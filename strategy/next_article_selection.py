@@ -5,7 +5,7 @@ from writing.wiki_manager import WikiManager
 
 # Do this at load time, because it's slow
 print("Loading list of words...")
-with open("data/en_gt_100.txt", 'r') as f:
+with open("data/en_gt_100.txt", 'r', encoding="utf8") as f:
     list_of_words = f.read().splitlines()
 list_of_words = [line.split(" ")[0].lower() for line in list_of_words if " " in line]
 

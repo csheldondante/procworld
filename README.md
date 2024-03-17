@@ -1,1 +1,3 @@
 # gamewiki
+
+structured_data_templates are used to define a standardized json structure for data so articles can be mapped from plain text to something machine parsable.  Articles can have multiple same typed structured datums and those can be displayed in article as infoboxes.  Note that it is common for the structured data to link relevant excerpts and situation articles in which an entity may have a specific role.

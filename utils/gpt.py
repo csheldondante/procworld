@@ -2,7 +2,9 @@ import os
 import re
 import time
 
+import os
 import openai
+
 from openai import OpenAI
 
 client = OpenAI(

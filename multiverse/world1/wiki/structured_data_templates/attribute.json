@@ -1,0 +1,29 @@
+{
+  "attribute": {
+    "name": "Vampirism",
+    "article_id": "5678",
+    "description": "A mystical condition granting enhanced strength, speed, and healing, but with severe weaknesses to sunlight and a thirst for blood.",
+    "tags": ["undead", "nocturnal", "bloodthirsty", "sunlight_aversion"],
+    "relevant_excerpts": [
+      {"article_id": "5678", "text": "The ancient curse of vampirism...", "loc": [102, 204]},
+      {"article_id": "1239", "text": "...revealed under the full moon, the vampire...", "loc": [78, 156]}
+    ],
+    "related_situations": [
+      {
+        "name": "The Night of Red Moon (situation)",
+        "article_id": "8910",
+        "role": "Defender of the homestead",
+      },
+      {
+        "name": "The Bloodbath at Wacom Manner",
+        "article_id": "1112",
+        "role": "The Devourer"
+      }
+    ],
+    "metadata": {
+      "type": "attribute",
+      "creation_date": "2024-04-01",
+      "last_updated": "2024-04-02"
+    }
+  }
+}
