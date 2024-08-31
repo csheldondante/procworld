@@ -1,0 +1,9 @@
+I'm writing an article for the wiki that I use for my D&D campaign. This wiki uses the markdown `.md` file format with one change, which is that you can link articles with [[Double Brackets]], like in wikitext. You can change the displayed text with a pipe, like this: [[Elves|Elf]], which will display "Elves", but link to the article titled "Elf".
+
+I'm writing an article on the topic of: {topic}.
+
+I want to make sure my writing is consistent.  Please extract all the snippits of text that talk about {topic} from the following article {title} and return them in a comma separated list with each entry surrounded by double quotes "snippet".
+
+{article}
+
+Please return only the list, without commentary.

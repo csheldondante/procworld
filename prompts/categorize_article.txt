@@ -1,0 +1,9 @@
+I'm taking articles from a wiki that I use for my D&D campaign and converting them into structured data I can use progromatically. This wiki uses the markdown `.md` file format with one change, which is that you can link articles with [[Double Brackets]], like in wikitext. You can change the displayed text with a pipe, like this: [[Elves|Elf]], which will display "Elves", but link to the article titled "Elf".
+
+Depending on the subject of the article there is different structured information we want to extract.  The different categories of article we care about are: {categories}.
+
+Please choose all the categories that apply to the subject of the article {topic} and list them as a comma separated list.  The article is:
+
+{article}
+
+Please return only the list, without commentary.
