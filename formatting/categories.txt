@@ -1,0 +1,1 @@
+["Person", "Place", "Event", "Item", "Demographic", "Organization", "Technology", "Phenomena", "Custom", "Ability", "Belief", "Myth", "Philosophy", "Tradition", "Celebration", "Species", "Profession", "Geographical Feature", "Religion", "Law", "Resource", "Conflict", "Language", "Ritual"]

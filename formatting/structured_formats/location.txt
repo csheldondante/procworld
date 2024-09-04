@@ -1,0 +1,12 @@
+Format:
+{
+        "location" : "Title of Article Where this is located",
+        "nearby locations" : ["Article of adjacent location if applicable", "Article of adjacent location2 if applicable", "..."]
+}
+
+Example for the article [[The Scintilating Spire]]:
+
+{
+        "location" : "[[Windsprite Keep]]",
+        "nearby locations" : ["[[The Windsprite Throne Room]]", "[[The Crimson Chamber]]"]
+}
