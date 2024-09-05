@@ -43,7 +43,7 @@ def get_neighbors_and_bounds(voronoi):
             bounding_planes[index2] = []
         bounding_planes[index1].append([midpoint, p2-p1])#consider normalizing the vector
         bounding_planes[index2].append([midpoint, p1-p2])#consider normalizing the vector
-        return neighbors, bounding_planes
+    return neighbors, bounding_planes
 
 #lets just limit this to voronoi diagrams, with the index and the maps produced by the methods above we should be able to easily check containment
 #we can scale the random points to the range of the bb then check containment and generate new points if needed
@@ -63,6 +63,33 @@ def generate_points_within_convex_hull(index: int, voronoi: Voronoi, neighbors: 
             if len(points_within_bounds) == num_points:
                 break
     return np.array(points_within_bounds), neighbors, bounding_planes
+
+def get_graph(voronoi: Voronoi):
+    neighbors, bounding_planes = get_neighbors_and_bounds(voronoi)
+    G = nx.Graph()
+        # Add edges between the centroids of neighboring regions
+    for key in enumerate(neighbors.keys()):
+        point1 = voronoi.points[key]
+        for neighbor_index in enumerate(neighbors.get(key, [])):
+            point2 = voronoi.points[neighbor_index]
+            G.add_edge(point1, point2)
+
+    return G
+
+def visualize_voronoi_graph(G, vor):
+    pos = {tuple(point): point for point in G.nodes}
+    
+    # Draw the Voronoi cells
+    voronoi_plot_2d(vor, show_points=False, show_vertices=False, line_colors='orange', line_width=.2)
+    
+    # Draw the graph on top of the Voronoi diagram
+    nx.draw(G, pos, with_labels=False, node_size=50, node_color='blue', edge_color='black')
+    plt.show()
+
+vor = Voronoi(np.random.rand(24, 2))
+G = get_graph(vor)
+visualize_voronoi_graph(G, vor)
+
 '''
 class LocationNode():
     voronoi: Voronoi
