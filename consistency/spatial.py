@@ -68,11 +68,11 @@ def get_graph(voronoi: Voronoi):
     neighbors, bounding_planes = get_neighbors_and_bounds(voronoi)
     G = nx.Graph()
         # Add edges between the centroids of neighboring regions
-    for key in enumerate(neighbors.keys()):
+    for key, neighborhood in neighbors.items():
         point1 = voronoi.points[key]
-        for neighbor_index in enumerate(neighbors.get(key, [])):
+        for neighbor_index in neighborhood:
             point2 = voronoi.points[neighbor_index]
-            G.add_edge(point1, point2)
+            G.add_edge(tuple(point1), tuple(point2))
 
     return G
 
