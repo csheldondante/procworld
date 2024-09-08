@@ -3,7 +3,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
-from scipy.spatial import Voronoi, voronoi_plot_2d
+from scipy.spatial import Voronoi, voronoi_plot_2d, convex_hull_plot_2d
 
 # This is a library to recursivel partition a space into subregions and partition those subregions while maintaining a planar graph structure at each level
 
@@ -24,7 +24,7 @@ def is_point_in_convex_hull(point, bounds):
             return False
     return True
 
-def get_neighbors_and_bounds(voronoi):
+def get_neighbors_and_bounds(voronoi: Voronoi):
     neighbors = {}
     bounding_planes = {}
     for index1, index2 in voronoi.ridge_points:
@@ -45,24 +45,43 @@ def get_neighbors_and_bounds(voronoi):
         bounding_planes[index2].append([midpoint, p1-p2])#consider normalizing the vector
     return neighbors, bounding_planes
 
+def get_boundary_indices(voronoi: Voronoi):
+    boundary_points=set()
+    region_index_2_point_index = {}
+    for point_index, region_index in enumerate(voronoi.point_region):
+        region_index_2_point_index[region_index] = point_index
+                                              
+    for i, point_indices in enumerate(voronoi.regions):
+        if -1 in point_indices:
+            boundary_points.add(region_index_2_point_index[i])
+    return boundary_points
+
 #lets just limit this to voronoi diagrams, with the index and the maps produced by the methods above we should be able to easily check containment
 #we can scale the random points to the range of the bb then check containment and generate new points if needed
 #ideally we just generate some moderately large number of points greater than num points and then filter them and repeat if needed in batches
 #our loop can terminate as soon as we have num points
-def generate_points_within_convex_hull(index: int, voronoi: Voronoi, num_points: int=24, dim: int=2):
+def generate_points_within_voronoi_cell(index: int, voronoi: Voronoi, num_points: int=24, dim: int=2):
     neighbors, bounding_planes = get_neighbors_and_bounds(voronoi)
     return generate_points_within_convex_hull(index, voronoi, neighbors, bounding_planes, num_points, dim)
 
 def generate_points_within_convex_hull(index: int, voronoi: Voronoi, neighbors: dict, bounding_planes: dict, num_points: int=24, dim: int=2):
+    vertex_indices = voronoi.regions[index]
+    vertices=voronoi.vertices[vertex_indices]
+    min = np.min(vertices, axis=0)
+    max = np.max(vertices, axis=0)
+    diag = max-min
     points_within_bounds = []
     while len(points_within_bounds) < num_points:
         points = np.random.rand(num_points, dim)
+        points = points * diag + min
         for point in points:#definitely more efficient to vectorize this and use numpy but this is fine for now
             if is_point_in_convex_hull(point, bounding_planes[index]):
                 points_within_bounds.append(point)
             if len(points_within_bounds) == num_points:
                 break
-    return np.array(points_within_bounds), neighbors, bounding_planes
+    scaled_points=np.array(points_within_bounds)
+    scaled_points = (scaled_points-min) / diag
+    return scaled_points, neighbors, bounding_planes
 
 def get_graph(voronoi: Voronoi):
     neighbors, bounding_planes = get_neighbors_and_bounds(voronoi)
@@ -73,22 +92,43 @@ def get_graph(voronoi: Voronoi):
         for neighbor_index in neighborhood:
             point2 = voronoi.points[neighbor_index]
             G.add_edge(tuple(point1), tuple(point2))
-
     return G
 
-def visualize_voronoi_graph(G, vor):
+def get_boundary_graph(voronoi: Voronoi):
+    boundary = get_boundary_indices(voronoi)
+    G = nx.Graph()
+    for point in boundary:
+        G.add_node(tuple(voronoi.points[point]))
+    return G
+
+def visualize_voronoi_graph(G, vor, BG: nx.Graph=None):
     pos = {tuple(point): point for point in G.nodes}
     
     # Draw the Voronoi cells
     voronoi_plot_2d(vor, show_points=False, show_vertices=False, line_colors='orange', line_width=.2)
+
+    #if boundary_points is not None:
+        #convex_hull_plot_2d(boundary_points)
     
     # Draw the graph on top of the Voronoi diagram
     nx.draw(G, pos, with_labels=False, node_size=50, node_color='blue', edge_color='black')
+
+    if BG is not None:
+        nx.draw(BG, pos, with_labels=False, node_size=60, node_color='red', edge_color='black')
     plt.show()
 
-vor = Voronoi(np.random.rand(24, 2))
+points = np.random.rand(24, 2)
+vor = Voronoi(points)
+boundary_points=get_boundary_indices(vor)
 G = get_graph(vor)
-visualize_voronoi_graph(G, vor)
+BG = get_boundary_graph(vor)
+visualize_voronoi_graph(G, vor, BG)
+
+pass
+#more_points = generate_points_within_voronoi_cell(7, vor, num_points=24, dim=2)
+#vor = Voronoi(np.vstack([points, more_points[0]]))
+#G = get_graph(vor)
+#visualize_voronoi_graph(G, vor)
 
 '''
 class LocationNode():
