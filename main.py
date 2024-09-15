@@ -2,6 +2,7 @@ from pathlib import Path
 
 from writing.wiki_manager import WikiManager
 from writing.write_articles import add_articles_to_wiki
+from roleplay.GameMaster import GameMaster
 
 def load_wiki(wiki_name: str = "testing") -> WikiManager:
     wiki_path = Path(f"multiverse/{wiki_name}/wiki/docs")
@@ -18,9 +19,14 @@ def load_wiki(wiki_name: str = "testing") -> WikiManager:
     # Print all links
     for link, count in links.items():
         print(f"{link} ({count})")
-
     return wiki
 
 
 if __name__ == "__main__":
-    add_articles_to_wiki("world2", num_new_articles=1000)
+    #add_articles_to_wiki("world2", num_new_articles=1000)
+    wiki = load_wiki("world1")
+    gm = GameMaster(wiki)
+    gm.new_run()
+    gm.start_game()
+
+
