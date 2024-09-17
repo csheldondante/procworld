@@ -6,12 +6,22 @@ from writing.article import Article
 from config.globals import LLM_MODEL
 
 class NarrativeContext():
-    potential_plots = []
-    fan_theories = []
-    mc = None
-    characters = []
-    story_board = []
-    story_summary_so_far = ""
+    scenes = []#already elapsed scenes
+    potential_plots = []#potential ideas of where the story could go.  Possibly mention fan theories in prompt to get speculation.
+    mc = None#main character
+    characters = []#already introduced characters
+    locations = []#already introduced locations
+    story_board = []#a list of ideas for scenes to come based on the current favorite potential plot
+    summary= ""#description of what's happened so far
+    def __init__(self):
+        pass
+
+class Scene():
+    characters=[]
+    locations=[]
+    events=[]
+    summary=""
+    important_details=[]#keys to bring up later to make things better connected
     def __init__(self):
         pass
 
