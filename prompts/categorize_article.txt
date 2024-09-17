@@ -6,4 +6,4 @@ Please choose all the categories that apply to the subject of the article {topic
 
 {article}
 
-Please return only the list, without commentary.
+Please return only the list, without commentary formatted as a python list with categories in quotes.

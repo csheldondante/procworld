@@ -1,9 +1,21 @@
-I'm writing an article for the wiki that I use for my D&D campaign. This wiki uses the markdown `.md` file format with one change, which is that you can link articles with [[Double Brackets]], like in wikitext. You can change the displayed text with a pipe, like this: [[Elves|Elf]], which will display "Elves", but link to the article titled "Elf".
-
-I'm writing an article on the topic of: {topic}.
-
-I want to make sure my writing is consistent.  Please extract all the snippits of text that talk about {topic} from the following article {title} and return them in a comma separated list with each entry surrounded by double quotes "snippet".
-
-{article}
-
-Please return only the list, without commentary.
+Is the setting historical fiction, fantasy or sci-fi?
+Does the world have magic?
+	If so what types of magic?
+	What is the source of magic?
+Are there poweres?
+	If so what type of powers?
+	Who has them?
+	How did they get them?
+	What is the source of the power?
+Does the world have fantastic creatures?
+	If so do they draw from a specific mythology?
+	If so which one?
+Does the world have cryptids?
+	Which ones?
+What is the technology like?
+What is the culture like?
+	Does it draw inspirations from any periods or subcultures within human history?
+If fantasy or sci-fi what is the cosmology like compared with our own?
+	Is the setting on a planet or in space or completely different?
+What is the aesthetic?
+	Retrofuturism, Noir, Gritty, Technocolor, Realistic, Bright etc.

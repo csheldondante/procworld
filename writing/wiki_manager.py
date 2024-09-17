@@ -19,6 +19,7 @@ class WikiManager:
                     article_content = f.read()
                 article = Article(article_file.replace(".md", ""), content_markdown=article_content)
                 self.articles.append(article)
+        
 
     def get_article_by_title(self, title: str) -> Article:
         for article in self.articles:

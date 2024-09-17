@@ -1,0 +1,1 @@
+["specific person","organization","place","event","object","beleif","category of people","type of thing","phenomena","technology"]

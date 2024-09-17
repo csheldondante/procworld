@@ -1,5 +1,9 @@
 from pathlib import Path
 from writing.wiki_manager import WikiManager
+from writing.write_articles import get_or_build_index
+from utils.gpt import prompt_completion_chat
+from writing.article import Article
+from config.globals import LLM_MODEL
 
 class NarrativeContext():
     potential_plots = []
@@ -7,6 +11,7 @@ class NarrativeContext():
     mc = None
     characters = []
     story_board = []
+    story_summary_so_far = ""
     def __init__(self):
         pass
 
@@ -14,6 +19,7 @@ class NarrativeContext():
 class GameMaster():
     def __init__(self, wiki: WikiManager=None):
         self.wiki = wiki
+        self.article_index = get_or_build_index(wiki)
         self.narrative_context = NarrativeContext()
 
     def create_character(self):
@@ -68,6 +74,26 @@ class GameMaster():
         self.mc=self.character_selection()
         self.start_game()
         pass
+
+    def setup_new_run(main_article_name: str, wiki: WikiManager) -> str:
+        snippets = wiki.get_snippets_that_mention(main_article_name)
+        snippets_text = ""
+        for article_name, article_snippets in snippets.items():
+            for snippet in article_snippets:
+                snippets_text += f"The \"{article_name}\" article says: "
+                snippets_text += f"{snippet}\n\n"
+
+        # TODO: Somehow get the most relevant links here
+        other_article_titles = wiki.get_existing_links(max_num_links=40, alphabetize=True)
+
+        with open("prompts/write_new_article.txt", 'r') as f:
+            prompt = f.read()
+
+        prompt = prompt.format(topic=main_article_name, snippets=snippets_text.strip(), other_articles="\n".join([f"* [[{article_title}]]" for article_title in other_article_titles]))
+
+        response = prompt_completion_chat(prompt, max_tokens=2048, model=LLM_MODEL)
+
+        return response
 
 
 
