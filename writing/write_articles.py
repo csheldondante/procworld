@@ -43,9 +43,23 @@ def get_or_build_index(wiki: WikiManager):
             if article.title in value:
                 break
         labels=categorize_article(article)
+
         for label in labels:
             if label not in categorized_articles:
                 categorized_articles[label] = set()
+            if len(labels)>1:
+                with open("prompts/disambiguate.txt", 'r') as f:
+                    prompt = f.read()
+                snippets = wiki.get_snippets_that_mention(article.title)
+                snippets_text = ""
+                for article_name, article_snippets in snippets.items():
+                    for snippet in article_snippets:
+                        snippets_text += f"The \"{article_name}\" article says: "
+                snippets_text += f"{snippet}\n\n"
+                prompt = prompt.format(topic=article.title, categories=labels, category=label, article=article.content_markdown, other_articles=list(snippets.keys()))
+                #TODO add snippets, enable this and update links...
+                #response = prompt_completion_chat(prompt, max_tokens=2048, model=LLM_MODEL)
+                pass#disambiguate articles
             categorized_articles[label].add(article.title)
     
     with open(f"{wiki.wiki_path}/article_index.index", 'w+') as f:

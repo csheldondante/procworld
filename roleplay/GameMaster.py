@@ -63,11 +63,11 @@ class GameMaster():
 
     def start_game(self):
         while True:
-            user_input = input("What do you want to do? ")
-            if user_input == None or user_input.lower() == 'continue' or user_input.lower() == 'next' or user_input.lower() == '':
+            player_contribution = input("What do you want to do? ")
+            if player_contribution == None or player_contribution.lower() == 'continue' or player_contribution.lower() == 'next' or player_contribution.lower() == '':
                 #TODO advance the story without the user input
                 pass
-            if user_input.lower() == 'quit' or user_input.lower() == 'exit' or user_input.lower() == 'stop' or user_input.lower() == 'end' or user_input.lower() == 'save' or user_input.lower() == 'save and quit' or user_input.lower() == 'x':
+            if player_contribution.lower() == 'quit' or player_contribution.lower() == 'exit' or player_contribution.lower() == 'q' or player_contribution.lower() == 'x':
                 print("Goodbye!")
                 #TODO save
                 break
