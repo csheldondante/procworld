@@ -61,9 +61,13 @@ def get_or_build_index(wiki: WikiManager):
                 #response = prompt_completion_chat(prompt, max_tokens=2048, model=LLM_MODEL)
                 pass#disambiguate articles
             categorized_articles[label].add(article.title)
-    
-    with open(f"{wiki.wiki_path}/article_index.index", 'w+') as f:
-            f.write(json.dumps(categorized_articles))
+    try:
+        # Convert sets to lists since JSON does not support sets
+        serializable_data = {key: list(value) for key, value in categorized_articles.items()}    
+        with open(f"{wiki.wiki_path}/article_index.index", 'w+') as f:
+            json.dump(serializable_data,f,indent=4)
+    except Exception as e:
+        print(f"Error saving the index: {e}")
 
     return categorized_articles
 
@@ -83,7 +87,10 @@ def categorize_article(article: Article):
         prompt = f.read()
     prompt = prompt.format(topic=article.title, categories=categories, article=article.content_markdown)
     response = prompt_completion_chat(prompt, max_tokens=2048, model=LLM_MODEL)
-    labels = json.loads(response)
+    try:
+        labels = json.loads(response)
+    except json.JSONDecodeError:
+        return []#TODO retry if we fail to decode the response
     return labels
 
 def add_articles_to_wiki(wiki_name: str = "testing", num_new_articles: int = 1):
