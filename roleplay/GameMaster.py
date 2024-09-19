@@ -1,6 +1,7 @@
 from pathlib import Path
 from writing.wiki_manager import WikiManager
 from writing.write_articles import get_or_build_index
+from writing.write_articles import get_or_build_summary
 from utils.gpt import prompt_completion_chat
 from writing.article import Article
 from config.globals import LLM_MODEL
@@ -29,8 +30,20 @@ class Scene():
 class GameMaster():
     def __init__(self, wiki: WikiManager=None):
         self.wiki = wiki
+        if(wiki==None):
+            return
         self.article_index = get_or_build_index(wiki)
+        self.event_summaries = ""
+        for article_name in self.article_index["event"]:
+            summary = get_or_build_summary(wiki, article_name)
+            self.event_summaries += f"**{article_name}**\n{summary}\n\n"
+        print(self.event_summaries)#TODO we should only summarize events that are pertinent to the locations and characters of the story
         self.narrative_context = NarrativeContext()
+        stories_path = f"{wiki.wiki_path} /stories"
+        if not Path(stories_path).exists():#deserialize the narrative context
+            Path(stories_path).mkdir()
+        #check for the most recent story to continue it
+        #if there is no most recent story, start a new one
 
     def create_character(self):
         user_input = input("Tell me about your idea for a character or ask for suggestions if you are unsure")

@@ -29,6 +29,22 @@ def get_article_text(next_article_name: str, wiki: WikiManager) -> str:
 
     return response
 
+def get_or_build_summary(wiki: WikiManager, article_name: str):
+    summary_filename=f"{wiki.wiki_path}/{article_name}_summary.md"
+    if os.path.exists(summary_filename) and os.path.getsize(summary_filename) > 0:
+        with open(summary_filename, 'r') as i:
+            summary=i.read()
+    else:
+        article = wiki.get_article_by_title(article_name)
+        with open("prompts/summarize.txt", 'r') as f:
+            prompt = f.read()
+        prompt = prompt.format(article=article.content_markdown)
+        response = prompt_completion_chat(prompt, max_tokens=2048, model=LLM_MODEL)
+        summary = response
+        with open(summary_filename, 'w+') as f:
+            f.write(summary)
+    return summary
+
 def get_or_build_index(wiki: WikiManager):
     index_filename=f"{wiki.wiki_path}/article_index.index"
     if os.path.exists(index_filename) and os.path.getsize(index_filename) > 0:
@@ -53,6 +69,7 @@ def get_or_build_index(wiki: WikiManager):
             if label not in categorized_articles:
                 categorized_articles[label] = set()
             if len(labels)>1:
+                '''
                 with open("prompts/disambiguate.txt", 'r') as f:
                     prompt = f.read()
                 snippets = wiki.get_snippets_that_mention(article.title)
@@ -64,7 +81,7 @@ def get_or_build_index(wiki: WikiManager):
                 prompt = prompt.format(topic=article.title, categories=labels, category=label, article=article.content_markdown, other_articles=list(snippets.keys()))
                 #TODO add snippets, enable this and update links...
                 #response = prompt_completion_chat(prompt, max_tokens=2048, model=LLM_MODEL)
-                pass#disambiguate articles
+                pass#disambiguate articles'''
             categorized_articles[label].add(article.title)
     try:
         # Convert sets to lists since JSON does not support sets

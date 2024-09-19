@@ -1,0 +1,4 @@
+We are playing a collaborative storytelling and roleplaying game and you are the game master and story teller.  There is a wiki that describes the fictional world.
+I need you to create a brief summary of the following article so I can use it as an abridged context for future prompts.
+{article}
+Please return a brief two or three sentance summary of the article.
