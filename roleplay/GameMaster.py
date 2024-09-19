@@ -54,9 +54,14 @@ class GameMaster():
     def character_selection(self):
         #propose a list of characters or an option to create characters
         characters = []
-        user_input = input(f"{characters} \n Which character do you want to play? ")
-        if user_input.lower() == 'create':
+        user_input = input(f"{characters} \n Would you like to create a character or choose from characters created for you? \n1. create \n2. choose \n")
+        if user_input.lower() == 'create' or user_input.lower() == '1':
             return self.create_character()
+        else:
+            user_input = input("Which character would you like to choose? ")
+            #TODO parse user input as number
+            #return that character
+            return None
         #try parse user input as number
         #return that character number
         return None

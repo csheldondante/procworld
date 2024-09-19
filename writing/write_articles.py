@@ -37,11 +37,16 @@ def get_or_build_index(wiki: WikiManager):
             categorized_articles = {key: set(value) for key, value in categorized_articles.items()}
     else:
         categorized_articles = {}
-        
+    
+
     for article in wiki.articles:
+        already_indexed=False
         for key, value in categorized_articles.items():
             if article.title in value:
+                already_indexed=True
                 break
+        if already_indexed:
+            continue
         labels=categorize_article(article)
 
         for label in labels:
