@@ -9,6 +9,11 @@ import json
 import os
 
 
+def record_article(article: Article, wiki: WikiManager):
+    with open(f"{wiki.wiki_path}/{article.title}.md", 'w+') as f:
+        f.write(article.content_markdown)
+    return
+
 def get_article_text(next_article_name: str, wiki: WikiManager) -> str:
     snippets = wiki.get_snippets_that_mention(next_article_name)
     snippets_text = ""
@@ -28,6 +33,17 @@ def get_article_text(next_article_name: str, wiki: WikiManager) -> str:
     response = prompt_completion_chat(prompt, max_tokens=2048, model=LLM_MODEL)
 
     return response
+
+def get_or_build_character(wiki: WikiManager):
+    main_article = wiki.get_article_by_name("Aesheron")#TODO make some method to get the main article so this isn't horribly hardcoded
+    with open("prompts/create_character.txt", 'r') as f:
+        prompt = f.read()
+    prompt = prompt.format(summary=main_article.content_markdown)
+    article_text = prompt_completion_chat(prompt, max_tokens=2048, model=LLM_MODEL)
+    character_name = prompt_completion_chat(f"What is the characters name in the following article: \n{article_text}", max_tokens=2048, model=LLM_MODEL)
+    character = Article(character_name, content_wikitext=article_text)
+    record_article(character, wiki)
+    return character
 
 def get_or_build_summary(wiki: WikiManager, article_name: str):
     summary_filename=f"{wiki.wiki_path}/{article_name}_summary.md"

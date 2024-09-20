@@ -2,6 +2,7 @@ from pathlib import Path
 from writing.wiki_manager import WikiManager
 from writing.write_articles import get_or_build_index
 from writing.write_articles import get_or_build_summary
+from writing.write_articles import get_or_build_character
 from utils.gpt import prompt_completion_chat
 from writing.article import Article
 from config.globals import LLM_MODEL
@@ -39,9 +40,9 @@ class GameMaster():
             self.event_summaries += f"**{article_name}**\n{summary}\n\n"
         print(self.event_summaries)#TODO we should only summarize events that are pertinent to the locations and characters of the story
         self.narrative_context = NarrativeContext()
-        stories_path = f"{wiki.wiki_path} /stories"
-        if not Path(stories_path).exists():#deserialize the narrative context
-            Path(stories_path).mkdir()
+        self.stories_path = f"{wiki.wiki_path}/stories"
+        if not Path(self.stories_path).exists():#deserialize the narrative context
+            Path(self.stories_path).mkdir()
         #check for the most recent story to continue it
         #if there is no most recent story, start a new one
 
@@ -71,6 +72,12 @@ class GameMaster():
         if user_input.lower() == 'create' or user_input.lower() == '1':
             return self.create_character()
         else:
+            characters=[]
+            for i in range(3):
+                character = get_or_build_character(self.wiki)
+                characters.append(character)
+                print(f"{i+1}. {character.content_wikitext}")
+
             user_input = input("Which character would you like to choose? ")
             #TODO parse user input as number
             #return that character
