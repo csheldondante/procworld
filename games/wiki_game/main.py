@@ -1,8 +1,7 @@
 from pathlib import Path
 
-from writing.wiki_manager import WikiManager
-from writing.write_articles import add_articles_to_wiki
-from roleplay.GameMaster import GameMaster
+from utils.writing.wiki_manager import WikiManager
+from utils.roleplaying.GameMaster import GameMaster
 
 def load_wiki(wiki_name: str = "testing") -> WikiManager:
     wiki_path = Path(f"multiverse/{wiki_name}/wiki/docs")

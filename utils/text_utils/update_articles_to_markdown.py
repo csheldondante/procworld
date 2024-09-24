@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List
 
-from writing.article import Article
+from utils.writing.article import Article
 
 
 def update_articles_wikitext_to_markdown(wiki_path: Path, article_names: List[str]):
@@ -14,4 +14,4 @@ def update_articles_wikitext_to_markdown(wiki_path: Path, article_names: List[st
 
 
 if __name__ == "__main__":
-    update_articles_wikitext_to_markdown(Path("multiverse/testing/wiki/docs"), ["Aesheron"])
+    update_articles_wikitext_to_markdown(Path("../../multiverse/testing/wiki/docs"), ["Aesheron"])

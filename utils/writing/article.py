@@ -1,7 +1,7 @@
 import re
 from typing import List, Optional, Tuple
 
-from formatting.formatting import convert_markdown_to_wikitext_links, convert_wikitext_to_markdown_links, \
+from utils.text_utils.formatting import convert_markdown_to_wikitext_links, convert_wikitext_to_markdown_links, \
     custom_title_case
 
 

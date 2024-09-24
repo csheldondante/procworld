@@ -1,10 +1,9 @@
 from pathlib import Path
-from writing.wiki_manager import WikiManager
-from writing.write_articles import get_or_build_index
-from writing.write_articles import get_or_build_summary
-from writing.write_articles import get_or_build_character
-from utils.gpt import prompt_completion_chat
-from writing.article import Article
+from utils.writing.wiki_manager import WikiManager
+from utils.writing.write_articles import get_or_build_index
+from utils.writing.write_articles import get_or_build_summary
+from utils.writing.write_articles import get_or_build_character
+from utils.llms.gpt import prompt_completion_chat
 from config.globals import LLM_MODEL
 
 class NarrativeContext():

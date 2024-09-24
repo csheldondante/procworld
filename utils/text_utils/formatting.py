@@ -98,7 +98,7 @@ def custom_title_case(s: str) -> str:
 def fix_link_cases():
     # I had to write this because I accidentally generated a bunch of articles without title case names
     # Change the file name of all `.md` files in the current directory to be title case
-    path = "../multiverse/world1/wiki/docs"
+    path = "../../multiverse/world1/wiki/docs"
     # for filename in os.listdir(path):
     #     if filename.endswith(".md"):
     #         new_filename = custom_title_case(filename)

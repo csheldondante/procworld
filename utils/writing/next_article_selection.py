@@ -1,7 +1,7 @@
 import math
 from typing import Dict
 
-from writing.wiki_manager import WikiManager
+from utils.writing.wiki_manager import WikiManager
 
 # Do this at load time, because it's slow
 print("Loading list of words...")

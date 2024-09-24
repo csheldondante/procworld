@@ -3,14 +3,14 @@ from pathlib import Path
 from threading import Thread
 from typing import List, Optional
 
-from art.process_response import process_art_response
+from utils.art.process_response import process_art_response
 from config.globals import LLM_MODEL
-from formatting.formatting import sanitize_article_name
-from strategy.next_article_selection import rank_articles
-from utils.dalle import get_picture_and_download
-from utils.gpt import prompt_completion_chat
-from writing.article import Article
-from writing.wiki_manager import WikiManager
+from utils.text_utils.formatting import sanitize_article_name
+from utils.writing.next_article_selection import rank_articles
+from utils.art.dalle import get_picture_and_download
+from utils.llms.gpt import prompt_completion_chat
+from utils.writing.article import Article
+from utils.writing.wiki_manager import WikiManager
 
 import concurrent.futures
 import os
@@ -82,7 +82,7 @@ def fetch_and_save_description(wiki: WikiManager, article: Article) -> Optional[
             file.write("\nUsed: False")
         return filename
     except Exception as e:
-        with open("logging/art_errors.txt", 'a') as error_file:
+        with open("logs/art_errors.txt", 'a') as error_file:
             error_file.write(f"Error fetching description for {article.title}: {e}\n")
         return None
 
@@ -98,7 +98,7 @@ def process_description(wiki: WikiManager, filename: str) -> None:
         with open(filename, 'a') as file:
             file.write("\nUsed: True")
     except Exception as e:
-        with open("logging/art_errors.txt", 'a') as error_file:
+        with open("logs/art_errors.txt", 'a') as error_file:
             error_file.write(f"Error processing description for {article_title}: {e}\n")
 
 

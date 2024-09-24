@@ -1,4 +1,4 @@
-from lockandkey.graph import generate_rectangular_grid, Graph
+from utils.lockandkey.graph import generate_rectangular_grid, Graph
 
 graph: Graph = generate_rectangular_grid(4, 4)
 

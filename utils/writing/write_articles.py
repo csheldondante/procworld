@@ -1,10 +1,10 @@
 from pathlib import Path
 
 from config.globals import LLM_MODEL
-from strategy.next_article_selection import select_next_article
-from utils.gpt import prompt_completion_chat
-from writing.article import Article
-from writing.wiki_manager import WikiManager
+from utils.writing.next_article_selection import select_next_article
+from utils.llms.gpt import prompt_completion_chat
+from utils.writing.article import Article
+from utils.writing.wiki_manager import WikiManager
 import json
 import os
 

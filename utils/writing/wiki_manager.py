@@ -3,7 +3,7 @@ import random
 from pathlib import Path
 from typing import List, Dict, Optional
 
-from writing.article import Article
+from utils.writing.article import Article
 
 
 class WikiManager:
