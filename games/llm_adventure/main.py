@@ -75,6 +75,7 @@ def check_skill(skill, difficulty):
 
 
 def get_game_response(conversation):
+    turns = []
     while True:
         response = prompt_completion_chat(
             model="gpt-3.5-turbo",
@@ -83,11 +84,11 @@ def get_game_response(conversation):
         )
 
         if "NEED" not in response:
-            show_narrative_text(response, "Game")
-            return response
+            turns.append(Turn("assistant", response))
+            return turns
 
         parts = response.split("NEED", 1)
-        show_narrative_text(parts[0], "Game")
+        turns.append(Turn("assistant", parts[0]))
 
         need_match = re.search(r"(\w+) (\d+)", parts[1])
         if need_match:
@@ -104,12 +105,11 @@ def get_game_response(conversation):
                 f"{'Success!' if success else 'Failure.'}"
             )
 
-            show_narrative_text(narrative_text, "Skill Check!")
-
-            conversation.add_turn("system", f"{skill.upper()} check result: {'Success' if success else 'Failure'}")
+            turns.append(Turn("system", narrative_text))
+            turns.append(Turn("system", f"{skill.upper()} check result: {'Success' if success else 'Failure'}"))
         else:
-            show_error(f"Failed to parse skill check: NEED{parts[1]}")
-            conversation.add_turn("system", f"Failed skill check: NEED{parts[1]}")
+            error_message = f"Failed to parse skill check: NEED{parts[1]}"
+            turns.append(Turn("system", error_message))
 
 
 def main_start():
