@@ -1,106 +1,114 @@
-from textual.app import App, ComposeResult
-from textual.containers import ScrollableContainer, Container
-from textual.widgets import Header, Footer, Static, Input, Button
-from textual.reactive import reactive
-import asyncio
+from rich import print
+from rich.panel import Panel
+from rich.console import Console, Group
+from rich.text import Text
+from rich.style import Style
+from rich.box import DOUBLE, ROUNDED
+from rich.columns import Columns
+from rich.live import Live
 
-class GameDisplay(App):
-    CSS = """
-    Screen {
-        layout: grid;
-        grid-size: 2;
-        grid-columns: 1fr 1fr;
-    }
+console = Console()
+left_column = []
+right_column = []
+live_display = Live(Group(), console=console, refresh_per_second=4, screen=True)
 
-    #left-column, #right-column {
-        height: 100%;
-        overflow: hidden;
-    }
+def update_display():
+    global live_display
+    live_display.update(
+        Columns(
+            [
+                Panel(Group(*left_column), expand=True, width=console.width // 2),
+                Panel(Group(*right_column), expand=True, width=console.width // 2)
+            ],
+            expand=True
+        )
+    )
 
-    .narrative, .rule, .error, .situation {
-        margin: 1 0;
-        padding: 1;
-    }
-
-    .narrative {
-        border: solid green;
-    }
-
-    .rule {
-        border: double yellow;
-    }
-
-    .error {
-        border: solid red;
-    }
-
-    .situation {
-        border: double cyan;
-    }
-
-    #user-input {
-        dock: bottom;
-    }
+def show_narrative_text(text: str, speaker: str="", color: str = "green") -> None:
     """
+    Display a block of narrative text in the GUI.
+    """
+    content = Text(text)
+    if not speaker or speaker == "":
+        panel = Panel(content, border_style=color, expand=False)
+    else:
+        panel = Panel(content, border_style=color, expand=False,
+                      title=speaker, title_align="left")
+    left_column.append(panel)
+    update_display()
 
-    BINDINGS = [("q", "quit", "Quit")]
-
-    def compose(self) -> ComposeResult:
-        yield Header()
-        yield Container(ScrollableContainer(id="left-column"), id="left-column")
-        yield Container(ScrollableContainer(id="right-column"), id="right-column")
-        yield Input(id="user-input", placeholder="What do you want to do?")
-        yield Footer()
-
-    def on_mount(self) -> None:
-        self.query_one("#user-input").focus()
-
-    def on_input_submitted(self, event: Input.Submitted) -> None:
-        self.handle_user_input(event.value)
-        event.input.value = ""
-
-    def handle_user_input(self, user_input: str) -> None:
-        if user_input.lower() == 'quit':
-            self.exit()
-        else:
-            self.show_narrative_text(user_input, "You")
-
-    def show_narrative_text(self, text: str, speaker: str = "") -> None:
-        content = f"[{speaker}] {text}" if speaker else text
-        self.query_one("#left-column").mount(Static(content, classes="narrative"))
-
-    def show_rule_text(self, text: str, rule: str = "") -> None:
-        content = f"[{rule}] {text}" if rule else text
-        self.query_one("#left-column").mount(Static(content, classes="rule"))
-
-    def show_error(self, error_message: str) -> None:
-        self.query_one("#left-column").mount(Static(error_message, classes="error"))
-
-    def show_situation(self, situation_text: str) -> None:
-        self.query_one("#right-column").query("*").remove()
-        self.query_one("#right-column").mount(Static(situation_text, classes="situation"))
-
-def show_narrative_text(text: str, speaker: str = "") -> None:
-    app.show_narrative_text(text, speaker)
-
-async def get_user_text(prompt: str) -> str:
-    return await app.run_async(lambda: app.query_one("#user-input").value)
+def get_user_text(prompt: str) -> str:
+    """
+    Get text input from the user.
+    """
+    prompt_panel = Panel(f"> {prompt}", border_style="magenta", expand=False)
+    left_column.append(prompt_panel)
+    update_display()
+    
+    user_input = ""
+    with console.input(hide_cursor=False) as input_generator:
+        while True:
+            char = input_generator.send(None)
+            if char == '\r':  # Enter key
+                break
+            elif char == '\x7f':  # Backspace
+                if user_input:
+                    user_input = user_input[:-1]
+            else:
+                user_input += char
+            
+            # Update the prompt panel with the current input
+            prompt_panel.renderable = f"> {prompt}{user_input}"
+            update_display()
+    
+    # Remove the prompt panel after input is complete
+    left_column.pop()
+    update_display()
+    return user_input
 
 def show_rule_text(text: str, rule: str = "") -> None:
-    app.show_rule_text(text, rule)
+    """
+    Display a block of text with a rule name in the GUI.
+    """
+    content = Text(text)
+    if not rule or rule == "":
+        panel = Panel(content, border_style="yellow", box=DOUBLE, expand=False)
+    else:
+        panel = Panel(content, border_style="yellow", box=DOUBLE, title="Game Rules", 
+                      title_align="center", expand=False)
+    left_column.append(panel)
+    update_display()
 
 def show_error(error_message: str) -> None:
-    app.show_error(error_message)
+    """
+    Display an error message in the GUI.
+    """
+    content = Text(error_message)
+    panel = Panel(content, border_style="red", title="Error", title_align="center", expand=False)
+    left_column.append(panel)
+    update_display()
 
 def show_situation(situation_text: str) -> None:
-    app.show_situation(situation_text)
+    """
+    Display the current situation details in the GUI.
+    """
+    content = Text(situation_text)
+    panel = Panel(
+        content,
+        border_style="cyan",
+        box=DOUBLE,
+        expand=False,
+        title="Current Situation",
+        title_align="right"
+    )
+    right_column.clear()  # Clear previous situation
+    right_column.append(panel)
+    update_display()
 
 def start_display():
-    global app
-    app = GameDisplay()
-    app.run()
+    global live_display
+    live_display.start()
 
 def stop_display():
-    app.exit()
-
-app = GameDisplay()
+    global live_display
+    live_display.stop()
