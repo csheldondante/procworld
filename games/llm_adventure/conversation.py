@@ -5,6 +5,9 @@ class Turn:
         self.role = role
         self.content = content
 
+    def __repr__(self):
+        return f"Turn(role='{self.role}', content='{self.content[:20]}...')"
+
 class Conversation:
     def __init__(self):
         self.system_message = {"role": "system", "content": load_prompt('system_prompt.txt')}
