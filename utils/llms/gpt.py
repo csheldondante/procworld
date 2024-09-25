@@ -80,3 +80,17 @@ def prompt_completion_chat(question="", model="gpt-3.5-turbo", n=1, temperature=
     if n == 1:
         return answers[0]
     return
+
+def prompt_completion_json(messages, model="gpt-3.5-turbo", temperature=0.2, max_tokens=1000):
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages + [{"role": "system", "content": "You must respond with valid JSON only."}],
+            temperature=temperature,
+            max_tokens=max_tokens,
+            response_format={"type": "json_object"}
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Error in JSON completion: {e}")
+        return None

@@ -9,6 +9,8 @@ class Monster:
         self.name = name
         self.health = health
 
+import json
+
 class Situation:
     def __init__(self):
         self.world = "world1"
@@ -30,3 +32,33 @@ class Situation:
             for monster in self.nearby_monsters:
                 situation += f"- {monster.name} (Health: {monster.health})\n"
         return situation.strip()
+
+    def to_json(self):
+        return json.dumps({
+            "world": self.world,
+            "location": self.location,
+            "player": {
+                "name": self.player.name,
+                "stats": self.player.stats,
+                "inventory": self.player.inventory
+            },
+            "nearby_monsters": [
+                {"name": monster.name, "health": monster.health}
+                for monster in self.nearby_monsters
+            ]
+        })
+
+    @classmethod
+    def from_json(cls, json_str):
+        data = json.loads(json_str)
+        situation = cls()
+        situation.world = data["world"]
+        situation.location = data["location"]
+        situation.player = Player(data["player"]["name"])
+        situation.player.stats = data["player"]["stats"]
+        situation.player.inventory = data["player"]["inventory"]
+        situation.nearby_monsters = [
+            Monster(monster["name"], monster["health"])
+            for monster in data["nearby_monsters"]
+        ]
+        return situation
