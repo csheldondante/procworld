@@ -1,6 +1,6 @@
 import json
 from utils.llms.gpt import prompt_completion_chat, prompt_completion_json
-from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text, show_error
+from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text, show_error, show_situation
 from conversation import Conversation
 from situation import Situation
 
@@ -39,7 +39,7 @@ def main_loop(conversation, situation):
         conversation.add_turn("assistant", response)
         
         situation = update_situation(situation, response, last_user_input)
-        show_narrative_text(situation.get_situation_string(), "New Situation")
+        show_situation(situation.get_situation_string())
         
         user_input = get_user_text("What do you want to do? ")
         
@@ -57,7 +57,7 @@ def main_start():
     conversation = Conversation()
     situation = Situation()
     situation.add_monster("Goblin", 50)
-    show_narrative_text(situation.get_situation_string(), "Starting Situation")
+    show_situation(situation.get_situation_string())
 
     main_loop(conversation, situation)
 

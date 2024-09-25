@@ -3,7 +3,7 @@ from rich.panel import Panel
 from rich.console import Console
 from rich.text import Text
 from rich.style import Style
-from rich.box import DOUBLE
+from rich.box import DOUBLE, ROUNDED
 
 console = Console()
 
@@ -45,3 +45,18 @@ def show_error(error_message: str) -> None:
     content = Text(error_message)
     panel = Panel(content, border_style="red", title="Error", title_align="center", expand=False)
     console.print(panel)
+
+def show_situation(situation_text: str) -> None:
+    """
+    Display the current situation details in the GUI.
+    """
+    content = Text(situation_text)
+    panel = Panel(
+        content,
+        border_style="cyan",
+        box=ROUNDED,
+        expand=False,
+        title="Current Situation",
+        title_align="right"
+    )
+    console.print(Panel(panel, expand=False, border_style="cyan"))
