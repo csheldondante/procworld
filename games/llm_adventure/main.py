@@ -51,7 +51,6 @@ def check_skill(skill, difficulty):
 
 
 def get_game_response(conversation):
-    turns = []
     while True:
         response = prompt_completion_chat(
             model="gpt-3.5-turbo",
@@ -60,12 +59,12 @@ def get_game_response(conversation):
         )
 
         if "NEED" not in response:
-            turns.append(Turn("assistant", response))
+            conversation.add_turn("assistant", response)
             show_narrative_text(response, "Game")
-            return turns
+            return
 
         parts = response.split("NEED", 1)
-        turns.append(Turn("assistant", parts[0]))
+        conversation.add_turn("assistant", parts[0])
         show_narrative_text(parts[0], "Game")
 
         need_match = re.search(r"(\w+) (\d+)", parts[1])
@@ -83,16 +82,16 @@ def get_game_response(conversation):
                 f"{'Success!' if success else 'Failure.'}"
             )
 
-            turns.append(Turn("assistant", narrative_text))
+            conversation.add_turn("assistant", narrative_text)
             show_narrative_text(narrative_text, "Skill Check!")
 
             result_text = f"{skill.upper()} check result: {'Success' if success else 'Failure'}"
-            turns.append(Turn("assistant", result_text))
+            conversation.add_turn("assistant", result_text)
             show_narrative_text(result_text, "Game")
         else:
             error_message = f"Failed to parse skill check: NEED{parts[1]}"
             show_error(error_message)
-            # turns.append(Turn("assistant", error_message))
+            # conversation.add_turn("assistant", error_message)
 
 
 def main_loop(conversation, situation):
@@ -101,12 +100,10 @@ def main_loop(conversation, situation):
         situation_json = situation.to_json()
         conversation.update_situation(situation_json)
 
-        turns = get_game_response(conversation)
+        get_game_response(conversation)
 
-        for turn in turns:
-            conversation.add_turn(turn.role, turn.content)
-
-        situation = update_situation(situation, turns[-1].content, last_user_input)
+        last_turn = conversation.history[-1]
+        situation = update_situation(situation, last_turn.content, last_user_input)
         show_situation(situation.get_situation_string())
 
         user_input = get_user_text("What do you want to do? ")
