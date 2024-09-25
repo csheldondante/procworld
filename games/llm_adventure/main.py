@@ -54,7 +54,8 @@ def get_game_response(conversation):
         response = prompt_completion_chat(
             model="gpt-3.5-turbo",
             max_tokens=150,
-            messages=conversation.get_messages()
+            messages=conversation.get_messages(),
+            stop=["CHECK"]
         )
         
         if "CHECK" in response:

@@ -67,6 +67,7 @@ def prompt_completion_chat(question="", model="gpt-3.5-turbo", n=1, temperature=
         n=n,
         stop=stop,
     )
+    # print(response)
     answers = []
     for i in range(n):
         ans = response.choices[i].message.content.strip()
