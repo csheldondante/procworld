@@ -45,12 +45,12 @@ def check_skill(skill, difficulty):
     total_result = check_result + skill_level
     
     # Determine success or failure
-    success = total_result >= difficulty * 2
+    success = total_result >= difficulty
     
     return skill_level, check_result, total_result, success
 
 
-def get_game_response(conversation):
+def process_narrative_response(conversation):
     while True:
         response = prompt_completion_chat(
             model="gpt-3.5-turbo",
@@ -64,8 +64,9 @@ def get_game_response(conversation):
             return
 
         parts = response.split("NEED", 1)
-        conversation.add_turn("assistant", parts[0])
-        show_narrative_text(parts[0], "Game")
+        if len(parts[0]) > 0:
+            conversation.add_turn("assistant", parts[0])
+            show_narrative_text(parts[0], "Game")
 
         need_match = re.search(r"(\w+) (\d+)", parts[1])
         if need_match:
@@ -84,14 +85,9 @@ def get_game_response(conversation):
 
             conversation.add_turn("assistant", narrative_text)
             show_narrative_text(narrative_text, "Skill Check!")
-
-            result_text = f"{skill.upper()} check result: {'Success' if success else 'Failure'}"
-            conversation.add_turn("assistant", result_text)
-            show_narrative_text(result_text, "Game")
         else:
             error_message = f"Failed to parse skill check: NEED{parts[1]}"
             show_error(error_message)
-            # conversation.add_turn("assistant", error_message)
 
 
 def main_loop(conversation, situation):
@@ -100,7 +96,7 @@ def main_loop(conversation, situation):
         situation_json = situation.to_json()
         conversation.update_situation(situation_json)
 
-        get_game_response(conversation)
+        process_narrative_response(conversation)
 
         last_turn = conversation.history[-1]
         situation = update_situation(situation, last_turn.content, last_user_input)

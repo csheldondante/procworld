@@ -10,7 +10,7 @@ def show_narrative_text(text: str, speaker: str="", color: str = "green") -> Non
     """
     Display a block of narrative text in the console.
     """
-    content = Text(text)
+    content = Text(text.strip())
     if speaker:
         panel = Panel(content, border_style=color, expand=False, title=speaker, title_align="left")
     else:
@@ -27,7 +27,7 @@ def show_rule_text(text: str, rule: str = "") -> None:
     """
     Display a block of text with a rule name in the console.
     """
-    content = Text(text)
+    content = Text(text.strip())
     title = "Game Rules" if rule else None
     panel = Panel(content, border_style="yellow", box=DOUBLE, expand=False, title=title, title_align="center")
     console.print(panel)
@@ -44,7 +44,7 @@ def show_situation(situation_text: str) -> None:
     Display the current situation details in the console.
     """
     panel = Panel(
-        Text(situation_text),
+        Text(situation_text.strip()),
         border_style="cyan",
         box=DOUBLE,
         expand=False,
