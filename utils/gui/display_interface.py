@@ -1,6 +1,6 @@
 from rich import print
 from rich.panel import Panel
-from rich.console import Console
+from rich.console import Console, Group
 from rich.text import Text
 from rich.style import Style
 from rich.box import DOUBLE, ROUNDED
