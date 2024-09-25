@@ -1,0 +1,17 @@
+#main-container {
+    layout: horizontal;
+    background: $boost;
+    height: 1fr;
+    margin: 1;
+    min-width: 50;
+    padding: 1;
+}
+
+#left-column, #right-column {
+    width: 1fr;
+    height: 100%;
+}
+
+#user-input {
+    dock: bottom;
+}
