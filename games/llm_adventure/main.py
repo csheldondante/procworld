@@ -58,13 +58,13 @@ def process_narrative_response(conversation):
 
         if "NEED" not in response:
             conversation.add_turn("assistant", response)
-            show_narrative_text(response, "Game")
+            show_narrative_text(response, "Narrator")
             return
 
         parts = response.split("NEED", 1)
         if len(parts[0]) > 0:
             conversation.add_turn("assistant", parts[0])
-            show_narrative_text(parts[0], "Game")
+            show_narrative_text(parts[0], "Narrator")
 
         need_match = re.search(r"(\w+) (\d+)", parts[1])
         if need_match:
@@ -118,8 +118,7 @@ def main_start():
     show_narrative_text("Creating your character...", "Game")
     character_data = create_character()
     if character_data:
-        show_narrative_text(f"Welcome, {character_data['name']}!", "Game")
-        show_narrative_text(f"You are a {character_data['race']} {character_data['class']} with a {character_data['background']} background.", "Game")
+        show_narrative_text(f"Welcome, {character_data['name']}!\nYou are a {character_data['race']} {character_data['class']} with a {character_data['background']} background.", "Narrator")
         show_narrative_text(f"Backstory: {character_data['backstory']}", "Character Background")
     else:
         show_error("Failed to create character. Using default character.")

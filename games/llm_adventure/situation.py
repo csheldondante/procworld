@@ -4,8 +4,10 @@ class Player:
         self.race = ""
         self.class_ = ""
         self.background = ""
-        self.stats = {"health": 100, "strength": 10, "dexterity": 10, "constitution": 10, "intelligence": 10, "wisdom": 10, "charisma": 10}
-        self.skills = []
+        self.max_health = 10
+        self.current_health = 10
+        # self.stats = {"strength": 10, "dexterity": 10, "constitution": 10, "intelligence": 10, "wisdom": 10, "charisma": 10}
+        self.skills = {"running": 4, "fighting": 2, "sneaking": 1, "persuasion": 3, "perception": 2, "magic": 0}
         self.inventory = []
         self.backstory = ""
 
@@ -14,8 +16,10 @@ class Player:
         self.race = character_data['race']
         self.class_ = character_data['class']
         self.background = character_data['background']
-        self.stats.update(character_data['stats'])
-        self.skills = character_data['skills']
+        self.max_health = character_data['max_health']
+        self.current_health = character_data['current_health']
+        # self.stats.update(character_data['stats'])
+        self.skills.update(character_data['skills'])
         self.inventory = character_data['equipment']
         self.backstory = character_data['backstory']
 
@@ -37,10 +41,11 @@ class Situation:
         self.nearby_monsters.append(Monster(name, health))
 
     def get_situation_string(self):
-        situation = f"World: {self.world}\n"
-        situation += f"Location: {self.location}\n"
+        # situation = f"World: {self.world}\n"
+        situation = f"Location: {self.location}\n"
         situation += f"Player: {self.player.name} ({self.player.race} {self.player.class_})\n"
-        situation += f"Player Stats: {self.player.stats}\n"
+        # situation += f"Player Stats: {self.player.stats}\n"
+        situation += f"Player Health: {self.player.current_health} / {self.player.max_health}\n"
         situation += f"Player Skills: {', '.join(self.player.skills)}\n"
         situation += f"Player Inventory: {', '.join(self.player.inventory)}\n"
         if self.nearby_monsters:
@@ -58,7 +63,9 @@ class Situation:
                 "race": self.player.race,
                 "class": self.player.class_,
                 "background": self.player.background,
-                "stats": self.player.stats,
+                # "stats": self.player.stats,
+                "max_health": self.player.max_health,
+                "current_health": self.player.current_health,
                 "skills": self.player.skills,
                 "inventory": self.player.inventory,
                 "backstory": self.player.backstory
@@ -79,7 +86,9 @@ class Situation:
         situation.player.race = data["player"]["race"]
         situation.player.class_ = data["player"]["class"]
         situation.player.background = data["player"]["background"]
-        situation.player.stats = data["player"]["stats"]
+        # situation.player.stats = data["player"]["stats"]
+        situation.player.max_health = data["player"]["max_health"]
+        situation.player.current_health = data["player"]["current_health"]
         situation.player.skills = data["player"]["skills"]
         situation.player.inventory = data["player"]["inventory"]
         situation.player.backstory = data["player"]["backstory"]
