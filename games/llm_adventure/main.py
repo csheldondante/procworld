@@ -73,44 +73,44 @@ def check_skill(skill, difficulty):
     
     return skill_level, check_result, total_result, success
 
+
 def get_game_response(conversation):
-    response = prompt_completion_chat(
-        model="gpt-3.5-turbo",
-        max_tokens=150,
-        messages=conversation.get_messages()
-    )
-    
-    need_match = re.search(r"NEED (\w+) (\d+)", response)
-    if need_match:
-        skill = need_match.group(1)
-        difficulty = int(need_match.group(2))
-        
-        skill_level, check_result, total_result, success = check_skill(skill, difficulty)
-        
-        # Prepare narrative text for the skill check
-        narrative_text = (
-            f"Skill Check: {skill} (Difficulty: {difficulty})\n"
-            f"Player's {skill} level: {skill_level}\n"
-            f"Dice Roll: {check_result}\n"
-            f"Total Result: {total_result}\n"
-            f"{'Success!' if success else 'Failure.'}"
-        )
-        
-        # Show narrative text for the skill check
-        show_narrative_text(narrative_text, "Skill Check!")
-        
-        # Add the check result to the conversation
-        conversation.add_turn("system", f"{skill.upper()} check result: {'Success' if success else 'Failure'}")
-        
-        # Continue with the rest of the response
-        remaining_response = prompt_completion_chat(
+    while True:
+        response = prompt_completion_chat(
             model="gpt-3.5-turbo",
             max_tokens=150,
-            messages=conversation.get_messages() + [{"role": "assistant", "content": f"The {skill} check was a {'success' if success else 'failure'}. Continue the narrative based on this result."}]
+            messages=conversation.get_messages()
         )
-        return response.split("NEED")[0] + remaining_response
-    else:
-        return response
+
+        if "NEED" not in response:
+            show_narrative_text(response, "Game")
+            return response
+
+        parts = response.split("NEED", 1)
+        show_narrative_text(parts[0], "Game")
+
+        need_match = re.search(r"(\w+) (\d+)", parts[1])
+        if need_match:
+            skill = need_match.group(1)
+            difficulty = int(need_match.group(2))
+
+            skill_level, check_result, total_result, success = check_skill(skill, difficulty)
+
+            narrative_text = (
+                f"Skill Check: {skill} (Difficulty: {difficulty})\n"
+                f"Player's {skill} level: {skill_level}\n"
+                f"Dice Roll: {check_result}\n"
+                f"Total Result: {total_result}\n"
+                f"{'Success!' if success else 'Failure.'}"
+            )
+
+            show_narrative_text(narrative_text, "Skill Check!")
+
+            conversation.add_turn("system", f"{skill.upper()} check result: {'Success' if success else 'Failure'}")
+        else:
+            show_error(f"Failed to parse skill check: NEED{parts[1]}")
+            conversation.add_turn("system", f"Failed skill check: NEED{parts[1]}")
+
 
 def main_start():
     start_display()
