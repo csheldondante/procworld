@@ -47,6 +47,8 @@ def show_situation(situation_text: str, only_new: bool = False) -> None:
     If only_new is True, only show lines that have changed since the last call.
     """
     global _previous_situation
+
+    original_situation_text = situation_text
     
     if only_new:
         new_lines = []
@@ -72,7 +74,7 @@ def show_situation(situation_text: str, only_new: bool = False) -> None:
     )
     console.print(panel)
     
-    _previous_situation = situation_text.strip()
+    _previous_situation = original_situation_text.strip()
 
 def start_display():
     console.clear()

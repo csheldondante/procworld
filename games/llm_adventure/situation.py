@@ -7,7 +7,7 @@ class Player:
         self.max_health = 10
         self.current_health = 10
         # self.stats = {"strength": 10, "dexterity": 10, "constitution": 10, "intelligence": 10, "wisdom": 10, "charisma": 10}
-        self.skills = {"running": 4, "fighting": 2, "sneaking": 1, "persuasion": 3, "perception": 2, "magic": 0}
+        self.skills = {"sneaking": 0, "persuasion": 0, "perception": 0, "magic": 0, "acrobatics": 0}
         self.inventory = []
         self.backstory = ""
 
