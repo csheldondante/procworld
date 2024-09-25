@@ -4,6 +4,7 @@ import random
 
 import os
 import sys
+
 # Get the project root directory
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
 
@@ -124,9 +125,12 @@ def main_start():
     start_display()
     welcome_message = "Welcome to the LLM Adventure Game!\nType 'quit' to exit the game."
     show_rule_text(welcome_message, "Game Rules")
+
+    situation = Situation()
     
     show_narrative_text("Creating your character...", "Game")
     character_data = create_character()
+    situation.player.update_from_character_data(character_data)
 
     show_narrative_text(f"Welcome, {character_data['name']}!\nYou are a {character_data['race']} {character_data['class']} with a {character_data['background']} background.", "Narrator")
     show_narrative_text(f"Backstory: {character_data['backstory']}", "Character Background")
@@ -134,8 +138,6 @@ def main_start():
     # show_narrative_text("Full Character: " + json.dumps(character_data, indent=2), "Character Sheet")
 
     conversation = Conversation()
-    situation = Situation()
-    situation.player.update_from_character_data(character_data)
     situation.add_monster("Goblin", 10)
     show_situation(situation.get_situation_string())
 
