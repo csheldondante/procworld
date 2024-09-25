@@ -84,7 +84,7 @@ def get_game_response(conversation):
             )
 
             turns.append(Turn("assistant", narrative_text))
-            show_narrative_text(narrative_text, "Game")
+            show_narrative_text(narrative_text, "Skill Check!")
 
             result_text = f"{skill.upper()} check result: {'Success' if success else 'Failure'}"
             turns.append(Turn("assistant", result_text))
