@@ -1,5 +1,10 @@
+import os
 from utils.llms.gpt import prompt_completion_chat
 from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text
+
+def load_prompt(filename):
+    with open(os.path.join('games', 'llm_adventure', 'prompts', filename), 'r') as file:
+        return file.read().strip()
 
 class Turn:
     def __init__(self, role, content):
@@ -8,7 +13,7 @@ class Turn:
 
 class Conversation:
     def __init__(self):
-        self.system_message = {"role": "system", "content": "You are in a text-based adventure game. Describe the player's surroundings and ask what they want to do."}
+        self.system_message = {"role": "system", "content": load_prompt('system_prompt.txt')}
         self.history = []
 
     def add_turn(self, role, content):
@@ -42,7 +47,8 @@ def main_loop(conversation):
         conversation.add_turn("user", user_input)
 
 def main_start():
-    show_rule_text("Welcome to the LLM Adventure Game!\nType 'quit' to exit the game.", "Game Rules")
+    welcome_message = load_prompt('welcome_message.txt')
+    show_rule_text(welcome_message, "Game Rules")
     
     conversation = Conversation()
     main_loop(conversation)
