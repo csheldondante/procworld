@@ -43,7 +43,7 @@ def main_loop(conversation):
         conversation.add_turn("user", user_input)
 
 def main_start():
-    welcome_message = load_prompt('welcome_message.txt')
+    welcome_message = "Welcome to the LLM Adventure Game!\nType 'quit' to exit the game."
     show_rule_text(welcome_message, "Game Rules")
     
     conversation = Conversation()

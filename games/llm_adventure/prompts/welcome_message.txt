@@ -1,2 +1,0 @@
-Welcome to the LLM Adventure Game!
-Type 'quit' to exit the game.
