@@ -1,0 +1,9 @@
+// NOT YET USED
+{
+    "acrobatics": "For acrobatics checks, consider the complexity of the maneuver and the environment. Easy tasks like simple tumbles might be DC 10, while complex flips or balancing on narrow surfaces could be DC 15-20.",
+    "strength": "Strength checks often involve lifting, pushing, or breaking objects. Set the DC based on the weight or resistance. Lifting a heavy object might be DC 15, while breaking down a sturdy door could be DC 20.",
+    "rangering": "Rangering checks can cover tracking, survival, and nature knowledge. Easy tracks in soft ground might be DC 10, while following old trails in harsh weather could be DC 20.",
+    "nature": "Nature checks test knowledge of plants, animals, and natural phenomena. Identifying common flora or fauna might be DC 10, while recalling information about rare species or complex ecosystems could be DC 15-20.",
+    "people skills": "People skills cover social interactions. Simple persuasion attempts might be DC 10, while trying to convince a hostile NPC could be DC 20.",
+    "sneaking": "Sneaking checks depend on the environment and observers. Moving quietly in a dark, empty room might be DC 10, while sneaking past alert guards in a well-lit area could be DC 20."
+}
