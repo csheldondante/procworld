@@ -122,11 +122,21 @@ def main_start():
         show_narrative_text(f"Backstory: {character_data['backstory']}", "Character Background")
     else:
         show_error("Failed to create character. Using default character.")
-        character_data = {"name": "Hero", "race": "Human", "class": "Fighter"}
+        character_data = {
+            "name": "Hero",
+            "race": "Human",
+            "class": "Fighter",
+            "background": "Soldier",
+            "skills": {"strength": 5, "dexterity": 3, "constitution": 4, "intelligence": 2, "wisdom": 2, "charisma": 1},
+            "equipment": ["Longsword", "Shield", "Leather Armor"],
+            "backstory": "A former soldier seeking adventure.",
+            "max_health": 20,
+            "current_health": 20
+        }
 
     conversation = Conversation()
     situation = Situation()
-    situation.player.name = character_data['name']
+    situation.player.update_from_character_data(character_data)
     situation.add_monster("Goblin", 50)
     show_situation(situation.get_situation_string())
 
