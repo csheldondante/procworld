@@ -20,19 +20,11 @@ def main_loop(conversation, situation):
         show_narrative_text(response, "Game")
         conversation.add_turn("assistant", response)
         
-        user_input = get_user_text("What do you want to do? ")
-        
-        if user_input.lower() == 'quit':
-            show_narrative_text("Thanks for playing!")
-            break
-        
-        conversation.add_turn("user", user_input)
-        
-        # Get new situation based on model response and user input
+        # Get new situation based on model response and last user input
         new_situation_json = prompt_completion_json(
             messages=[
-                {"role": "system", "content": "Given the current situation, the game's response, and the user's input, provide an updated situation as a JSON object."},
-                {"role": "user", "content": f"Current situation: {situation_json}\nGame response: {response}\nUser input: {user_input}"}
+                {"role": "system", "content": "Given the current situation, the game's response, and the user's last input, provide an updated situation as a JSON object."},
+                {"role": "user", "content": f"Current situation: {situation_json}\nGame response: {response}\nLast user input: {last_user_input}"}
             ]
         )
         
@@ -42,6 +34,13 @@ def main_loop(conversation, situation):
             except json.JSONDecodeError:
                 print("Error: Invalid JSON received from the model. Keeping the current situation.")
         
+        user_input = get_user_text("What do you want to do? ")
+        
+        if user_input.lower() == 'quit':
+            show_narrative_text("Thanks for playing!")
+            break
+        
+        conversation.add_turn("user", user_input)
         last_user_input = user_input
 
 def main_start():
