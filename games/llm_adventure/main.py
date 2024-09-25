@@ -32,12 +32,16 @@ def main_loop(conversation, situation):
         situation_json = situation.to_json()
         conversation.update_situation(situation_json)
         
-        response = get_game_response(conversation)
+        turns = get_game_response(conversation)
         
-        show_narrative_text(response, "Game")
-        conversation.add_turn("assistant", response)
+        for turn in turns:
+            if turn.role == "assistant":
+                show_narrative_text(turn.content, "Game")
+            elif turn.role == "system":
+                show_rule_text(turn.content)
+            conversation.add_turn(turn.role, turn.content)
         
-        situation = update_situation(situation, response, last_user_input)
+        situation = update_situation(situation, turns[-1].content, last_user_input)
         show_situation(situation.get_situation_string())
         
         user_input = get_user_text("What do you want to do? ")
