@@ -126,7 +126,7 @@ def main_start():
     conversation = Conversation()
     situation = Situation()
     situation.player.update_from_character_data(character_data)
-    situation.add_monster("Goblin", 50)
+    situation.add_monster("Goblin", 10)
     show_situation(situation.get_situation_string())
 
     main_loop(conversation, situation)
