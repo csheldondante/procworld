@@ -14,9 +14,8 @@ def show_narrative_text(text: str, speaker: str="") -> None:
     if not speaker or speaker == "":
         panel = Panel(content, border_style="cyan", expand=False)
     else:
-        speaker_style = Style(color="yellow", bold=True)
-        content = Text.assemble((f"{speaker}: ", speaker_style), content)
-        panel = Panel(content, border_style="green", expand=False)
+        panel = Panel(content, border_style="green", expand=False, 
+                      title=speaker, title_align="left")
     console.print(panel)
 
 def get_user_text(prompt: str) -> str:
