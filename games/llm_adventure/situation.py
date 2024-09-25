@@ -1,3 +1,8 @@
+from pathlib import Path
+from utils.writing.wiki_manager import WikiManager
+from utils.writing.write_articles import write_new_artilce
+
+
 class Player:
     def __init__(self, name):
         self.name = name
@@ -23,6 +28,9 @@ class Player:
         self.inventory = character_data['equipment']
         self.backstory = character_data['backstory']
 
+    def update_from_objective_data(self, objective_data):
+        self.objectives = objective_data
+
 class Monster:
     def __init__(self, name, health):
         self.name = name
@@ -33,9 +41,22 @@ import json
 class Situation:
     def __init__(self):
         self.world = "world1"
+        wiki_path = Path(f"multiverse/{self.world}/wiki/docs")
+        self.wiki = WikiManager(self.world, wiki_path)
         self.location = "Caverns of Echo"
+        try:
+            location_article = self.wiki.get_article_by_name(self.location)
+        except:
+            location_article = write_new_artilce(self.location, self.wiki)
         self.player = Player("Hero")
         self.nearby_monsters = []
+
+    def get_player_article(self):
+        try:
+            player_article = self.wiki.get_article_by_name(self.player.name)
+        except:
+            player_article = write_new_artilce(self.player.name, self.wiki)#TODO add in other data about the player to write into the article
+        return player_article
 
     def add_monster(self, name, health):
         self.nearby_monsters.append(Monster(name, health))

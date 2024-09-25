@@ -131,23 +131,25 @@ def categorize_article(article: Article):
         return []#TODO retry if we fail to decode the response
     return labels
 
+def write_new_artilce(article_title: str, wiki: WikiManager):
+    # Get article text
+    article_text = get_article_text(article_title, wiki)
+    article = Article(article_title, content_wikitext=article_text)
+    wiki_path = Path(f"multiverse/{wiki.wiki_name}/wiki/docs")
+    # Write article file
+    with open(f"{wiki_path}/{article_title}.md", 'w') as f:
+        f.write(article.content_markdown)
+    print(f"Wrote article {article_title}!")
+
 def add_articles_to_wiki(wiki_name: str = "testing", num_new_articles: int = 1):
     wiki_path = Path(f"multiverse/{wiki_name}/wiki/docs")
+    # Load all articles
+    wiki = WikiManager(wiki_name, wiki_path)
 
     for i in range(num_new_articles):
-        # Load all articles
-        wiki = WikiManager(wiki_name, wiki_path)
-
         # Select next article
         next_article = select_next_article(wiki)
         print(f"Next article: {next_article}")
 
-        # Get article text
-        article_text = get_article_text(next_article, wiki)
-        article = Article(next_article, content_wikitext=article_text)
-
-        # Write article file
-        with open(f"{wiki_path}/{next_article}.md", 'w') as f:
-            f.write(article.content_markdown)
-        print(f"Wrote article {next_article}!")
+        write_new_artilce(next_article, wiki)
 
