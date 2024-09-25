@@ -39,10 +39,29 @@ def show_error(error_message: str) -> None:
     panel = Panel(Text(error_message), border_style="red", title="Error", title_align="center", expand=False)
     console.print(panel)
 
-def show_situation(situation_text: str) -> None:
+_previous_situation = ""
+
+def show_situation(situation_text: str, only_new: bool = False) -> None:
     """
     Display the current situation details in the console.
+    If only_new is True, only show lines that have changed since the last call.
     """
+    global _previous_situation
+    
+    if only_new:
+        new_lines = []
+        previous_lines = _previous_situation.split('\n')
+        current_lines = situation_text.strip().split('\n')
+        
+        for line in current_lines:
+            if line not in previous_lines:
+                new_lines.append(line)
+        
+        if not new_lines:
+            return  # Nothing new to display
+        
+        situation_text = '\n'.join(new_lines)
+    
     panel = Panel(
         Text(situation_text.strip()),
         border_style="cyan",
@@ -52,6 +71,8 @@ def show_situation(situation_text: str) -> None:
         title_align="right"
     )
     console.print(panel)
+    
+    _previous_situation = situation_text.strip()
 
 def start_display():
     console.clear()

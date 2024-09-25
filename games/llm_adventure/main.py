@@ -98,7 +98,7 @@ def main_loop(conversation, situation):
 
         last_turn = conversation.history[-1]
         situation = update_situation(situation, last_turn.content, last_user_input)
-        show_situation(situation.get_situation_string())
+        show_situation(situation.get_situation_string(), only_new=True)
 
         user_input = get_user_text("What do you want to do? ")
 
