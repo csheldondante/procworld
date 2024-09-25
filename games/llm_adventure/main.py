@@ -49,35 +49,57 @@ def main_loop(conversation, situation):
         conversation.add_turn("user", user_input)
         last_user_input = user_input
 
+import re
+import json
+
 def get_game_response(conversation):
-    while True:
-        response = prompt_completion_chat(
+    response = prompt_completion_chat(
+        model="gpt-3.5-turbo",
+        max_tokens=150,
+        messages=conversation.get_messages()
+    )
+    
+    need_match = re.search(r"NEED (\w+) (\d+)", response)
+    if need_match:
+        skill = need_match.group(1)
+        difficulty = int(need_match.group(2))
+        
+        # Get player's skill level
+        skill_json = prompt_completion_json(
+            messages=[
+                {"role": "system", "content": f"Provide the player's skill level for {skill} as a JSON object with a 'skill_level' key. The value should be between -10 and 10."},
+                {"role": "user", "content": f"What is the player's skill level in {skill}?"}
+            ]
+        )
+        skill_data = json.loads(skill_json)
+        skill_level = skill_data.get('skill_level', 0)
+        
+        # Generate a random number for the skill check
+        check_result = random.randint(1, 20)
+        total_result = check_result + skill_level
+        
+        # Determine success or failure
+        success = total_result >= difficulty * 2
+        
+        # Show narrative text for the skill check
+        show_narrative_text(f"Skill Check: {skill} (Difficulty: {difficulty})", "Game")
+        show_narrative_text(f"Player's {skill} level: {skill_level}", "Game")
+        show_narrative_text(f"Dice Roll: {check_result}", "Check")
+        show_narrative_text(f"Total Result: {total_result}", "Game")
+        show_narrative_text(f"{'Success!' if success else 'Failure.'}", "Game")
+        
+        # Add the check result to the conversation
+        conversation.add_turn("system", f"{skill.upper()} check result: {'Success' if success else 'Failure'}")
+        
+        # Continue with the rest of the response
+        remaining_response = prompt_completion_chat(
             model="gpt-3.5-turbo",
             max_tokens=150,
-            messages=conversation.get_messages(),
-            stop=["CHECK"]
+            messages=conversation.get_messages() + [{"role": "assistant", "content": f"The {skill} check was a {'success' if success else 'failure'}. Continue the narrative based on this result."}]
         )
-        
-        if "CHECK" in response:
-            parts = response.split("CHECK", 1)
-            show_narrative_text(parts[0], "Game")
-            
-            # Generate a random number between 1 and 20 (simulating a d20 roll)
-            check_result = random.randint(1, 20)
-            show_narrative_text(f"Dice Roll: {check_result}", "Check")
-            
-            # Add the check result to the conversation
-            conversation.add_turn("system", f"CHECK result: {check_result}")
-            
-            # Continue with the rest of the response
-            remaining_response = prompt_completion_chat(
-                model="gpt-3.5-turbo",
-                max_tokens=150,
-                messages=conversation.get_messages() + [{"role": "assistant", "content": parts[1]}]
-            )
-            return parts[0] + "CHECK" + parts[1] + remaining_response
-        else:
-            return response
+        return response.split("NEED")[0] + remaining_response
+    else:
+        return response
 
 def main_start():
     start_display()
