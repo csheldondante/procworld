@@ -1,14 +1,12 @@
 import json
-
 import re
-import json
 import random
-
 import asyncio
 from utils.llms.gpt import prompt_completion_chat, prompt_completion_json
 from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text, show_error, show_situation, start_display, stop_display
 from conversation import Conversation, Turn
 from situation import Situation
+from character import create_character
 
 def update_situation(current_situation, response, last_user_input):
     situation_json = current_situation.to_json()
@@ -117,8 +115,19 @@ def main_start():
     welcome_message = "Welcome to the LLM Adventure Game!\nType 'quit' to exit the game."
     show_rule_text(welcome_message, "Game Rules")
     
+    show_narrative_text("Creating your character...", "Game")
+    character_data = create_character()
+    if character_data:
+        show_narrative_text(f"Welcome, {character_data['name']}!", "Game")
+        show_narrative_text(f"You are a {character_data['race']} {character_data['class']} with a {character_data['background']} background.", "Game")
+        show_narrative_text(f"Backstory: {character_data['backstory']}", "Character Background")
+    else:
+        show_error("Failed to create character. Using default character.")
+        character_data = {"name": "Hero", "race": "Human", "class": "Fighter"}
+
     conversation = Conversation()
     situation = Situation()
+    situation.player.name = character_data['name']
     situation.add_monster("Goblin", 50)
     show_situation(situation.get_situation_string())
 
