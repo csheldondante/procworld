@@ -37,3 +37,11 @@ def show_rule_text(text: str, rule: str = "") -> None:
         panel = Panel(content, border_style="yellow", box=DOUBLE, title="Game Rules", 
                       title_align="center", expand=False)
     console.print(panel)
+
+def show_error(error_message: str) -> None:
+    """
+    Display an error message in the GUI.
+    """
+    content = Text(error_message)
+    panel = Panel(content, border_style="red", title="Error", title_align="center", expand=False)
+    console.print(panel)
