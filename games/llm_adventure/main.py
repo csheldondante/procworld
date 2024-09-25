@@ -1,4 +1,9 @@
 import json
+
+import re
+import json
+import random
+
 import asyncio
 from utils.llms.gpt import prompt_completion_chat, prompt_completion_json
 from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text, show_error, show_situation, start_display, stop_display
@@ -23,39 +28,6 @@ def update_situation(current_situation, response, last_user_input):
         show_error("Failed to generate new situation. Keeping the current situation.")
     
     return current_situation
-
-import random
-
-def main_loop(conversation, situation):
-    last_user_input = ""
-    while True:
-        situation_json = situation.to_json()
-        conversation.update_situation(situation_json)
-        
-        turns = get_game_response(conversation)
-        
-        for turn in turns:
-            if turn.role == "assistant":
-                show_narrative_text(turn.content, "Game")
-            elif turn.role == "system":
-                show_rule_text(turn.content)
-            conversation.add_turn(turn.role, turn.content)
-        
-        situation = update_situation(situation, turns[-1].content, last_user_input)
-        show_situation(situation.get_situation_string())
-        
-        user_input = get_user_text("What do you want to do? ")
-        
-        if user_input.lower() == 'quit':
-            show_narrative_text("Thanks for playing!")
-            break
-        
-        conversation.add_turn("user", user_input)
-        last_user_input = user_input
-
-import re
-import json
-import random
 
 def check_skill(skill, difficulty):
     # Get player's skill level
@@ -109,11 +81,36 @@ def get_game_response(conversation):
                 f"{'Success!' if success else 'Failure.'}"
             )
 
-            turns.append(Turn("system", narrative_text))
-            turns.append(Turn("system", f"{skill.upper()} check result: {'Success' if success else 'Failure'}"))
+            turns.append(Turn("assistant", narrative_text))
+            turns.append(Turn("assistant", f"{skill.upper()} check result: {'Success' if success else 'Failure'}"))
         else:
             error_message = f"Failed to parse skill check: NEED{parts[1]}"
-            turns.append(Turn("system", error_message))
+            show_error(error_message)
+            # turns.append(Turn("assistant", error_message))
+
+
+def main_loop(conversation, situation):
+    last_user_input = ""
+    while True:
+        situation_json = situation.to_json()
+        conversation.update_situation(situation_json)
+
+        turns = get_game_response(conversation)
+
+        for turn in turns:
+            conversation.add_turn(turn.role, turn.content)
+
+        situation = update_situation(situation, turns[-1].content, last_user_input)
+        show_situation(situation.get_situation_string())
+
+        user_input = get_user_text("What do you want to do? ")
+
+        if user_input.lower() == 'quit':
+            show_narrative_text("Thanks for playing!")
+            break
+
+        conversation.add_turn("user", user_input)
+        last_user_input = user_input
 
 
 def main_start():
