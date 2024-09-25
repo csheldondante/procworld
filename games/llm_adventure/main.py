@@ -51,6 +51,27 @@ def main_loop(conversation, situation):
 
 import re
 import json
+import random
+
+def check_skill(skill, difficulty):
+    # Get player's skill level
+    skill_json = prompt_completion_json(
+        messages=[
+            {"role": "system", "content": f"Provide the player's skill level for {skill} as a JSON object with a 'skill_level' key. The value should be between -10 and 10."},
+            {"role": "user", "content": f"What is the player's skill level in {skill}?"}
+        ]
+    )
+    skill_data = json.loads(skill_json)
+    skill_level = skill_data.get('skill_level', 0)
+    
+    # Generate a random number for the skill check
+    check_result = random.randint(1, 20)
+    total_result = check_result + skill_level
+    
+    # Determine success or failure
+    success = total_result >= difficulty * 2
+    
+    return skill_level, check_result, total_result, success
 
 def get_game_response(conversation):
     response = prompt_completion_chat(
@@ -64,29 +85,19 @@ def get_game_response(conversation):
         skill = need_match.group(1)
         difficulty = int(need_match.group(2))
         
-        # Get player's skill level
-        skill_json = prompt_completion_json(
-            messages=[
-                {"role": "system", "content": f"Provide the player's skill level for {skill} as a JSON object with a 'skill_level' key. The value should be between -10 and 10."},
-                {"role": "user", "content": f"What is the player's skill level in {skill}?"}
-            ]
+        skill_level, check_result, total_result, success = check_skill(skill, difficulty)
+        
+        # Prepare narrative text for the skill check
+        narrative_text = (
+            f"Skill Check: {skill} (Difficulty: {difficulty})\n"
+            f"Player's {skill} level: {skill_level}\n"
+            f"Dice Roll: {check_result}\n"
+            f"Total Result: {total_result}\n"
+            f"{'Success!' if success else 'Failure.'}"
         )
-        skill_data = json.loads(skill_json)
-        skill_level = skill_data.get('skill_level', 0)
-        
-        # Generate a random number for the skill check
-        check_result = random.randint(1, 20)
-        total_result = check_result + skill_level
-        
-        # Determine success or failure
-        success = total_result >= difficulty * 2
         
         # Show narrative text for the skill check
-        show_narrative_text(f"Skill Check: {skill} (Difficulty: {difficulty})", "Game")
-        show_narrative_text(f"Player's {skill} level: {skill_level}", "Game")
-        show_narrative_text(f"Dice Roll: {check_result}", "Check")
-        show_narrative_text(f"Total Result: {total_result}", "Game")
-        show_narrative_text(f"{'Success!' if success else 'Failure.'}", "Game")
+        show_narrative_text(narrative_text, "Game")
         
         # Add the check result to the conversation
         conversation.add_turn("system", f"{skill.upper()} check result: {'Success' if success else 'Failure'}")
