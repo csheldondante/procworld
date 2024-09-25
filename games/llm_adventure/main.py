@@ -61,10 +61,12 @@ def get_game_response(conversation):
 
         if "NEED" not in response:
             turns.append(Turn("assistant", response))
+            show_narrative_text(response, "Game")
             return turns
 
         parts = response.split("NEED", 1)
         turns.append(Turn("assistant", parts[0]))
+        show_narrative_text(parts[0], "Game")
 
         need_match = re.search(r"(\w+) (\d+)", parts[1])
         if need_match:
@@ -82,7 +84,11 @@ def get_game_response(conversation):
             )
 
             turns.append(Turn("assistant", narrative_text))
-            turns.append(Turn("assistant", f"{skill.upper()} check result: {'Success' if success else 'Failure'}"))
+            show_narrative_text(narrative_text, "Game")
+
+            result_text = f"{skill.upper()} check result: {'Success' if success else 'Failure'}"
+            turns.append(Turn("assistant", result_text))
+            show_narrative_text(result_text, "Game")
         else:
             error_message = f"Failed to parse skill check: NEED{parts[1]}"
             show_error(error_message)
