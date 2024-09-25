@@ -1,10 +1,6 @@
-import os
 from utils.llms.gpt import prompt_completion_chat
 from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text
-
-def load_prompt(filename):
-    with open(os.path.join('games', 'llm_adventure', 'prompts', filename), 'r') as file:
-        return file.read().strip()
+from utils.text_utils.prompting import load_prompt
 
 class Turn:
     def __init__(self, role, content):
