@@ -1,28 +1,35 @@
 from utils.llms.gpt import prompt_completion_chat
 from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text
 
+class Turn:
+    def __init__(self, role, content):
+        self.role = role
+        self.content = content
+
 class Conversation:
     def __init__(self):
-        self.context = "You are in a text-based adventure game. Describe the player's surroundings and ask what they want to do."
+        self.system_message = {"role": "system", "content": "You are in a text-based adventure game. Describe the player's surroundings and ask what they want to do."}
         self.history = []
 
-    def add_message(self, role, content):
-        self.history.append({"role": role, "content": content})
-        self.context += f"\n{role.capitalize()}: {content}"
+    def add_turn(self, role, content):
+        self.history.append(Turn(role, content))
 
-    def get_context(self):
-        return self.context
+    def get_messages(self):
+        messages = [self.system_message]
+        for turn in self.history:
+            messages.append({"role": turn.role, "content": turn.content})
+        return messages
 
 def main_loop(conversation):
     while True:
         response = prompt_completion_chat(
-            question=conversation.get_context(),
             model="gpt-3.5-turbo",
-            max_tokens=150
+            max_tokens=150,
+            messages=conversation.get_messages()
         )
         
         show_narrative_text(response, "Game")
-        conversation.add_message("Game", response)
+        conversation.add_turn("assistant", response)
         
         user_input = get_user_text("What do you want to do? ")
         
@@ -30,7 +37,7 @@ def main_loop(conversation):
             show_narrative_text("Thanks for playing!")
             break
         
-        conversation.add_message("Player", user_input)
+        conversation.add_turn("user", user_input)
 
 def main_start():
     show_rule_text("Welcome to the LLM Adventure Game!", "Game Rules")
