@@ -6,15 +6,15 @@ from rich.style import Style
 
 console = Console()
 
-def show_narrative_text(text: str, speaker: str="") -> None:
+def show_narrative_text(text: str, speaker: str="", color: str = "green") -> None:
     """
     Display a block of narrative text in the GUI.
     """
     content = Text(text)
     if not speaker or speaker == "":
-        panel = Panel(content, border_style="cyan", expand=False)
+        panel = Panel(content, border_style=color, expand=False)
     else:
-        panel = Panel(content, border_style="green", expand=False, 
+        panel = Panel(content, border_style=color, expand=False,
                       title=speaker, title_align="left")
     console.print(panel)
 
@@ -33,6 +33,6 @@ def show_rule_text(text: str, rule: str = "") -> None:
         panel = Panel(content, border_style="blue", expand=False)
     else:
         rule_style = Style(color="red", bold=True)
-        content = Text.assemble((f"{rule}\n", rule_style), content)
+        # content = Text.assemble((f"{rule}\n", rule_style), content)
         panel = Panel(content, border_style="blue", title="Game Rules", expand=False)
     console.print(panel)
