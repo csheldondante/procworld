@@ -10,11 +10,19 @@ from rich.live import Live
 console = Console()
 left_column = []
 right_column = []
-live_display = Live(Columns([]), console=console, refresh_per_second=4)
+live_display = Live(Group(), console=console, refresh_per_second=4, screen=True)
 
 def update_display():
     global live_display
-    live_display.update(Columns([Panel(Group(*left_column), expand=True), Panel(Group(*right_column), expand=True)]))
+    live_display.update(
+        Columns(
+            [
+                Panel(Group(*left_column), expand=True, width=console.width // 2),
+                Panel(Group(*right_column), expand=True, width=console.width // 2)
+            ],
+            expand=True
+        )
+    )
 
 def show_narrative_text(text: str, speaker: str="", color: str = "green") -> None:
     """
