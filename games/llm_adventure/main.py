@@ -6,12 +6,11 @@ from situation import Situation
 def main_loop(conversation, situation):
     while True:
         situation_string = situation.get_situation_string()
+        conversation.update_situation(situation_string)
         response = prompt_completion_chat(
             model="gpt-3.5-turbo",
             max_tokens=150,
-            messages=conversation.get_messages(),
-            system_description=conversation.system_message["content"],
-            situation=situation_string
+            messages=conversation.get_messages()
         )
         
         show_narrative_text(response, "Game")
