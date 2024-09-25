@@ -1,6 +1,6 @@
 import json
 from utils.llms.gpt import prompt_completion_chat, prompt_completion_json
-from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text, show_error, show_situation
+from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text, show_error, show_situation, start_display, stop_display
 from conversation import Conversation
 from situation import Situation
 
@@ -51,6 +51,7 @@ def main_loop(conversation, situation):
         last_user_input = user_input
 
 def main_start():
+    start_display()
     welcome_message = "Welcome to the LLM Adventure Game!\nType 'quit' to exit the game."
     show_rule_text(welcome_message, "Game Rules")
     
@@ -60,6 +61,7 @@ def main_start():
     show_situation(situation.get_situation_string())
 
     main_loop(conversation, situation)
+    stop_display()
 
 if __name__ == "__main__":
     main_start()

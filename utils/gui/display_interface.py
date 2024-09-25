@@ -4,8 +4,17 @@ from rich.console import Console
 from rich.text import Text
 from rich.style import Style
 from rich.box import DOUBLE, ROUNDED
+from rich.columns import Columns
+from rich.live import Live
 
 console = Console()
+left_column = []
+right_column = []
+live_display = Live(Columns([]), console=console, refresh_per_second=4)
+
+def update_display():
+    global live_display
+    live_display.update(Columns([Panel(Group(*left_column), expand=True), Panel(Group(*right_column), expand=True)]))
 
 def show_narrative_text(text: str, speaker: str="", color: str = "green") -> None:
     """
@@ -17,13 +26,17 @@ def show_narrative_text(text: str, speaker: str="", color: str = "green") -> Non
     else:
         panel = Panel(content, border_style=color, expand=False,
                       title=speaker, title_align="left")
-    console.print(panel)
+    left_column.append(panel)
+    update_display()
 
 def get_user_text(prompt: str) -> str:
     """
     Get text input from the user.
     """
-    return console.input(f"[bold magenta]> {prompt}[/bold magenta]")
+    live_display.stop()
+    user_input = console.input(f"[bold magenta]> {prompt}[/bold magenta]")
+    live_display.start()
+    return user_input
 
 def show_rule_text(text: str, rule: str = "") -> None:
     """
@@ -33,10 +46,10 @@ def show_rule_text(text: str, rule: str = "") -> None:
     if not rule or rule == "":
         panel = Panel(content, border_style="yellow", box=DOUBLE, expand=False)
     else:
-        rule_style = Style(color="yellow", bold=True)
         panel = Panel(content, border_style="yellow", box=DOUBLE, title="Game Rules", 
                       title_align="center", expand=False)
-    console.print(panel)
+    left_column.append(panel)
+    update_display()
 
 def show_error(error_message: str) -> None:
     """
@@ -44,7 +57,8 @@ def show_error(error_message: str) -> None:
     """
     content = Text(error_message)
     panel = Panel(content, border_style="red", title="Error", title_align="center", expand=False)
-    console.print(panel)
+    left_column.append(panel)
+    update_display()
 
 def show_situation(situation_text: str) -> None:
     """
@@ -59,4 +73,14 @@ def show_situation(situation_text: str) -> None:
         title="Current Situation",
         title_align="right"
     )
-    console.print(panel)
+    right_column.clear()  # Clear previous situation
+    right_column.append(panel)
+    update_display()
+
+def start_display():
+    global live_display
+    live_display.start()
+
+def stop_display():
+    global live_display
+    live_display.stop()
