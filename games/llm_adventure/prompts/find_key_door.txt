@@ -1,0 +1,38 @@
+We are analyzing a text based adventure and breaking the story down into goals, obstacles and keys.  In this context:
+
+*goal - anything that a character is intrinsically motivated to do.  (e.g. Escaping a dangerous situation, helping an injured friend, obtaining a powerful artifact, breaking a curse etc.)
+*obstacle - anything that makes a goal harder to achieve. (e.g. An injured leg that slows down your escape, a protective dog preventing you from reaching your friend, a riddle that must be solved to break the seal and reach the artifact, a corupted spirit that must be defeated in combat to break the curse etc.)
+*key - anything that makes an obstacle easier to overcome.  (e.g. An iron pipe you can use as a crutch, knowing the dogs name so you can calmly talk it down, an answer to part of the riddle provided by a mysterious stranger, a magic bow that strikes true against corruption etc.)
+
+Given the following description of the character and scene: 
+
+Character:
+{character_description}
+
+Scene:
+{scene_description}
+
+Please create a json formatted object containing goals and their associated obstacles and keys.
+
+Example format:
+
+{
+    "survive" : {
+        "obstacle": ["injured leg", "getting dark", "rough terrain", "vicious wolves"],
+        "keys": {
+            "injured leg" : ["fabric to tie splint", "iron pipe to use as a crutch"],
+            "getting dark" : ["emergency flares", "flashlight", "gasoline and iron pipe to make improvised torch"],
+            "rough terrain" : ["iron pipe to use as a crutch", "makeshift sled", "map of the area"],
+            "vicious wolves" : ["iron pipe to use as a weapon", "improvised torch to use as a weapon", "emergency flares to use as a weapon"]
+        }
+    },
+    "find help" : {
+        "obstacle": ["injured leg", "getting dark", "rough terrain", "broken radio"],
+        "keys": {
+            "injured leg" : ["fabric to tie splint", "iron pipe to use as a crutch"],
+            "getting dark" : ["emergency flares to attract attention", "flashlight to attract attention", "gasonline and iron pipe to make improvised torch to attract attention"],
+            "rough terrain" : ["iron pipe to use as a crutch", "makeshift sled", "map of the area"],
+            "broken radio" : ["emergency flares to attract attention", "flashlight to attract attention", "flashlight batteries to repair radio"]
+        }
+    }
+}

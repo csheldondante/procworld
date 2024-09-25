@@ -1,12 +1,22 @@
 import json
 import re
 import random
-import asyncio
+
+import os
+import sys
+# Get the project root directory
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+
+# Add the project root to the sys.path
+sys.path.append(project_root)
+
 from utils.llms.gpt import prompt_completion_chat, prompt_completion_json
 from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text, show_error, show_situation, start_display, stop_display
 from conversation import Conversation, Turn
 from situation import Situation
 from character import create_character
+
+
 
 def update_situation(current_situation, response, last_user_input):
     situation_json = current_situation.to_json()
