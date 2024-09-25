@@ -48,7 +48,7 @@ def prompt_completion(question, engine="davinci-instruct-beta", max_tokens=64, t
             answer.append(response.choices[i].text.strip())
     # print(f"\tPROMPT: {question}\n\tANSWER: {answer}\n")
     duration = time.perf_counter() - start_time
-    print(f"Duration: {duration:.2f} seconds: {answer}")
+    # print(f"Duration: {duration:.2f} seconds: {answer}")
     return answer
 
 
@@ -76,7 +76,7 @@ def prompt_completion_chat(question="", model="gpt-3.5-turbo", n=1, temperature=
     # print(f"\tPROMPT: {question}\n\tANSWER: {answer}\n")
     duration = time.perf_counter() - start_time
     short_answer = answers[0][:20].replace('\n', ' ')
-    print(f"Duration: {duration:.2f} seconds: {short_answer}...")
+    # print(f"Duration: {duration:.2f} seconds: {short_answer}...")
     if n == 1:
         return answers[0]
     return

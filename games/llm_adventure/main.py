@@ -42,8 +42,7 @@ def main_loop(conversation):
         conversation.add_turn("user", user_input)
 
 def main_start():
-    show_rule_text("Welcome to the LLM Adventure Game!", "Game Rules")
-    show_rule_text("Type 'quit' to exit the game.", "Game Rules")
+    show_rule_text("Welcome to the LLM Adventure Game!\nType 'quit' to exit the game.", "Game Rules")
     
     conversation = Conversation()
     main_loop(conversation)
