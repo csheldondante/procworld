@@ -1,4 +1,5 @@
 import json
+import asyncio
 from utils.llms.gpt import prompt_completion_chat, prompt_completion_json
 from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text, show_error, show_situation, start_display, stop_display
 from conversation import Conversation
@@ -23,7 +24,7 @@ def update_situation(current_situation, response, last_user_input):
     
     return current_situation
 
-async def main_loop(conversation, situation):
+def main_loop(conversation, situation):
     last_user_input = ""
     while True:
         situation_json = situation.to_json()
@@ -41,7 +42,7 @@ async def main_loop(conversation, situation):
         situation = update_situation(situation, response, last_user_input)
         show_situation(situation.get_situation_string())
         
-        user_input = await get_user_text("What do you want to do? ")
+        user_input = asyncio.run(get_user_text("What do you want to do? "))
         
         if user_input.lower() == 'quit':
             show_narrative_text("Thanks for playing!")

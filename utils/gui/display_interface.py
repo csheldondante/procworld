@@ -2,6 +2,7 @@ from textual.app import App, ComposeResult
 from textual.containers import ScrollableContainer, Container
 from textual.widgets import Header, Footer, Static, Input, Button
 from textual.reactive import reactive
+import asyncio
 
 class GameDisplay(App):
     CSS = """
@@ -82,8 +83,8 @@ class GameDisplay(App):
 def show_narrative_text(text: str, speaker: str = "") -> None:
     app.show_narrative_text(text, speaker)
 
-def get_user_text(prompt: str) -> str:
-    return app.run_async(lambda: app.query_one("#user-input").value)
+async def get_user_text(prompt: str) -> str:
+    return await app.run_async(lambda: app.query_one("#user-input").value)
 
 def show_rule_text(text: str, rule: str = "") -> None:
     app.show_rule_text(text, rule)
