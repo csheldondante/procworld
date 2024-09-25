@@ -54,9 +54,9 @@ def show_situation(situation_text: str) -> None:
     panel = Panel(
         content,
         border_style="cyan",
-        box=ROUNDED,
+        box=DOUBLE,
         expand=False,
         title="Current Situation",
         title_align="right"
     )
-    console.print(Panel(panel, expand=False, border_style="cyan"))
+    console.print(panel)
