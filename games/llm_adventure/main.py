@@ -17,7 +17,8 @@ class Conversation:
     def get_messages(self):
         messages = [self.system_message]
         for turn in self.history:
-            messages.append({"role": turn.role, "content": turn.content})
+            role = turn.role if turn.role in ["system", "user", "assistant"] else "user"
+            messages.append({"role": role, "content": turn.content})
         return messages
 
 def main_loop(conversation):
@@ -25,7 +26,8 @@ def main_loop(conversation):
         response = prompt_completion_chat(
             model="gpt-3.5-turbo",
             max_tokens=150,
-            messages=conversation.get_messages()
+            messages=conversation.get_messages(),
+            system_description=conversation.system_message["content"]
         )
         
         show_narrative_text(response, "Game")
