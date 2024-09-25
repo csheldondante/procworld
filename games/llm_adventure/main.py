@@ -24,17 +24,15 @@ def update_situation(current_situation, response, last_user_input):
     
     return current_situation
 
+import random
+
 def main_loop(conversation, situation):
     last_user_input = ""
     while True:
         situation_json = situation.to_json()
         conversation.update_situation(situation_json)
         
-        response = prompt_completion_chat(
-            model="gpt-3.5-turbo",
-            max_tokens=150,
-            messages=conversation.get_messages()
-        )
+        response = get_game_response(conversation)
         
         show_narrative_text(response, "Game")
         conversation.add_turn("assistant", response)
@@ -48,9 +46,37 @@ def main_loop(conversation, situation):
             show_narrative_text("Thanks for playing!")
             break
         
-        # show_narrative_text(user_input, "You")
         conversation.add_turn("user", user_input)
         last_user_input = user_input
+
+def get_game_response(conversation):
+    while True:
+        response = prompt_completion_chat(
+            model="gpt-3.5-turbo",
+            max_tokens=150,
+            messages=conversation.get_messages()
+        )
+        
+        if "CHECK" in response:
+            parts = response.split("CHECK", 1)
+            show_narrative_text(parts[0], "Game")
+            
+            # Generate a random number between 1 and 20 (simulating a d20 roll)
+            check_result = random.randint(1, 20)
+            show_narrative_text(f"Dice Roll: {check_result}", "Check")
+            
+            # Add the check result to the conversation
+            conversation.add_turn("system", f"CHECK result: {check_result}")
+            
+            # Continue with the rest of the response
+            remaining_response = prompt_completion_chat(
+                model="gpt-3.5-turbo",
+                max_tokens=150,
+                messages=conversation.get_messages() + [{"role": "assistant", "content": parts[1]}]
+            )
+            return parts[0] + "CHECK" + parts[1] + remaining_response
+        else:
+            return response
 
 def main_start():
     start_display()
