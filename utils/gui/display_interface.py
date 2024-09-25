@@ -1,114 +1,60 @@
 from rich import print
 from rich.panel import Panel
-from rich.console import Console, Group
+from rich.console import Console
 from rich.text import Text
-from rich.style import Style
-from rich.box import DOUBLE, ROUNDED
-from rich.columns import Columns
-from rich.live import Live
+from rich.box import DOUBLE
 
 console = Console()
-left_column = []
-right_column = []
-live_display = Live(Group(), console=console, refresh_per_second=4, screen=True)
-
-def update_display():
-    global live_display
-    live_display.update(
-        Columns(
-            [
-                Panel(Group(*left_column), expand=True, width=console.width // 2),
-                Panel(Group(*right_column), expand=True, width=console.width // 2)
-            ],
-            expand=True
-        )
-    )
 
 def show_narrative_text(text: str, speaker: str="", color: str = "green") -> None:
     """
-    Display a block of narrative text in the GUI.
+    Display a block of narrative text in the console.
     """
     content = Text(text)
-    if not speaker or speaker == "":
-        panel = Panel(content, border_style=color, expand=False)
+    if speaker:
+        panel = Panel(content, border_style=color, expand=False, title=speaker, title_align="left")
     else:
-        panel = Panel(content, border_style=color, expand=False,
-                      title=speaker, title_align="left")
-    left_column.append(panel)
-    update_display()
+        panel = Panel(content, border_style=color, expand=False)
+    console.print(panel)
 
 def get_user_text(prompt: str) -> str:
     """
     Get text input from the user.
     """
-    prompt_panel = Panel(f"> {prompt}", border_style="magenta", expand=False)
-    left_column.append(prompt_panel)
-    update_display()
-    
-    user_input = ""
-    with console.input(hide_cursor=False) as input_generator:
-        while True:
-            char = input_generator.send(None)
-            if char == '\r':  # Enter key
-                break
-            elif char == '\x7f':  # Backspace
-                if user_input:
-                    user_input = user_input[:-1]
-            else:
-                user_input += char
-            
-            # Update the prompt panel with the current input
-            prompt_panel.renderable = f"> {prompt}{user_input}"
-            update_display()
-    
-    # Remove the prompt panel after input is complete
-    left_column.pop()
-    update_display()
-    return user_input
+    return console.input(f"> {prompt}")
 
 def show_rule_text(text: str, rule: str = "") -> None:
     """
-    Display a block of text with a rule name in the GUI.
+    Display a block of text with a rule name in the console.
     """
     content = Text(text)
-    if not rule or rule == "":
-        panel = Panel(content, border_style="yellow", box=DOUBLE, expand=False)
-    else:
-        panel = Panel(content, border_style="yellow", box=DOUBLE, title="Game Rules", 
-                      title_align="center", expand=False)
-    left_column.append(panel)
-    update_display()
+    title = "Game Rules" if rule else None
+    panel = Panel(content, border_style="yellow", box=DOUBLE, expand=False, title=title, title_align="center")
+    console.print(panel)
 
 def show_error(error_message: str) -> None:
     """
-    Display an error message in the GUI.
+    Display an error message in the console.
     """
-    content = Text(error_message)
-    panel = Panel(content, border_style="red", title="Error", title_align="center", expand=False)
-    left_column.append(panel)
-    update_display()
+    panel = Panel(Text(error_message), border_style="red", title="Error", title_align="center", expand=False)
+    console.print(panel)
 
 def show_situation(situation_text: str) -> None:
     """
-    Display the current situation details in the GUI.
+    Display the current situation details in the console.
     """
-    content = Text(situation_text)
     panel = Panel(
-        content,
+        Text(situation_text),
         border_style="cyan",
         box=DOUBLE,
         expand=False,
         title="Current Situation",
         title_align="right"
     )
-    right_column.clear()  # Clear previous situation
-    right_column.append(panel)
-    update_display()
+    console.print(panel)
 
 def start_display():
-    global live_display
-    live_display.start()
+    console.clear()
 
 def stop_display():
-    global live_display
-    live_display.stop()
+    pass
