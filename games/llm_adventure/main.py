@@ -2,6 +2,11 @@ from utils.llms.gpt import prompt_completion_chat
 from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text
 from utils.text_utils.prompting import load_prompt
 
+class Situation:
+    def __init__(self):
+        self.world = "world1"
+        self.location = "Caverns of Echo"
+
 class Turn:
     def __init__(self, role, content):
         self.role = role
