@@ -6,17 +6,19 @@ Example JSON format:
     "race": "Half-Elf",
     "class": "Ranger",
     "background": "Outlander",
-    "stats": {
-        "strength": 12,
-        "dexterity": 16,
-        "constitution": 14,
-        "intelligence": 10,
-        "wisdom": 15,
-        "charisma": 11
+    "skills": {
+        "acrobatics": 4,
+        "strength": -2,
+        "rangering": 6,
+        "nature": 5,
+        "people skills": -3,
+        "sneaking": 0
     },
-    "skills": ["Survival", "Nature", "Perception", "Stealth", "Animal Handling"],
     "equipment": ["Longbow", "Shortsword", "Leather Armor", "Explorer's Pack", "Animal Companion (Hawk)"],
     "backstory": "Lyra grew up on the fringes of civilization, learning to survive in the wild from her elven mother. Her human father's wanderlust inspired her to become a ranger, exploring the untamed lands and protecting nature's balance."
 }
 
-Ensure that the stats are balanced and appropriate for a starting character (values between 8 and 18). The skills, equipment, and backstory should reflect the character's class and background. Make the character unique and interesting, with traits and a backstory that would be engaging in a text-based adventure game.
+Ensure that the stats are balanced and appropriate for a starting character (values between 8 and 18). The skills, equipment, and backstory should reflect the character's class and background. Make the character unique and interesting, with traits and a backstory that would be engaging in a text-based adventure game. But at the same time, the character is quite weak and at the beginning of their adventuring career.
+
+Skills range from 0 to 10, with 0 being no skill and 10 being expert level. Negative values indicate a lack of skill or a weakness in that area.
+
