@@ -1,30 +1,43 @@
 from utils.llms.gpt import prompt_completion_chat
+from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text
 
-def main_loop():
-    print("Welcome to the LLM Adventure Game!")
-    print("Type 'quit' to exit the game.")
-    
-    context = "You are in a text-based adventure game. Describe the player's surroundings and ask what they want to do."
-    
+class Conversation:
+    def __init__(self):
+        self.context = "You are in a text-based adventure game. Describe the player's surroundings and ask what they want to do."
+        self.history = []
+
+    def add_message(self, role, content):
+        self.history.append({"role": role, "content": content})
+        self.context += f"\n{role.capitalize()}: {content}"
+
+    def get_context(self):
+        return self.context
+
+def main_loop(conversation):
     while True:
         response = prompt_completion_chat(
-            question=context,
+            question=conversation.get_context(),
             model="gpt-3.5-turbo",
             max_tokens=150
         )
         
-        print("\n" + response + "\n")
+        show_narrative_text(response, "Game")
+        conversation.add_message("Game", response)
         
-        user_input = input("What do you want to do? ")
+        user_input = get_user_text("What do you want to do? ")
         
         if user_input.lower() == 'quit':
-            print("Thanks for playing!")
+            show_narrative_text("Thanks for playing!")
             break
         
-        context = f"{context}\nPlayer: {user_input}\nGame:"
+        conversation.add_message("Player", user_input)
 
 def main_start():
-    main_loop()
+    show_rule_text("Welcome to the LLM Adventure Game!", "Game Rules")
+    show_rule_text("Type 'quit' to exit the game.", "Game Rules")
+    
+    conversation = Conversation()
+    main_loop(conversation)
 
 if __name__ == "__main__":
     main_start()
