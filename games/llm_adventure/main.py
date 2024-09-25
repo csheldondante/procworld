@@ -47,6 +47,7 @@ def main_loop(conversation, situation):
             show_narrative_text("Thanks for playing!")
             break
         
+        show_narrative_text(user_input, "You")
         conversation.add_turn("user", user_input)
         last_user_input = user_input
 

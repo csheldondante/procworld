@@ -41,9 +41,29 @@ def get_user_text(prompt: str) -> str:
     """
     Get text input from the user.
     """
-    live_display.stop()
-    user_input = console.input(f"[bold magenta]> {prompt}[/bold magenta]")
-    live_display.start()
+    prompt_panel = Panel(f"> {prompt}", border_style="magenta", expand=False)
+    left_column.append(prompt_panel)
+    update_display()
+    
+    user_input = ""
+    with console.input(hide_cursor=False) as input_generator:
+        while True:
+            char = input_generator.send(None)
+            if char == '\r':  # Enter key
+                break
+            elif char == '\x7f':  # Backspace
+                if user_input:
+                    user_input = user_input[:-1]
+            else:
+                user_input += char
+            
+            # Update the prompt panel with the current input
+            prompt_panel.renderable = f"> {prompt}{user_input}"
+            update_display()
+    
+    # Remove the prompt panel after input is complete
+    left_column.pop()
+    update_display()
     return user_input
 
 def show_rule_text(text: str, rule: str = "") -> None:
