@@ -97,7 +97,7 @@ def get_game_response(conversation):
         )
         
         # Show narrative text for the skill check
-        show_narrative_text(narrative_text, "Game")
+        show_narrative_text(narrative_text, "Skill Check!")
         
         # Add the check result to the conversation
         conversation.add_turn("system", f"{skill.upper()} check result: {'Success' if success else 'Failure'}")
