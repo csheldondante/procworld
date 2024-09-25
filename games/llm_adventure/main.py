@@ -2,7 +2,7 @@ import json
 import asyncio
 from utils.llms.gpt import prompt_completion_chat, prompt_completion_json
 from utils.gui.display_interface import show_narrative_text, get_user_text, show_rule_text, show_error, show_situation, start_display, stop_display
-from conversation import Conversation
+from conversation import Conversation, Turn
 from situation import Situation
 
 def update_situation(current_situation, response, last_user_input):
