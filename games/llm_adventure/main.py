@@ -6,6 +6,7 @@ from situation import Situation
 def main_loop(conversation, situation):
     while True:
         situation_string = situation.get_situation_string()
+        show_narrative_text(situation_string, "Situation")
         conversation.update_situation(situation_string)
         response = prompt_completion_chat(
             model="gpt-3.5-turbo",

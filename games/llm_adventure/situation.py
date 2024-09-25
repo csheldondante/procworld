@@ -29,4 +29,4 @@ class Situation:
             situation += "Nearby Monsters:\n"
             for monster in self.nearby_monsters:
                 situation += f"- {monster.name} (Health: {monster.health})\n"
-        return situation
+        return situation.strip()
