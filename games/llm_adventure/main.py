@@ -8,7 +8,6 @@ def main_loop(conversation, situation):
     last_user_input = ""
     while True:
         situation_json = situation.to_json()
-        show_narrative_text(situation.get_situation_string(), "Situation")
         conversation.update_situation(situation_json)
         
         response = prompt_completion_chat(
@@ -33,6 +32,8 @@ def main_loop(conversation, situation):
                 situation = Situation.from_json(new_situation_json)
             except json.JSONDecodeError:
                 print("Error: Invalid JSON received from the model. Keeping the current situation.")
+
+        show_narrative_text(situation.get_situation_string(), "New Situation")
         
         user_input = get_user_text("What do you want to do? ")
         
@@ -50,6 +51,8 @@ def main_start():
     conversation = Conversation()
     situation = Situation()
     situation.add_monster("Goblin", 50)
+    show_narrative_text(situation.get_situation_string(), "Starting Situation")
+
     main_loop(conversation, situation)
 
 if __name__ == "__main__":
