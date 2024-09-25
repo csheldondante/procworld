@@ -103,4 +103,4 @@ def start_display():
 def stop_display():
     app.exit()
 
-app = None
+app = GameDisplay()
