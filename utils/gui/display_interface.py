@@ -3,6 +3,7 @@ from rich.panel import Panel
 from rich.console import Console
 from rich.text import Text
 from rich.style import Style
+from rich.box import DOUBLE
 
 console = Console()
 
@@ -30,9 +31,9 @@ def show_rule_text(text: str, rule: str = "") -> None:
     """
     content = Text(text)
     if not rule or rule == "":
-        panel = Panel(content, border_style="blue", expand=False)
+        panel = Panel(content, border_style="yellow", box=DOUBLE, expand=False)
     else:
-        rule_style = Style(color="red", bold=True)
-        # content = Text.assemble((f"{rule}\n", rule_style), content)
-        panel = Panel(content, border_style="blue", title="Game Rules", expand=False)
+        rule_style = Style(color="yellow", bold=True)
+        panel = Panel(content, border_style="yellow", box=DOUBLE, title="Game Rules", 
+                      title_align="center", expand=False)
     console.print(panel)
