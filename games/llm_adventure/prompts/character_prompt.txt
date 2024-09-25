@@ -14,6 +14,8 @@ Example JSON format:
         "people skills": -3,
         "sneaking": 0
     },
+    max_health: 10,
+    current_health: 10,
     "equipment": ["Longbow", "Shortsword", "Leather Armor", "Explorer's Pack", "Animal Companion (Hawk)"],
     "backstory": "Lyra grew up on the fringes of civilization, learning to survive in the wild from her elven mother. Her human father's wanderlust inspired her to become a ranger, exploring the untamed lands and protecting nature's balance."
 }

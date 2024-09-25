@@ -117,22 +117,11 @@ def main_start():
     
     show_narrative_text("Creating your character...", "Game")
     character_data = create_character()
-    if character_data:
-        show_narrative_text(f"Welcome, {character_data['name']}!\nYou are a {character_data['race']} {character_data['class']} with a {character_data['background']} background.", "Narrator")
-        show_narrative_text(f"Backstory: {character_data['backstory']}", "Character Background")
-    else:
-        show_error("Failed to create character. Using default character.")
-        character_data = {
-            "name": "Hero",
-            "race": "Human",
-            "class": "Fighter",
-            "background": "Soldier",
-            "skills": {"strength": 5, "dexterity": 3, "constitution": 4, "intelligence": 2, "wisdom": 2, "charisma": 1},
-            "equipment": ["Longsword", "Shield", "Leather Armor"],
-            "backstory": "A former soldier seeking adventure.",
-            "max_health": 20,
-            "current_health": 20
-        }
+
+    show_narrative_text(f"Welcome, {character_data['name']}!\nYou are a {character_data['race']} {character_data['class']} with a {character_data['background']} background.", "Narrator")
+    show_narrative_text(f"Backstory: {character_data['backstory']}", "Character Background")
+
+    # show_narrative_text("Full Character: " + json.dumps(character_data, indent=2), "Character Sheet")
 
     conversation = Conversation()
     situation = Situation()

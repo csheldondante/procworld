@@ -1,5 +1,7 @@
 import json
 import random
+
+from utils.gui.display_interface import show_narrative_text
 from utils.llms.gpt import prompt_completion_json
 from utils.text_utils.prompting import load_prompt
 
@@ -27,7 +29,7 @@ def create_character():
     ]
     
     character_json = prompt_completion_json(messages)
-    
+
     if character_json:
         try:
             character_data = json.loads(character_json)

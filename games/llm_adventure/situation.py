@@ -46,8 +46,9 @@ class Situation:
         situation += f"Player: {self.player.name} ({self.player.race} {self.player.class_})\n"
         # situation += f"Player Stats: {self.player.stats}\n"
         situation += f"Player Health: {self.player.current_health} / {self.player.max_health}\n"
-        situation += f"Player Skills: {', '.join(self.player.skills)}\n"
+        situation += f"Player Skills: {self.player.skills}\n"
         situation += f"Player Inventory: {', '.join(self.player.inventory)}\n"
+        # situation += json.dumps(self.player.skills, indent=2)
         if self.nearby_monsters:
             situation += "Nearby Monsters:\n"
             for monster in self.nearby_monsters:
