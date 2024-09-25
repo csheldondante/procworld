@@ -23,7 +23,7 @@ def update_situation(current_situation, response, last_user_input):
     
     return current_situation
 
-def main_loop(conversation, situation):
+async def main_loop(conversation, situation):
     last_user_input = ""
     while True:
         situation_json = situation.to_json()
@@ -41,7 +41,7 @@ def main_loop(conversation, situation):
         situation = update_situation(situation, response, last_user_input)
         show_situation(situation.get_situation_string())
         
-        user_input = get_user_text("What do you want to do? ")
+        user_input = await get_user_text("What do you want to do? ")
         
         if user_input.lower() == 'quit':
             show_narrative_text("Thanks for playing!")
@@ -62,7 +62,6 @@ def main_start():
     show_situation(situation.get_situation_string())
 
     main_loop(conversation, situation)
-    stop_display()
 
 if __name__ == "__main__":
     main_start()
