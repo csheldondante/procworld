@@ -3,6 +3,7 @@ import random
 import json
 import os
 from typing import List, Dict, Optional, Any
+from rich.text import Text
 
 class Door:
     def __init__(self, room1: 'Room', room2: 'Room', direction: str, lock: Optional[Dict] = None):
@@ -17,10 +18,14 @@ class Door:
     def unlock(self) -> None:
         self.lock = None
 
-    def get_lock_description(self) -> str:
+    def get_lock_description(self) -> Text:
         if self.lock:
-            return f"The door is locked with a {self.lock['name']}. {self.lock['description']}"
-        return "The door is unlocked."
+            description = Text()
+            description.append("The door is locked with a ")
+            description.append(self.lock['name'], style=f"bold {self.lock['color']}")
+            description.append(f". {self.lock['description']}")
+            return description
+        return Text("The door is unlocked.")
 
 class Room:
     def __init__(self, name: str, room_type: str, size: int, adjectives: List[str]):
@@ -40,17 +45,19 @@ class Room:
     def remove_item(self, item: Dict) -> None:
         self.items.remove(item)
 
-    def get_size_description(self) -> str:
+    def get_size_description(self) -> Text:
+        size_description = Text()
         if self.size <= 2:
-            return "tiny"
+            size_description.append("tiny")
         elif self.size <= 4:
-            return "small"
+            size_description.append("small")
         elif self.size <= 6:
-            return "medium-sized"
+            size_description.append("medium-sized")
         elif self.size <= 8:
-            return "large"
+            size_description.append("large")
         else:
-            return "enormous"
+            size_description.append("enormous")
+        return size_description
 
 class Graph:
     def __init__(self):
