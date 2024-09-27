@@ -6,6 +6,7 @@ from games.walk_and_key.lock import Lock
 from games.walk_and_key.room_and_door import Room, Door
 from games.walk_and_key.utils.json import load_json
 from games.walk_and_key.graph import Graph
+from games.walk_and_key.item import Item
 
 
 def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_file: str) -> None:
@@ -127,18 +128,15 @@ def add_alternative_paths(graph: Graph, locks: List[Lock], keys: List[Item]) -> 
 
 
 def add_misc_items(graph: Graph) -> None:
-    misc_items = [
-        Item("Mysterious Object", "gray", ["intriguing", "odd", "peculiar"],
-             "An object of unknown origin and purpose."),
-        # Add more miscellaneous items here
-    ]
+    misc_items = load_json("data/items.json")
+    items = [Item(item["name"], item["color"], item["adjectives"], item["description"]) for item in misc_items]
 
     for room in graph.rooms:
         if random.random() < 0.3:  # 30% chance to add a misc item
-            if misc_items:
-                item = random.choice(misc_items)
+            if items:
+                item = random.choice(items)
                 room.items.append(item)
-                misc_items.remove(item)
+                items.remove(item)
 
 
 def generate_unique_name(room: Room, room_name_counts: Dict[str, int]) -> str:
