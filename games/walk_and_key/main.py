@@ -45,14 +45,16 @@ def initialize_game(config: Dict) -> tuple[Graph, Player]:
 
 def describe_situation(player: Player) -> Text:
     situation = Text()
-    situation.append(f"You are in the {player.current_room.get_size_description()} ")
+    situation.append("You are in the ")
+    situation.append(player.current_room.get_size_description())
+    situation.append(" ")
     situation.append(player.current_room.name, style="bold")
     situation.append(".\n\n")
     
     situation.append("Your inventory:\n")
     if player.inventory:
         for item in player.inventory:
-            situation.append(f"- ")
+            situation.append("- ")
             situation.append(item['name'], style=f"bold {item['color']}")
             situation.append("\n")
     else:
@@ -61,7 +63,7 @@ def describe_situation(player: Player) -> Text:
     if player.current_room.items:
         situation.append("\nItems in the room:\n")
         for item in player.current_room.items:
-            situation.append(f"- ")
+            situation.append("- ")
             situation.append(item['name'], style=f"bold {item['color']}")
             situation.append("\n")
     else:
@@ -77,12 +79,14 @@ def get_available_actions(player: Player) -> List[Action]:
     # Movement actions
     for direction, door in player.current_room.doors.items():
         target_room = door.room2 if door.room1 == player.current_room else door.room1
-        lock_status = f" ({door.get_lock_description()})" if door.is_locked() else ""
         description = Text()
         description.append(f"Go {direction} to the ")
         description.append(target_room.name, style="bold")
-        description.append(lock_status)
-        actions.append(Action(ActionType.MOVE, door, str(description)))
+        if door.is_locked():
+            description.append(" (")
+            description.append(door.get_lock_description())
+            description.append(")")
+        actions.append(Action(ActionType.MOVE, door, description))
     
     # Pick up actions
     for item in player.current_room.items:
@@ -108,7 +112,12 @@ def display_actions(situation: Text, actions: List[Action]) -> None:
     alphabet = string.ascii_lowercase
     for i, action in enumerate(actions):
         if i < len(alphabet):
-            situation.append(f"{alphabet[i]}. {action}\n")
+            situation.append(f"{alphabet[i]}. ")
+            if isinstance(action.description, Text):
+                situation.append(action.description)
+            else:
+                situation.append(str(action))
+            situation.append("\n")
         else:
             break
     show_narrative_text(situation, "Options")
@@ -154,7 +163,11 @@ def use_key(player: Player, key: Dict) -> None:
         message.append(f" to unlock the door(s) to the {', '.join(unlocked_doors)}.")
         show_narrative_text(message)
     else:
-        show_narrative_text(f"There are no {key_color} locked doors in this room.")
+        message = Text()
+        message.append("There are no ")
+        message.append(key_color, style=f"bold {key_color}")
+        message.append(" locked doors in this room.")
+        show_narrative_text(message)
 
 
 def move_player(player: Player, door: Door) -> None:
