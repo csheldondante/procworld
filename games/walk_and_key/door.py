@@ -1,6 +1,7 @@
 from typing import Optional
 from rich.text import Text
 from games.walk_and_key.lock import Lock
+from games.walk_and_key.room import Room
 
 class Door:
     def __init__(self, room1: 'Room', room2: 'Room', direction: str, lock: Optional[Lock] = None):
