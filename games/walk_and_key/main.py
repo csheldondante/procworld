@@ -153,6 +153,7 @@ def use_key(player: Player, key: Item) -> None:
         message.append(key.get_name())
         message.append(f" to unlock the door(s) to the {', '.join(unlocked_doors)}.")
         show_narrative_text(message)
+        player.remove_from_inventory(key)
     else:
         message = Text("There are no ")
         message.append(Text(key_color, style=f"bold {key_color}"))
