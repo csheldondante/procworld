@@ -133,24 +133,39 @@ class Graph:
         room2.add_door(opposite_direction[direction], door)
         self.doors.append(door)
 
-def generate_random_graph(num_rooms: int, min_connections: int = 1, max_connections: int = 4) -> Graph:
+def generate_random_graph(num_rooms: int) -> Graph:
     world = Graph()
-    room_names = [f"Room {i+1}" for i in range(num_rooms)]
+    grid_size = 5
+    grid = [[None for _ in range(grid_size)] for _ in range(grid_size)]
     
-    # Create rooms
-    for room_name in room_names:
-        room = Room(room_name, "generic", 0, [])  # We'll set the room type, size, and adjectives in decorate_graph
+    # Create rooms and place them on the grid
+    for i in range(num_rooms):
+        room_name = f"Room {i+1}"
+        room = Room(room_name, "generic", 0, [])
         world.add_room(room)
+        
+        # Find an empty cell on the grid
+        while True:
+            x, y = random.randint(0, grid_size-1), random.randint(0, grid_size-1)
+            if grid[y][x] is None:
+                grid[y][x] = room
+                break
     
     # Create connections
-    for room_name in room_names:
-        num_connections = random.randint(min_connections, min(max_connections, num_rooms - 1))
-        connected_rooms = random.sample([r for r in room_names if r != room_name], num_connections)
-        
-        for connected_room in connected_rooms:
-            if connected_room not in [door.room2.name for door in world.rooms[room_name].doors.values()]:
-                direction = random.choice(["north", "south", "east", "west"])
-                world.add_door(room_name, connected_room, direction)
+    directions = ["north", "south", "east", "west"]
+    for y in range(grid_size):
+        for x in range(grid_size):
+            if grid[y][x] is not None:
+                room = grid[y][x]
+                for direction in directions:
+                    if direction == "north" and y > 0 and grid[y-1][x] is not None:
+                        world.add_door(room.name, grid[y-1][x].name, direction)
+                    elif direction == "south" and y < grid_size-1 and grid[y+1][x] is not None:
+                        world.add_door(room.name, grid[y+1][x].name, direction)
+                    elif direction == "east" and x < grid_size-1 and grid[y][x+1] is not None:
+                        world.add_door(room.name, grid[y][x+1].name, direction)
+                    elif direction == "west" and x > 0 and grid[y][x-1] is not None:
+                        world.add_door(room.name, grid[y][x-1].name, direction)
     
     return world
 
@@ -205,7 +220,7 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
                 all_items.remove(matching_key)
 
 def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_file: str) -> Graph:
-    graph = generate_random_graph(num_rooms)
+    graph = generate_random_graph(min(num_rooms, 25))  # Limit to 25 rooms (5x5 grid)
     decorate_graph(graph, room_types_file, locks_file, keys_file)
     return graph
 
