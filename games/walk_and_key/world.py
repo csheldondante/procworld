@@ -6,6 +6,10 @@ from typing import List, Dict, Optional, Any
 from rich.text import Text
 from games.walk_and_key.item import Item
 
+from utils.gui.display_interface import show_narrative_text
+from rich.text import Text
+from rich.panel import Panel
+
 class Door:
     def __init__(self, room1: 'Room', room2: 'Room', direction: str, lock: Optional[Dict] = None):
         self.room1: 'Room' = room1
@@ -182,10 +186,6 @@ def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_f
     graph = generate_random_graph(num_rooms)
     decorate_graph(graph, room_types_file, locks_file, keys_file)
     return graph
-
-from utils.gui.display_interface import show_narrative_text
-from rich.text import Text
-from rich.panel import Panel
 
 def print_map(graph: Graph) -> None:
     map_text = Text()
