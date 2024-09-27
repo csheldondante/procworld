@@ -91,15 +91,14 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
             if door.lock and door.is_locked():
                 for key in player_keys:
                     if door.can_unlock(key):
-                        door.unlock(key)
-                        log.append(f"Player uses {key.name} to unlock a door to {door.get_other_room(current_room).name}")
+                        log.append(f"Player uses {key.name} to pass through a locked door to {door.get_other_room(current_room).name}")
                         break
 
         # Move to next room
         next_room = choose_next_room(graph, current_room, visited_rooms)
         if next_room:
             connecting_door = graph.get_door_between(current_room, next_room)
-            if not connecting_door.lock or not connecting_door.is_locked():
+            if not connecting_door.lock or connecting_door.can_unlock(next(iter(player_keys), None)):
                 player_path.append(next_room)
                 log.append(f"Player moves to {next_room.name}")
                 current_room = next_room
