@@ -11,7 +11,7 @@ from rich.text import Text
 from rich.panel import Panel
 
 import networkx as nx
-import matplotlib.pyplot as plt
+from texttable import Texttable
 
 class Lock:
     def __init__(self, name: str, color: str, adjectives: List[str], description: str):
@@ -253,60 +253,7 @@ def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_f
     return graph
 
 
-def draw_grid_graph(graph: Graph):
-    G = nx.Graph()
-    pos = {}
-    labels = {}
-    edge_labels = {}
-
-    # Add nodes and positions
-    for room in graph.rooms.values():
-        G.add_node(room.name)
-        pos[room.name] = (room.x, -room.y)  # Negative y to flip the grid
-
-        # Prepare node labels with room name and items
-        label = f"{room.name}\n"
-        if room.items:
-            label += "Items: " + ", ".join(item.name for item in room.items)
-        labels[room.name] = label
-
-    # Add edges and edge labels
-    for room in graph.rooms.values():
-        for direction, door in room.doors.items():
-            target_room = door.room2 if door.room1 == room else door.room1
-            G.add_edge(room.name, target_room.name)
-
-            # Prepare edge labels with direction and lock information
-            edge_label = f"{direction.capitalize()}"
-            if door.is_locked():
-                edge_label += f"\n(Locked: {door.lock.name})"
-            edge_labels[(room.name, target_room.name)] = edge_label
-
-    plt.figure(figsize=(8, 8))
-
-    # Draw nodes
-    nx.draw_networkx_nodes(G, pos, node_color='lightblue', node_size=3000)
-
-    # Draw edges
-    nx.draw_networkx_edges(G, pos)
-
-    # Draw node labels
-    nx.draw_networkx_labels(G, pos, labels, font_size=8, font_weight='bold')
-
-    # Draw edge labels
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=6)
-
-    plt.title("Room Layout with Connections")
-    plt.axis('off')
-    plt.tight_layout()
-    plt.show()
-
-    # Optional: Save the graph as an image file
-    # plt.savefig("room_layout.png", format="png", dpi=300, bbox_inches='tight')
-
 def print_map(graph: Graph) -> None:
-    draw_grid_graph(graph)
-
     map_text = Text()
 
     # Create a grid representation
