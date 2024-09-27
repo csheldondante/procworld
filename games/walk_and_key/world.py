@@ -194,12 +194,25 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
     locks_data = load_json(locks_file)
     keys = load_json(keys_file)
 
-    # Assign room types
+    # Assign room types and ensure unique names
+    room_name_counts = {}
     for room in graph.rooms.values():
         room_type = random.choice(room_types)
         room.room_type = room_type["name"]
         room.adjectives = random.sample(room_type["adjectives"], min(len(room_type["adjectives"]), 3))
-        room.name = f"{room.room_type.replace('_', ' ').title()}"
+        base_name = f"{room.room_type.replace('_', ' ').title()}"
+        
+        if base_name in room_name_counts:
+            room_name_counts[base_name] += 1
+            count = room_name_counts[base_name]
+            if count <= len(room.adjectives):
+                room.name = f"{room.adjectives[count-1].capitalize()} {base_name}"
+            else:
+                room.name = f"{base_name} {count}"
+        else:
+            room_name_counts[base_name] = 1
+            room.name = base_name
+        
         room.size = room_type["size"]
         room.description = room_type["description"]
 
