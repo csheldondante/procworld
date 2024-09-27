@@ -27,7 +27,8 @@ def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, 
     print("\n".join(log))
 
     # Add remaining keys and locks to create alternative paths
-    add_alternative_paths(graph, locks, keys)
+    # TODO This is a good idea but needs to be handled with care
+    # add_alternative_paths(graph, locks, keys)
 
     # Add miscellaneous items to rooms
     add_misc_items(graph)
@@ -40,7 +41,7 @@ def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, 
         print(f"{door.room1.name} -> {door.room2.name} ({door.locked_with_no_key} {door.is_locked_with_no_key()})")
 
     # Delete all doors which are locked with no key
-    graph.doors = [door for door in graph.doors if not door.is_locked_with_no_key()]
+    # graph.doors = [door for door in graph.doors if not door.is_locked_with_no_key()]
     for room in graph.rooms:
         print(f"{room.name}: {room.doors}")
         for d in room.doors:
@@ -161,18 +162,18 @@ def choose_next_room(graph: Graph, current_room: Room, visited_rooms: Set[Room])
     return random.choice(unvisited_neighbors) if unvisited_neighbors else None
 
 
-def add_alternative_paths(graph: Graph, locks: List[Lock], keys: List[Item]) -> None:
-    for door in graph.doors:
-        if not door.lock and random.random() < 0.2:  # 20% chance to add a lock
-            new_lock = create_lock(locks)
-            if new_lock:
-                door.lock = new_lock
-
-                # Place the corresponding key in a random room
-                new_key = create_key(keys, new_lock.color)
-                if new_key:
-                    random_room = random.choice(graph.rooms)
-                    random_room.items.append(new_key)
+# def add_alternative_paths(graph: Graph, locks: List[Lock], keys: List[Item]) -> None:
+#     for door in graph.doors:
+#         if not door.lock and random.random() < 0.2:  # 20% chance to add a lock
+#             new_lock = create_lock(locks)
+#             if new_lock:
+#                 door.lock = new_lock
+#
+#                 # Place the corresponding key in a random room
+#                 new_key = create_key(keys, new_lock.color)
+#                 if new_key:
+#                     random_room = random.choice(graph.rooms)
+#                     random_room.items.append(new_key)
 
 
 def add_misc_items(graph: Graph) -> None:
