@@ -2,7 +2,7 @@ from typing import List, Dict, Optional
 from rich.text import Text
 from games.walk_and_key.lock import Lock
 from games.walk_and_key.item import Item
-from games.walk_and_key.item import Item
+from games.walk_and_key.player import Player
 
 class Room:
     def __init__(self, name: str, room_type: str, size: int, adjectives: List[str], description: str, x: int = -1, y: int = -1):
@@ -84,7 +84,7 @@ class Door:
     def can_unlock(self, key: Item) -> bool:
         return self.lock and self.lock.color == key.color
 
-    def can_player_unlock(self, player: 'Player') -> bool:
+    def can_player_unlock(self, player: Player) -> bool:
         return any(self.can_unlock(key) for key in player.inventory)
 
     def get_lock_description_short(self) -> Text:

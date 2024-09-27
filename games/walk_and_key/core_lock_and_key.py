@@ -2,6 +2,7 @@ from typing import List, Dict, Set, Optional, Tuple
 import random
 
 from games.walk_and_key.item import Item
+from games.walk_and_key.player import Player
 from games.walk_and_key.lock import Lock
 from games.walk_and_key.room_and_door import Room, Door
 from games.walk_and_key.utils.json import load_json
@@ -54,7 +55,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
     graph.starting_room = start_room
     current_room = start_room
     player_path = [current_room]
-    player_keys: Set[Item] = set()
+    player = Player()
     visited_rooms: Set[Room] = set()
 
     # Initialize the log
@@ -79,7 +80,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
                     new_key = create_key(keys, connecting_door.lock.color)
                     if new_key:
                         current_room.items.append(new_key)
-                        player_keys.add(new_key)
+                        player.inventory.add(new_key)
                         log.append(f"Player finds a {new_key.name} in {current_room.name}")
                     else:
                         log.append(f"Player discovers a locked door to {neighbor.name} but can't find a key")
@@ -89,7 +90,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
         # Try to use a key
         for door in graph.get_doors_for_room_bidirectional(current_room):
             if door.lock and door.is_locked():
-                for key in player_keys:
+                for key in player.inventory:
                     if door.can_unlock(key):
                         log.append(f"Player uses {key.name} to pass through a locked door to {door.get_other_room(current_room).name}")
                         break
