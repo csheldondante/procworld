@@ -256,12 +256,19 @@ def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_f
 def print_map(graph: Graph) -> None:
     map_text = Text()
 
+    # Calculate grid size based on room positions
+    min_x = min(room.x for room in graph.rooms.values())
+    max_x = max(room.x for room in graph.rooms.values())
+    min_y = min(room.y for room in graph.rooms.values())
+    max_y = max(room.y for room in graph.rooms.values())
+    
+    grid_width = max_x - min_x + 1
+    grid_height = max_y - min_y + 1
+
     # Create a grid representation
-    grid_size = 5
-    grid = [[None for _ in range(grid_size)] for _ in range(grid_size)]
+    grid = [[None for _ in range(grid_width)] for _ in range(grid_height)]
     for room in graph.rooms.values():
-        if 0 <= room.x < grid_size and 0 <= room.y < grid_size:
-            grid[room.y][room.x] = room
+        grid[room.y - min_y][room.x - min_x] = room
 
     # Print the grid
     map_text.append("Grid Map:\n")
