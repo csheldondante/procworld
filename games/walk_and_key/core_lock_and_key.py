@@ -132,11 +132,17 @@ def add_misc_items(graph: Graph) -> None:
     items = [Item(item["name"], item["color"], item["adjectives"], item["description"]) for item in misc_items]
 
     for room in graph.rooms:
-        if random.random() < 0.3:  # 30% chance to add a misc item
+        num_items = random.choices([0, 1, 2], weights=[0.3, 0.5, 0.2])[0]  # 30% chance for 0, 50% for 1, 20% for 2
+        for _ in range(num_items):
             if items:
                 item = random.choice(items)
                 room.items.append(item)
                 items.remove(item)
+            else:
+                # If we run out of unique items, create copies of existing ones
+                original_item = random.choice(misc_items)
+                new_item = Item(original_item["name"], original_item["color"], original_item["adjectives"], original_item["description"])
+                room.items.append(new_item)
 
 
 def generate_unique_name(room: Room, room_name_counts: Dict[str, int]) -> str:
