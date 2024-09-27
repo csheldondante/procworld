@@ -12,9 +12,16 @@ class Room:
     def __init__(self, name):
         self.name = name
         self.doors = {}
+        self.items = []
 
     def add_door(self, direction, door):
         self.doors[direction] = door
+
+    def add_item(self, item):
+        self.items.append(item)
+
+    def remove_item(self, item):
+        self.items.remove(item)
 
 class Graph:
     def __init__(self):
@@ -44,7 +51,14 @@ def generate_random_graph(num_rooms, min_connections=1, max_connections=4, locke
     
     # Create rooms
     for room_name in room_names:
-        world.add_room(Room(room_name))
+        room = Room(room_name)
+        world.add_room(room)
+        
+        # Add random items to the room
+        num_items = random.randint(0, 2)
+        for _ in range(num_items):
+            item = random.choice(["Key", "Coin", "Gem", "Book", "Potion"])
+            room.add_item(item)
     
     # Create connections
     for room_name in room_names:
