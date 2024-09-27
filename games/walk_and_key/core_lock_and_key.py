@@ -36,6 +36,17 @@ def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, 
     for room in graph.rooms:
         room.visited = False
 
+    for door in graph.doors:
+        print(f"{door.room1.name} -> {door.room2.name} ({door.locked_with_no_key} {door.is_locked_with_no_key()})")
+
+    # Delete all doors which are locked with no key
+    graph.doors = [door for door in graph.doors if not door.is_locked_with_no_key()]
+    for room in graph.rooms:
+        print(f"{room.name}: {room.doors}")
+        for d in room.doors:
+            print(f"{d}: {room.doors[d].room1.name} -> {room.doors[d].room2.name} ({room.doors[d].locked_with_no_key} {room.doors[d].is_locked_with_no_key()})")
+        room.doors = {room.doors[d]: door for d, door in room.doors.items() if not door.is_locked_with_no_key()}
+
 
 def initialize_rooms(graph: Graph, room_types: List[Dict]) -> None:
     room_name_counts: Dict[str, int] = {}
@@ -85,16 +96,16 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
                             current_room.items.append(new_key)
                             player.inventory.append(new_key)
                             log.append(f"Player finds a {new_key.name} in {current_room.name}")
-                            print(f"Created lock and key for door to {neighbor.name}")
+                            # print(f"Created lock and key for door to {neighbor.name}")
                         else:
                             log.append(f"Player discovers a locked door to {neighbor.name} but can't find a key")
-                            print(f"Created lock but no key available for door to {neighbor.name}")
+                            # print(f"Created lock but no key available for door to {neighbor.name}")
                     else:
                         log.append(f"Player discovers a locked door to {neighbor.name}")
-                        print(f"No lock available for door to {neighbor.name}")
+                        # print(f"No lock available for door to {neighbor.name}")
                 else:
                     log.append(f"Player discovers a locked door to {neighbor.name}")
-                    print(f"Decided not to create lock for door to {neighbor.name}")
+                    # print(f"Decided not to create lock for door to {neighbor.name}")
 
         # Try to use a key
         for door in graph.get_doors_for_room_bidirectional(current_room):
@@ -129,11 +140,8 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
 
 
 def create_lock(locks: List[Lock]) -> Optional[Lock]:
-    if locks:
-        lock = random.choice(locks)
-        locks.remove(lock)
-        return lock
-    return None
+    lock = random.choice(locks)
+    return lock
 
 
 def create_key(keys: List[Item], color: str) -> Optional[Item]:
