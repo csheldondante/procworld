@@ -24,6 +24,8 @@ def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, 
 
     # Simulate player movement and decorate the graph
     player_path, log = simulate_player_movement(graph, locks, keys)
+
+    print(f"\n\nPlayer path!\n")
     print("\n".join(log))
 
     # Add remaining keys and locks to create alternative paths
@@ -37,16 +39,9 @@ def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, 
     for room in graph.rooms:
         room.visited = False
 
-    for door in graph.doors:
-        print(f"{door.room1.name} -> {door.room2.name} ({door.locked_with_no_key} {door.is_locked_with_no_key()})")
-
     # Delete all doors which are locked with no key
-    # graph.doors = [door for door in graph.doors if not door.is_locked_with_no_key()]
     for room in graph.rooms:
-        print(f"{room.name}: {room.doors}")
-        for d in room.doors:
-            print(f"{d}: {room.doors[d].room1.name} -> {room.doors[d].room2.name} ({room.doors[d].locked_with_no_key} {room.doors[d].is_locked_with_no_key()})")
-        room.doors = {room.doors[d]: door for d, door in room.doors.items() if not door.is_locked_with_no_key()}
+        room.doors = {d: door for d, door in room.doors.items() if not door.is_locked_with_no_key()}
 
 
 def initialize_rooms(graph: Graph, room_types: List[Dict]) -> None:
@@ -78,15 +73,15 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
         door.set_locked_with_no_key()
 
     while len(visited_rooms) < len(graph.rooms):
-        print(f"Current room: {current_room.name}")
-        print(f"Visited rooms: {len(visited_rooms)}/{len(graph.rooms)}")
+        # print(f"Current room: {current_room.name}")
+        # print(f"Visited rooms: {len(visited_rooms)}/{len(graph.rooms)}")
         current_room.visited = True
         visited_rooms.add(current_room)
 
         # Check neighboring rooms and potentially create locks and keys
         for neighbor in graph.get_neighboring_rooms(current_room):
             connecting_door = graph.get_door_between(current_room, neighbor)
-            print(f"Checking door to {neighbor.name}: {'Locked' if connecting_door.is_locked() else 'Unlocked'}")
+            # print(f"Checking door to {neighbor.name}: {'Locked' if connecting_door.is_locked() else 'Unlocked'}")
             if connecting_door.is_locked_with_no_key():
                 if random.random() < 0.7:  # 70% chance to create a lock and key
                     new_lock = create_lock(locks)
@@ -108,20 +103,11 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
                     log.append(f"Player discovers a locked door to {neighbor.name}")
                     # print(f"Decided not to create lock for door to {neighbor.name}")
 
-        # Try to use a key
-        for door in graph.get_doors_for_room_bidirectional(current_room):
-            if door.is_locked():
-                for key in player.inventory:
-                    if door.can_unlock(key):
-                        door.unlock()
-                        log.append(f"Player uses {key.name} to unlock a door to {door.get_other_room(current_room).name}")
-                        break
-
         # Move to next room
         next_room = choose_next_room(graph, current_room, visited_rooms)
         if next_room:
             connecting_door = graph.get_door_between(current_room, next_room)
-            if not connecting_door.is_locked():
+            if connecting_door.can_player_unlock(player):
                 player_path.append(next_room)
                 log.append(f"Player moves to {next_room.name}")
                 current_room = next_room

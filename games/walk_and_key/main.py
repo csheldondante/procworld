@@ -157,7 +157,7 @@ def use_key(player: LockAndKeyPlayer, key: Item) -> None:
         message.append(key.get_name())
         message.append(f" to unlock the door(s) to the {', '.join(unlocked_doors)}.")
         show_narrative_text(message)
-        player.remove_from_inventory(key)
+        # Key is not removed from inventory
     else:
         message = Text("There are no ")
         message.append(Text(key_color, style=f"bold {key_color}"))
