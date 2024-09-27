@@ -104,7 +104,8 @@ def main() -> None:
                 situation.append(f"{alphabet[i]}. {action}\n")
             else:
                 break
-        
+
+        print(situation)
         show_narrative_text(str(situation), "Options")
 
         choice = get_user_text("Enter your choice: ").lower()
