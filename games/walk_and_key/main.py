@@ -57,8 +57,8 @@ def main():
     world = create_world()
     player = Player(random.choice(list(world.rooms.values())))
 
-    show_narrative_text("Welcome to the Simple Text RPG!")
-    show_narrative_text(f"You find yourself in the {player.current_room.name}.")
+    show_narrative_text("Welcome to the Simple Text RPG!", "Introduction")
+    show_narrative_text(f"You are in the {player.current_room.name}.", "Location")
 
     while True:
         options = list(player.current_room.doors.items())
@@ -66,9 +66,9 @@ def main():
         for i, (direction, room) in enumerate(options):
             situation += f"{chr(97 + i)}. Go {direction} to the {room.name}\n"
         situation += f"{chr(97 + len(options))}. Quit"
-        show_situation(situation)
+        show_narrative_text(situation, "Options")
 
-        choice = get_user_text("Enter your choice (a, b, c, ...): ").lower()
+        choice = get_user_text("Enter your choice: ").lower()
 
         if choice == chr(97 + len(options)):
             show_narrative_text("Thanks for playing!")
