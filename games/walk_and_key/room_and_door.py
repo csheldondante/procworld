@@ -74,12 +74,25 @@ class Door:
         self.room2: 'Room' = room2
         self.direction: str = direction
         self.lock: Optional[Lock] = lock
+        self.locked_with_no_key: bool = False
     
     def is_locked(self) -> bool:
-        return self.lock is not None
+        return self.lock is not None or self.locked_with_no_key
+
+    def set_locked_with_no_key(self) -> None:
+        self.locked_with_no_key = True
+        self.lock = None
+
+    def is_locked_with_no_key(self) -> bool:
+        return self.locked_with_no_key
+
+    def set_lock(self, lock: Lock) -> None:
+        self.lock = lock
+        self.locked_with_no_key = False
 
     def unlock(self) -> None:
         self.lock = None
+        self.locked_with_no_key = False
 
     def can_unlock(self, key: Item) -> bool:
         return self.lock and self.lock.color == key.color
@@ -91,7 +104,9 @@ class Door:
         return self.room2 if current_room == self.room1 else self.room1
 
     def get_lock_description_short(self) -> Text:
-        if self.lock:
+        if self.locked_with_no_key:
+            return Text("Locked with no key")
+        elif self.lock:
             description = Text()
             description.append("Locked with a ")
             description.append(self.lock.name, style=f"bold {self.lock.color}")
@@ -99,7 +114,9 @@ class Door:
         return Text("Unlocked")
 
     def get_lock_description(self) -> Text:
-        if self.lock:
+        if self.locked_with_no_key:
+            return Text("The door is locked, but there doesn't seem to be a keyhole.")
+        elif self.lock:
             description = Text()
             description.append("The door is locked with a ")
             description.append(self.lock.name, style=f"bold {self.lock.color}")
