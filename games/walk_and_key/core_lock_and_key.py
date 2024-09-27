@@ -61,45 +61,48 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
     # Initialize the log
     log: List[str] = [f"Player starts in {current_room.name}"]
 
-    # Start with some doors locked
+    # Start with all doors locked with no key
     for door in graph.doors:
-        if random.random() < 0.3:  # 30% chance for a door to be locked
-            new_lock = create_lock(locks)
-            if new_lock:
-                door.lock = new_lock
+        door.set_locked_with_no_key()
 
     while len(visited_rooms) < len(graph.rooms):
         current_room.visited = True
         visited_rooms.add(current_room)
 
-        # Check neighboring rooms and potentially create keys
+        # Check neighboring rooms and potentially create locks and keys
         for neighbor in graph.get_neighboring_rooms(current_room):
             connecting_door = graph.get_door_between(current_room, neighbor)
-            if connecting_door.lock and connecting_door.is_locked():
-                if random.random() < 0.7:  # 70% chance to create a key
-                    new_key = create_key(keys, connecting_door.lock.color)
-                    if new_key:
-                        current_room.items.append(new_key)
-                        player.inventory.append(new_key)
-                        log.append(f"Player finds a {new_key.name} in {current_room.name}")
+            if connecting_door.is_locked_with_no_key():
+                if random.random() < 0.7:  # 70% chance to create a lock and key
+                    new_lock = create_lock(locks)
+                    if new_lock:
+                        connecting_door.set_lock(new_lock)
+                        new_key = create_key(keys, new_lock.color)
+                        if new_key:
+                            current_room.items.append(new_key)
+                            player.inventory.append(new_key)
+                            log.append(f"Player finds a {new_key.name} in {current_room.name}")
+                        else:
+                            log.append(f"Player discovers a locked door to {neighbor.name} but can't find a key")
                     else:
-                        log.append(f"Player discovers a locked door to {neighbor.name} but can't find a key")
+                        log.append(f"Player discovers a locked door to {neighbor.name}")
                 else:
                     log.append(f"Player discovers a locked door to {neighbor.name}")
 
         # Try to use a key
         for door in graph.get_doors_for_room_bidirectional(current_room):
-            if door.lock and door.is_locked():
+            if door.is_locked():
                 for key in player.inventory:
                     if door.can_unlock(key):
-                        log.append(f"Player uses {key.name} to pass through a locked door to {door.get_other_room(current_room).name}")
+                        door.unlock()
+                        log.append(f"Player uses {key.name} to unlock a door to {door.get_other_room(current_room).name}")
                         break
 
         # Move to next room
         next_room = choose_next_room(graph, current_room, visited_rooms)
         if next_room:
             connecting_door = graph.get_door_between(current_room, next_room)
-            if not connecting_door.lock or connecting_door.can_player_unlock(player):
+            if not connecting_door.is_locked():
                 player_path.append(next_room)
                 log.append(f"Player moves to {next_room.name}")
                 current_room = next_room
