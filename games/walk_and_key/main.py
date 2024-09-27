@@ -39,7 +39,7 @@ def main() -> None:
     )
     player = Player(random.choice(list(world.rooms.values())))
 
-    show_narrative_text("Welcome to the Simple Text RPG!", "Introduction")
+    show_narrative_text("Welcome to the Lock and Key RPG!", "Introduction")
     while True:
         actions = []
         situation = f"You are in the {player.current_room.get_size_description()} {player.current_room.name}.\n"
