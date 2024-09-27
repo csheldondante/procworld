@@ -53,19 +53,21 @@ def main():
 
     while True:
         print("\nWhat would you like to do?")
-        print("Available doors:")
-        for direction, room in player.current_room.doors.items():
-            print(f"- Go {direction} to the {room.name}")
-        print("- Quit")
+        print("Available options:")
+        options = list(player.current_room.doors.items())
+        for i, (direction, room) in enumerate(options):
+            print(f"{chr(97 + i)}. Go {direction} to the {room.name}")
+        print(f"{chr(97 + len(options))}. Quit")
 
-        choice = input("Enter your choice: ").lower()
+        choice = input("Enter your choice (a, b, c, ...): ").lower()
 
-        if choice == "quit":
+        if choice == chr(97 + len(options)):
             print("Thanks for playing!")
             break
-        elif choice in player.current_room.doors:
-            player.current_room = player.current_room.doors[choice]
-            print(f"You move to the {player.current_room.name}.")
+        elif choice.isalpha() and ord(choice) - 97 < len(options):
+            direction, room = options[ord(choice) - 97]
+            player.current_room = room
+            print(f"You move {direction} to the {player.current_room.name}.")
         else:
             print("Invalid choice. Please try again.")
 
