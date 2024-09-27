@@ -5,6 +5,7 @@ from rich import print
 from rich.text import Text
 import string
 from games.walk_and_key.item import Item
+from games.walk_and_key.lockandkeyplayer import LockAndKeyPlayer
 from utils.gui.display_interface import (
     show_narrative_text,
     get_user_text,
@@ -20,18 +21,9 @@ from games.walk_and_key.action import Action, ActionType
 from rich.text import Text
 
 
-class Player:
-    def __init__(self, current_room: Room):
-        self.current_room: Room = current_room
-        self.inventory: List[Item] = []
 
-    def add_to_inventory(self, item: Item) -> None:
-        self.inventory.append(item)
 
-    def remove_from_inventory(self, item: Item) -> None:
-        self.inventory.remove(item)
-
-def pickup_item(player: Player, item: Item) -> Text:
+def pickup_item(player: LockAndKeyPlayer, item: Item) -> Text:
     player.add_to_inventory(item)
     player.current_room.remove_item(item)
     message = Text("You picked up the ")
@@ -45,7 +37,7 @@ def load_config() -> Dict:
     return toml.load("games/walk_and_key/config.toml")
 
 
-def initialize_game(config: Dict) -> tuple[Graph, Player]:
+def initialize_game(config: Dict) -> tuple[Graph, LockAndKeyPlayer]:
     world = generate_world(
         config["game"]["num_rooms"],
         config["game"]["grid_size"],
@@ -55,18 +47,18 @@ def initialize_game(config: Dict) -> tuple[Graph, Player]:
     )
     starting_room = world.starting_room
     starting_room.visited = True
-    player = Player(starting_room)
+    player = LockAndKeyPlayer(starting_room)
     return world, player
 
 
-def autopickup_items(player: Player, config: Dict) -> None:
+def autopickup_items(player: LockAndKeyPlayer, config: Dict) -> None:
     if config["game"]["autopickup"] and player.current_room.items:
         for item in player.current_room.items[:]:  # Create a copy of the list to iterate over
             message = pickup_item(player, item)
             show_narrative_text(message, "Item Pickup")
 
 
-def describe_situation(player: Player) -> Text:
+def describe_situation(player: LockAndKeyPlayer) -> Text:
     situation = player.current_room.get_full_description()
     
     situation.append("\nYour inventory:\n")
@@ -82,7 +74,7 @@ def describe_situation(player: Player) -> Text:
     return situation
 
 
-def get_available_actions(player: Player, world: Graph) -> List[Action]:
+def get_available_actions(player: LockAndKeyPlayer, world: Graph) -> List[Action]:
     actions = []
     
     # Movement actions
@@ -132,7 +124,7 @@ def display_actions(situation: Text, actions: List[Action]) -> None:
     show_narrative_text(situation, "Options")
 
 
-def handle_action(action: Action, player: Player, config: Dict) -> bool:
+def handle_action(action: Action, player: LockAndKeyPlayer, config: Dict) -> bool:
     if action.action_type == ActionType.QUIT:
         show_narrative_text("Thanks for playing!")
         return False
@@ -153,7 +145,7 @@ def handle_action(action: Action, player: Player, config: Dict) -> bool:
     return True
 
 
-def use_key(player: Player, key: Item) -> None:
+def use_key(player: LockAndKeyPlayer, key: Item) -> None:
     key_color = key.color
     unlocked_doors = []
     for direction, door in player.current_room.doors.items():
@@ -173,7 +165,7 @@ def use_key(player: Player, key: Item) -> None:
         show_narrative_text(message, "Action")
 
 
-def move_player(player: Player, door: Door, config: Dict) -> None:
+def move_player(player: LockAndKeyPlayer, door: Door, config: Dict) -> None:
     if door.is_locked():
         show_narrative_text(door.get_lock_description(), "Locked door")
     else:

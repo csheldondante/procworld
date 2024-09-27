@@ -2,7 +2,7 @@ from typing import List, Dict, Set, Optional, Tuple
 import random
 
 from games.walk_and_key.item import Item
-from games.walk_and_key.player import Player
+from games.walk_and_key.lockandkeyplayer import LockAndKeyPlayer
 from games.walk_and_key.lock import Lock
 from games.walk_and_key.room_and_door import Room, Door
 from games.walk_and_key.utils.json import load_json
@@ -55,7 +55,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
     graph.starting_room = start_room
     current_room = start_room
     player_path = [current_room]
-    player = Player()
+    player = LockAndKeyPlayer()
     visited_rooms: Set[Room] = set()
 
     # Initialize the log
