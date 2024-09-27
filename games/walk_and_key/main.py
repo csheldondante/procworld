@@ -7,7 +7,7 @@ from utils.gui.display_interface import (
     stop_display,
     show_error
 )
-from games.walk_and_key.world import Room, Graph, generate_random_graph
+from games.walk_and_key.world import Room, Graph, Door, generate_random_graph
 
 
 class Player:
