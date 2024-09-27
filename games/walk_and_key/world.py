@@ -10,6 +10,17 @@ class Door:
         self.room2: 'Room' = room2
         self.direction: str = direction
         self.lock: Optional[Dict] = lock
+    
+    def is_locked(self) -> bool:
+        return self.lock is not None
+
+    def unlock(self) -> None:
+        self.lock = None
+
+    def get_lock_description(self) -> str:
+        if self.lock:
+            return f"The door is locked with a {self.lock['name']}. {self.lock['description']}"
+        return "The door is unlocked."
 
 class Room:
     def __init__(self, name: str, room_type: str, size: int, adjectives: List[str]):
@@ -99,7 +110,7 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
         room_type = random.choice(room_types)
         room.room_type = room_type["name"]
         room.adjectives = room_type["adjectives"]
-        room.name = f"{random.choice(room.adjectives)} {room.room_type}"
+        room.name = f"{random.choice(room.adjectives).capitalize()} {room.room_type.replace('_', ' ').title()}"
         room.size = room_type["size"]
 
     # Add locks to doors
@@ -117,7 +128,19 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
             matching_items = [item for item in all_items if any(adj in room.adjectives for adj in item["adjectives"])]
             if matching_items:
                 item = random.choice(matching_items)
+                if "count" in item:
+                    item["count"] -= 1
+                    if item["count"] == 0:
+                        all_items.remove(item)
                 room.add_item(item)
+
+    # Ensure all locks have corresponding keys in the world
+    for door in graph.doors:
+        if door.lock:
+            matching_key = next((key for key in keys if key["color"] == door.lock["color"]), None)
+            if matching_key:
+                random_room = random.choice(list(graph.rooms.values()))
+                random_room.add_item(matching_key)
 
 def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_file: str) -> Graph:
     graph = generate_random_graph(num_rooms)
