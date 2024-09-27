@@ -100,10 +100,10 @@ def get_available_actions(player: Player) -> List[Action]:
         description = Text()
         description.append("Use ")
         description.append(item['name'], style=f"bold {item['color']}")
-        actions.append(Action(ActionType.USE, item, str(description)))
+        actions.append(Action(ActionType.USE, item, description))
     
     # Quit action
-    actions.append(Action(ActionType.QUIT, None, "Quit"))
+    actions.append(Action(ActionType.QUIT, None, Text("Quit")))
     
     return actions
 
