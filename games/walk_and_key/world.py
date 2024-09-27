@@ -10,12 +10,19 @@ from utils.gui.display_interface import show_narrative_text
 from rich.text import Text
 from rich.panel import Panel
 
+class Lock:
+    def __init__(self, name: str, color: str, adjectives: List[str], description: str):
+        self.name: str = name
+        self.color: str = color
+        self.adjectives: List[str] = adjectives
+        self.description: str = description
+
 class Door:
-    def __init__(self, room1: 'Room', room2: 'Room', direction: str, lock: Optional[Dict] = None):
+    def __init__(self, room1: 'Room', room2: 'Room', direction: str, lock: Optional[Lock] = None):
         self.room1: 'Room' = room1
         self.room2: 'Room' = room2
         self.direction: str = direction
-        self.lock: Optional[Dict] = lock
+        self.lock: Optional[Lock] = lock
     
     def is_locked(self) -> bool:
         return self.lock is not None
@@ -27,7 +34,7 @@ class Door:
         if self.lock:
             description = Text()
             description.append("Locked with a ")
-            description.append(self.lock['name'], style=f"bold {self.lock['color']}")
+            description.append(self.lock.name, style=f"bold {self.lock.color}")
             return description
         return Text("Unlocked")
 
@@ -35,8 +42,8 @@ class Door:
         if self.lock:
             description = Text()
             description.append("The door is locked with a ")
-            description.append(self.lock['name'], style=f"bold {self.lock['color']}")
-            description.append(f". {self.lock['description']}")
+            description.append(self.lock.name, style=f"bold {self.lock.color}")
+            description.append(f". {self.lock.description}")
             return description
         return Text("The door is unlocked.")
 
@@ -143,7 +150,7 @@ def load_json(file_path: str) -> Any:
 
 def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_file: str) -> None:
     room_types = load_json(room_types_file)
-    locks = load_json(locks_file)
+    locks_data = load_json(locks_file)
     keys = load_json(keys_file)
 
     # Assign room types
@@ -153,6 +160,9 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
         room.adjectives = room_type["adjectives"]
         room.name = f"{random.choice(room.adjectives).capitalize()} {room.room_type.replace('_', ' ').title()}"
         room.size = room_type["size"]
+
+    # Create Lock objects
+    locks = [Lock(lock["name"], lock["color"], lock["adjectives"], lock["description"]) for lock in locks_data]
 
     # Add locks to doors
     for door in graph.doors:
@@ -176,7 +186,7 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
     # Ensure all locks have corresponding keys in the world
     for door in graph.doors:
         if door.lock:
-            matching_key = next((key for key in all_items if key.color == door.lock["color"]), None)
+            matching_key = next((key for key in all_items if key.color == door.lock.color), None)
             if matching_key:
                 random_room = random.choice(list(graph.rooms.values()))
                 random_room.add_item(matching_key)
@@ -201,7 +211,7 @@ def print_map(graph: Graph) -> None:
             
             if door.is_locked():
                 door_text.append(" (")
-                door_text.append(Text("Locked", style=f"bold {door.lock['color']}"))
+                door_text.append(Text("Locked", style=f"bold {door.lock.color}"))
                 door_text.append(")")
             
             door_text.append("\n")
