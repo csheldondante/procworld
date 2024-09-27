@@ -2,7 +2,7 @@ from typing import List, Dict, Set, Optional, Tuple
 import random
 
 from games.walk_and_key.item import Item
-from games.walk_and_key.lock import Lock, Key
+from games.walk_and_key.lock import Lock
 from games.walk_and_key.room_and_door import Room, Door
 from games.walk_and_key.utils.json import load_json
 from games.walk_and_key.graph import Graph
@@ -74,7 +74,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
         # Check neighboring rooms and potentially create keys
         for neighbor in graph.get_neighboring_rooms(current_room):
             connecting_door = graph.get_door_between(current_room, neighbor)
-            if connecting_door.lock and connecting_door.lock.is_locked():
+            if connecting_door.lock and connecting_door.is_locked():
                 if random.random() < 0.7:  # 70% chance to create a key
                     new_key = create_key(keys, connecting_door.lock.color)
                     if new_key:
@@ -88,10 +88,10 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
 
         # Try to use a key
         for door in graph.get_doors_for_room_bidirectional(current_room):
-            if door.lock and door.lock.is_locked():
+            if door.lock and door.is_locked():
                 for key in player_keys:
-                    if isinstance(key, Key) and door.lock.can_unlock(key):
-                        door.lock.unlock(key)
+                    if door.can_unlock(key):
+                        door.unlock(key)
                         log.append(f"Player uses {key.name} to unlock a door to {door.get_other_room(current_room).name}")
                         break
 
@@ -99,7 +99,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
         next_room = choose_next_room(graph, current_room, visited_rooms)
         if next_room:
             connecting_door = graph.get_door_between(current_room, next_room)
-            if not connecting_door.lock or not connecting_door.lock.is_locked():
+            if not connecting_door.lock or not connecting_door.is_locked():
                 player_path.append(next_room)
                 log.append(f"Player moves to {next_room.name}")
                 current_room = next_room
@@ -126,8 +126,8 @@ def create_lock(locks: List[Lock]) -> Optional[Lock]:
     return None
 
 
-def create_key(keys: List[Item], color: str) -> Optional[Key]:
-    matching_keys = [key for key in keys if isinstance(key, Key) and key.color == color]
+def create_key(keys: List[Item], color: str) -> Optional[Item]:
+    matching_keys = [key for key in keys if key.color == color]
     if matching_keys:
         key = random.choice(matching_keys)
         keys.remove(key)
