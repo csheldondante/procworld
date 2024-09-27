@@ -88,18 +88,18 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
 
         # Try to use a key
         for door in graph.get_doors_for_room_bidirectional(current_room):
-            if door.lock and door.lock.color in [key.color for key in player_keys]:
-                used_key = next(key for key in player_keys if key.color == door.lock.color)
-                door.lock = None
-                player_keys.remove(used_key)
-                log.append(f"Player uses {used_key.name} to unlock a door")
-                break
+            if door.lock and door.lock.is_locked():
+                for key in player_keys:
+                    if door.lock.unlock(key):
+                        player_keys.remove(key)
+                        log.append(f"Player uses {key.name} to unlock a door")
+                        break
 
         # Move to next room
         next_room = choose_next_room(graph, current_room, visited_rooms)
         if next_room:
             connecting_door = graph.get_door_between(current_room, next_room)
-            if not connecting_door.locked_with_no_key and not connecting_door.lock:
+            if not connecting_door.locked_with_no_key and (not connecting_door.lock or not connecting_door.lock.is_locked()):
                 player_path.append(next_room)
                 log.append(f"Player moves to {next_room.name}")
                 current_room = next_room

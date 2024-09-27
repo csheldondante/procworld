@@ -36,3 +36,9 @@ class Graph:
 
     def get_doors_for_room_bidirectional(self, room: Room) -> List[Door]:
         return [door for door in self.doors if door.room1 == room or door.room2 == room]
+
+    def get_door_between(self, room1: Room, room2: Room) -> Optional[Door]:
+        for door in self.doors:
+            if (door.room1 == room1 and door.room2 == room2) or (door.room1 == room2 and door.room2 == room1):
+                return door
+        return None
