@@ -238,12 +238,13 @@ def print_map(graph: Graph) -> None:
 
     # Print the grid
     map_text.append("Grid Map:\n")
+    cell_size = 8
     for row in grid:
         for room in row:
             if room:
-                map_text.append(f"[{room.name[:8]:^8}]")
+                map_text.append(f"[{room.name[:cell_size]:^cell_size}]")
             else:
-                map_text.append("[        ]")
+                map_text.append("[" + " " * cell_size + "]")
         map_text.append("\n")
     map_text.append("\n")
 
