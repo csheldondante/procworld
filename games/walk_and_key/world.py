@@ -191,14 +191,12 @@ def print_map(graph: Graph) -> None:
     map_text = Text()
 
     for room_name, room in graph.rooms.items():
-        map_text.append("┌" + "─" * 38 + "┐\n")
-        map_text.append("│ ")
         map_text.append(room.get_name())
-        map_text.append(" " * (37 - len(room.name)) + "│\n")
+        map_text.append("\n")
 
         for direction, door in room.doors.items():
             target_room = door.room2 if door.room1 == room else door.room1
-            door_text = Text(f"│  {direction.capitalize()}: ")
+            door_text = Text(f"  {direction.capitalize()}: ")
             door_text.append(target_room.get_name())
             
             if door.is_locked():
@@ -206,9 +204,9 @@ def print_map(graph: Graph) -> None:
                 door_text.append(Text("Locked", style=f"bold {door.lock['color']}"))
                 door_text.append(")")
             
-            door_text.append(" " * (37 - len(door_text)) + "│\n")
+            door_text.append("\n")
             map_text.append(door_text)
 
-        map_text.append("└" + "─" * 38 + "┘\n\n")
+        map_text.append("\n")
 
     show_narrative_text(map_text, "World Map")
