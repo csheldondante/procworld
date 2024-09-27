@@ -209,7 +209,7 @@ def print_map(graph: Graph) -> None:
             room_text.append("\n")
 
         panel = Panel(room_text, expand=False, border_style="cyan")
-        map_text.append(panel)
+        map_text.append(str(panel))
         map_text.append("\n")
 
     show_narrative_text(map_text, "World Map")
