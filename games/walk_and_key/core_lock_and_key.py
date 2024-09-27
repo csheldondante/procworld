@@ -29,6 +29,10 @@ def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, 
     # Add miscellaneous items to rooms
     add_misc_items(graph)
 
+    # Reset annotations
+    for room in graph.rooms:
+        room.visited = False
+
 
 def initialize_rooms(graph: Graph, room_types: List[Dict]) -> None:
     room_name_counts: Dict[str, int] = {}
@@ -45,6 +49,7 @@ def initialize_rooms(graph: Graph, room_types: List[Dict]) -> None:
 
 def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) -> List[Room]:
     start_room = random.choice(graph.rooms)
+    graph.starting_room = start_room
     current_room = start_room
     player_path = [current_room]
     player_keys: Set[Item] = set()

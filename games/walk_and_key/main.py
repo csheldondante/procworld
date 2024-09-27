@@ -18,16 +18,6 @@ from games.walk_and_key.graph import Graph
 from games.walk_and_key.room_and_door import Room, Door
 from games.walk_and_key.action import Action, ActionType
 from rich.text import Text
-from games.walk_and_key.player import Player
-
-def pickup_item(player: Player, item: Item) -> Text:
-    player.add_to_inventory(item)
-    player.current_room.remove_item(item)
-    message = Text("You picked up the ")
-    message.append(item.get_name())
-    message.append(". ")
-    message.append(item.description)
-    return message
 
 
 class Player:
@@ -40,6 +30,15 @@ class Player:
 
     def remove_from_inventory(self, item: Item) -> None:
         self.inventory.remove(item)
+
+def pickup_item(player: Player, item: Item) -> Text:
+    player.add_to_inventory(item)
+    player.current_room.remove_item(item)
+    message = Text("You picked up the ")
+    message.append(item.get_name())
+    message.append(". ")
+    message.append(item.description)
+    return message
 
 
 def load_config() -> Dict:
@@ -54,7 +53,7 @@ def initialize_game(config: Dict) -> tuple[Graph, Player]:
         config["files"]["locks"],
         config["files"]["keys"]
     )
-    starting_room = random.choice(list(world.rooms))
+    starting_room = world.starting_room
     starting_room.visited = True
     player = Player(starting_room)
     return world, player
@@ -64,8 +63,7 @@ def autopickup_items(player: Player, config: Dict) -> None:
     if config["game"]["autopickup"] and player.current_room.items:
         for item in player.current_room.items[:]:  # Create a copy of the list to iterate over
             message = pickup_item(player, item)
-            message.insert(0, "You automatically picked up the ", "Item Pickup")
-            show_narrative_text(message)
+            show_narrative_text(message, "Item Pickup")
 
 
 def describe_situation(player: Player) -> Text:
@@ -140,7 +138,7 @@ def handle_action(action: Action, player: Player, config: Dict) -> bool:
         return False
     elif action.action_type == ActionType.PICK_UP:
         message = pickup_item(player, action.target)
-        show_narrative_text(message)
+        show_narrative_text(message, "Item Pickup")
     elif action.action_type == ActionType.USE:
         if "Key" in action.target.name:
             use_key(player, action.target)

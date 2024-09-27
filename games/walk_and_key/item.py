@@ -15,7 +15,7 @@ class Item:
         description.append(self.get_name())
         if self.adjectives:
             description.append(" (")
-            description.append(", ".join([Text(adj, style="italic").plain for adj in self.adjectives]))
+            description.append(", ".join([Text(adj, style="").plain for adj in self.adjectives]))  # Style italic
             description.append(")")
         description.append(f": {self.description}")
         return description

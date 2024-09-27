@@ -14,6 +14,7 @@ class Room:
         self.items: List[Item] = []
         self.x: int = x
         self.y: int = y
+        self.visited: bool = False
 
     def add_door(self, direction: str, door: 'Door') -> None:
         self.doors[direction] = door
@@ -46,7 +47,7 @@ class Room:
         
         # Handle adjectives
         if self.adjectives:
-            adj_text = Text(", ").join([Text(adj, style="italic") for adj in self.adjectives])
+            adj_text = Text(", ").join([Text(adj, style="") for adj in self.adjectives])  # Style italic
             description.append(adj_text)
             description.append(", ")
         

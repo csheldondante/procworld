@@ -17,5 +17,5 @@ class Lock:
         # Add adjectives
         if self.adjectives:
             description.append(" ")
-            description.append(" ".join(self.adjectives), style="italic")
+            description.append(" ".join(self.adjectives), style="")  # Style italic
         return description

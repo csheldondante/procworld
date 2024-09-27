@@ -8,6 +8,7 @@ class Graph:
     def __init__(self):
         self.rooms: List[Room] = []
         self.doors: List[Door] = []
+        self.starting_room: Optional[Room] = None
 
     def add_room(self, room: Room) -> None:
         self.rooms.append(room)
