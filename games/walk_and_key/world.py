@@ -242,7 +242,7 @@ def print_map(graph: Graph) -> None:
     for row in grid:
         for room in row:
             if room:
-                map_text.append(f"[{room.name[:cell_size]:^cell_size}]")
+                map_text.append(f"[{room.name[:cell_size-2]:^{cell_size-2}}]")
             else:
                 map_text.append("[" + " " * cell_size + "]")
         map_text.append("\n")
