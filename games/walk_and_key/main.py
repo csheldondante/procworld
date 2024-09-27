@@ -18,6 +18,7 @@ from games.walk_and_key.graph import Graph
 from games.walk_and_key.room_and_door import Room, Door
 from games.walk_and_key.action import Action, ActionType
 from rich.text import Text
+from games.walk_and_key.player import Player
 
 def pickup_item(player: Player, item: Item) -> Text:
     player.add_to_inventory(item)
