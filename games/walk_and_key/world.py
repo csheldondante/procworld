@@ -17,6 +17,18 @@ class Lock:
         self.adjectives: List[str] = adjectives
         self.description: str = description
 
+    def get_name(self) -> Text:
+        return Text(self.name, style=f"bold {self.color}")
+
+    def get_description(self) -> Text:
+        description = Text()
+        description.append(self.description)
+        # Add adjectives
+        if self.adjectives:
+            description.append(" ")
+            description.append(" ".join(self.adjectives), style="italic")
+        return description
+
 class Door:
     def __init__(self, room1: 'Room', room2: 'Room', direction: str, lock: Optional[Lock] = None):
         self.room1: 'Room' = room1
@@ -204,14 +216,21 @@ def print_map(graph: Graph) -> None:
         map_text.append(room.get_name())
         map_text.append("\n")
 
+        # Items
+        for item in room.items:
+            map_text.append("  - ")
+            map_text.append(item.get_name())
+            map_text.append("\n")
+
+        # Doors
         for direction, door in room.doors.items():
             target_room = door.room2 if door.room1 == room else door.room1
             door_text = Text(f"  {direction.capitalize()}: ")
             door_text.append(target_room.get_name())
             
             if door.is_locked():
-                door_text.append(" (")
-                door_text.append(Text("Locked", style=f"bold {door.lock.color}"))
+                door_text.append(" (Locked with ")
+                door_text.append(door.lock.get_name())
                 door_text.append(")")
             
             door_text.append("\n")
