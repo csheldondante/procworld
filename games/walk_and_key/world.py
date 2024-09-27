@@ -4,8 +4,7 @@ import os
 from typing import List, Dict, Optional, Any
 from rich.text import Text
 from games.walk_and_key.item import Item
-from games.walk_and_key.room import Room
-from games.walk_and_key.door import Door
+from games.walk_and_key.room_and_door import Room, Door
 from games.walk_and_key.lock import Lock
 
 from utils.gui.display_interface import show_narrative_text

@@ -13,7 +13,8 @@ from utils.gui.display_interface import (
     stop_display,
     show_error
 )
-from games.walk_and_key.world import Room, Graph, Door, generate_world, print_map
+from games.walk_and_key.world import Graph, generate_world, print_map
+from games.walk_and_key.room_and_door import Room, Door
 from games.walk_and_key.action import Action, ActionType
 
 
