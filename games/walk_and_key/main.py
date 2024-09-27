@@ -45,14 +45,9 @@ def initialize_game(config: Dict) -> tuple[Graph, Player]:
 
 
 def describe_situation(player: Player) -> Text:
-    situation = Text()
-    situation.append("You are in the ")
-    situation.append(player.current_room.get_size_description())
-    situation.append(" ")
-    situation.append(player.current_room.name, style="bold")
-    situation.append(".\n\n")
+    situation = player.current_room.get_full_description()
     
-    situation.append("Your inventory:\n")
+    situation.append("\nYour inventory:\n")
     if player.inventory:
         for item in player.inventory:
             situation.append("- ")
@@ -60,15 +55,6 @@ def describe_situation(player: Player) -> Text:
             situation.append("\n")
     else:
         situation.append("Your inventory is empty.\n")
-    
-    if player.current_room.items:
-        situation.append("\nItems in the room:\n")
-        for item in player.current_room.items:
-            situation.append("- ")
-            situation.append(item.get_name())
-            situation.append("\n")
-    else:
-        situation.append("\nThere are no items in this room.\n")
     
     situation.append("\nAvailable options:\n")
     return situation

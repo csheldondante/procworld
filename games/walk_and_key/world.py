@@ -46,19 +46,39 @@ class Room:
     def remove_item(self, item: Item) -> None:
         self.items.remove(item)
 
+    def get_name(self) -> Text:
+        return Text(self.name, style="bold")
+
     def get_size_description(self) -> Text:
-        size_description = Text()
         if self.size <= 2:
-            size_description.append("tiny")
+            return Text("tiny")
         elif self.size <= 4:
-            size_description.append("small")
+            return Text("small")
         elif self.size <= 6:
-            size_description.append("medium-sized")
+            return Text("medium-sized")
         elif self.size <= 8:
-            size_description.append("large")
+            return Text("large")
         else:
-            size_description.append("enormous")
-        return size_description
+            return Text("enormous")
+
+    def get_full_description(self) -> Text:
+        description = Text()
+        description.append("You are in the ")
+        description.append(self.get_size_description())
+        description.append(" ")
+        description.append(self.get_name())
+        description.append(".\n\n")
+
+        if self.items:
+            description.append("Items in the room:\n")
+            for item in self.items:
+                description.append("- ")
+                description.append(item.get_name())
+                description.append("\n")
+        else:
+            description.append("There are no items in this room.\n")
+
+        return description
 
 class Graph:
     def __init__(self):
