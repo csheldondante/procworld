@@ -84,6 +84,9 @@ class Door:
     def can_unlock(self, key: Item) -> bool:
         return self.lock and self.lock.color == key.color
 
+    def can_player_unlock(self, player: 'Player') -> bool:
+        return any(self.can_unlock(key) for key in player.inventory)
+
     def get_lock_description_short(self) -> Text:
         if self.lock:
             description = Text()
