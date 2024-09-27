@@ -1,6 +1,6 @@
 import random
 import toml
-from typing import List
+from typing import List, Dict
 from rich import print
 from rich.text import Text
 import string
