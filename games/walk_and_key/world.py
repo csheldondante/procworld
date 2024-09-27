@@ -60,11 +60,12 @@ class Door:
         return Text("The door is unlocked.")
 
 class Room:
-    def __init__(self, name: str, room_type: str, size: int, adjectives: List[str], x: int = -1, y: int = -1):
+    def __init__(self, name: str, room_type: str, size: int, adjectives: List[str], description: str, x: int = -1, y: int = -1):
         self.name: str = name
         self.room_type: str = room_type
         self.size: int = size
         self.adjectives: List[str] = adjectives
+        self.description: str = description
         self.doors: Dict[str, Door] = {}
         self.items: List[Item] = []
         self.x: int = x
@@ -101,6 +102,8 @@ class Room:
         description.append(self.get_name())
         description.append(f" ({self.get_size_description()})")
         description.append(".\n\n")
+        description.append(self.description)
+        description.append("\n\n")
 
         if self.items:
             description.append("Items in the room:\n")
@@ -189,6 +192,7 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
         room.adjectives = random.sample(room_type["adjectives"], min(len(room_type["adjectives"]), 3))
         room.name = f"{room.room_type.replace('_', ' ').title()}"
         room.size = room_type["size"]
+        room.description = room_type["description"]
 
     # Create Lock objects
     locks = [Lock(lock["name"], lock["color"], lock["adjectives"], lock["description"]) for lock in locks_data]
