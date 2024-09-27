@@ -43,7 +43,7 @@ def initialize_game(config: Dict) -> tuple[Graph, Player]:
         config["files"]["locks"],
         config["files"]["keys"]
     )
-    player = Player(random.choice(list(world.rooms.values())))
+    player = Player(random.choice(list(world.rooms)))
     return world, player
 
 
