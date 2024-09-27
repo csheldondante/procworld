@@ -66,12 +66,15 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
         door.set_locked_with_no_key()
 
     while len(visited_rooms) < len(graph.rooms):
+        print(f"Current room: {current_room.name}")
+        print(f"Visited rooms: {len(visited_rooms)}/{len(graph.rooms)}")
         current_room.visited = True
         visited_rooms.add(current_room)
 
         # Check neighboring rooms and potentially create locks and keys
         for neighbor in graph.get_neighboring_rooms(current_room):
             connecting_door = graph.get_door_between(current_room, neighbor)
+            print(f"Checking door to {neighbor.name}: {'Locked' if connecting_door.is_locked() else 'Unlocked'}")
             if connecting_door.is_locked_with_no_key():
                 if random.random() < 0.7:  # 70% chance to create a lock and key
                     new_lock = create_lock(locks)
@@ -82,12 +85,16 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
                             current_room.items.append(new_key)
                             player.inventory.append(new_key)
                             log.append(f"Player finds a {new_key.name} in {current_room.name}")
+                            print(f"Created lock and key for door to {neighbor.name}")
                         else:
                             log.append(f"Player discovers a locked door to {neighbor.name} but can't find a key")
+                            print(f"Created lock but no key available for door to {neighbor.name}")
                     else:
                         log.append(f"Player discovers a locked door to {neighbor.name}")
+                        print(f"No lock available for door to {neighbor.name}")
                 else:
                     log.append(f"Player discovers a locked door to {neighbor.name}")
+                    print(f"Decided not to create lock for door to {neighbor.name}")
 
         # Try to use a key
         for door in graph.get_doors_for_room_bidirectional(current_room):
