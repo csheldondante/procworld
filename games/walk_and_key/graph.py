@@ -7,7 +7,6 @@ from games.walk_and_key.room_and_door import Room, Door
 class Graph:
     def __init__(self):
         self.rooms: List[Room] = []
-        self.doors: List[Door] = []
         self.starting_room: Optional[Room] = None
 
     def add_room(self, room: Room) -> None:
@@ -23,22 +22,19 @@ class Graph:
         door = Door(room1, room2, direction, lock)
         room1.add_door(direction, door)
         room2.add_door(opposite_direction[direction], door)
-        self.doors.append(door)
 
     def get_neighboring_rooms(self, room: Room) -> List[Room]:
         neighboring_rooms = []
-        for door in self.doors:
-            if door.room1 == room:
-                neighboring_rooms.append(door.room2)
-            elif door.room2 == room:
-                neighboring_rooms.append(door.room1)
+        for direction, door in room.doors.items():
+            neighboring_room = door.room1 if door.room2 == room else door.room2
+            neighboring_rooms.append(neighboring_room)
         return neighboring_rooms
 
     def get_doors_for_room_bidirectional(self, room: Room) -> List[Door]:
-        return [door for door in self.doors if door.room1 == room or door.room2 == room]
+        return list(room.doors.values())
 
     def get_door_between(self, room1: Room, room2: Room) -> Optional[Door]:
-        for door in self.doors:
-            if (door.room1 == room1 and door.room2 == room2) or (door.room1 == room2 and door.room2 == room1):
+        for door in room1.doors.values():
+            if door.room1 == room2 or door.room2 == room2:
                 return door
         return None
