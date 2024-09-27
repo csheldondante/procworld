@@ -60,13 +60,15 @@ class Door:
         return Text("The door is unlocked.")
 
 class Room:
-    def __init__(self, name: str, room_type: str, size: int, adjectives: List[str]):
+    def __init__(self, name: str, room_type: str, size: int, adjectives: List[str], x: int = -1, y: int = -1):
         self.name: str = name
         self.room_type: str = room_type
         self.size: int = size
         self.adjectives: List[str] = adjectives
         self.doors: Dict[str, Door] = {}
         self.items: List[Item] = []
+        self.x: int = x
+        self.y: int = y
 
     def add_door(self, direction: str, door: Door) -> None:
         self.doors[direction] = door
@@ -141,13 +143,13 @@ def generate_random_graph(num_rooms: int) -> Graph:
     # Create rooms and place them on the grid
     for i in range(num_rooms):
         room_name = f"Room {i+1}"
-        room = Room(room_name, "generic", 0, [])
-        world.add_room(room)
         
         # Find an empty cell on the grid
         while True:
             x, y = random.randint(0, grid_size-1), random.randint(0, grid_size-1)
             if grid[y][x] is None:
+                room = Room(room_name, "generic", 0, [], x, y)
+                world.add_room(room)
                 grid[y][x] = room
                 break
     
@@ -227,6 +229,26 @@ def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_f
 def print_map(graph: Graph) -> None:
     map_text = Text()
 
+    # Create a grid representation
+    grid_size = 5
+    grid = [[None for _ in range(grid_size)] for _ in range(grid_size)]
+    for room in graph.rooms.values():
+        if 0 <= room.x < grid_size and 0 <= room.y < grid_size:
+            grid[room.y][room.x] = room
+
+    # Print the grid
+    map_text.append("Grid Map:\n")
+    for row in grid:
+        for room in row:
+            if room:
+                map_text.append(f"[{room.name[:8]:^8}]")
+            else:
+                map_text.append("[        ]")
+        map_text.append("\n")
+    map_text.append("\n")
+
+    # Print detailed room information
+    map_text.append("Room Details:\n")
     for room_name, room in graph.rooms.items():
         map_text.append(room.get_name())
         map_text.append("\n")
