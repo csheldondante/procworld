@@ -36,6 +36,7 @@ def load_config() -> Dict:
 def initialize_game(config: Dict) -> tuple[Graph, Player]:
     world = generate_world(
         config["game"]["num_rooms"],
+        config["game"]["grid_size"],
         config["files"]["room_types"],
         config["files"]["locks"],
         config["files"]["keys"]

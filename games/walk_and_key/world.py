@@ -32,9 +32,8 @@ class Graph:
         room2.add_door(opposite_direction[direction], door)
         self.doors.append(door)
 
-def generate_random_graph(num_rooms: int) -> Graph:
+def generate_random_graph(num_rooms: int, grid_size: int) -> Graph:
     world = Graph()
-    grid_size = 5
     grid = [[None for _ in range(grid_size)] for _ in range(grid_size)]
     
     # Create rooms and place them on the grid
@@ -132,8 +131,8 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
                 random_room.add_item(matching_key)
                 all_items.remove(matching_key)
 
-def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_file: str) -> Graph:
-    graph = generate_random_graph(min(num_rooms, 25))  # Limit to 25 rooms (5x5 grid)
+def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_file: str, keys_file: str) -> Graph:
+    graph = generate_random_graph(min(num_rooms, grid_size * grid_size), grid_size)
     decorate_graph(graph, room_types_file, locks_file, keys_file)
     return graph
 

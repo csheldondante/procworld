@@ -5,3 +5,4 @@ keys = "data/keys.json"
 
 [game]
 num_rooms = 10
+grid_size = 5
