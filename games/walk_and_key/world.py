@@ -182,3 +182,31 @@ def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_f
     graph = generate_random_graph(num_rooms)
     decorate_graph(graph, room_types_file, locks_file, keys_file)
     return graph
+
+def print_map(graph: Graph) -> None:
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.text import Text
+
+    console = Console()
+
+    for room_name, room in graph.rooms.items():
+        room_text = Text()
+        room_text.append(room.get_name())
+        room_text.append("\n")
+
+        for direction, door in room.doors.items():
+            target_room = door.room2 if door.room1 == room else door.room1
+            door_text = Text(f"  {direction.capitalize()}: ")
+            door_text.append(target_room.get_name())
+            
+            if door.is_locked():
+                door_text.append(" (")
+                door_text.append(Text("Locked", style=f"bold {door.lock['color']}"))
+                door_text.append(")")
+            
+            room_text.append(door_text)
+            room_text.append("\n")
+
+        panel = Panel(room_text, expand=False, border_style="cyan")
+        console.print(panel)

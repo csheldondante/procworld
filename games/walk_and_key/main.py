@@ -13,7 +13,7 @@ from utils.gui.display_interface import (
     stop_display,
     show_error
 )
-from games.walk_and_key.world import Room, Graph, Door, generate_world
+from games.walk_and_key.world import Room, Graph, Door, generate_world, print_map
 from games.walk_and_key.action import Action, ActionType
 
 
@@ -170,6 +170,8 @@ def main() -> None:
     
     config = load_config()
     world, player = initialize_game(config)
+
+    print_map(world)  # Print the map for development purposes
 
     show_narrative_text("Welcome to the Lock and Key RPG!", "Introduction")
     
