@@ -133,7 +133,8 @@ def handle_action(action: Action, player: Player) -> bool:
         message = Text()
         message.append("You picked up the ")
         message.append(action.target['name'], style=f"bold {action.target['color']}")
-        message.append(f". {action.target['description']}")
+        message.append(". ")
+        message.append(action.target['description'])
         show_narrative_text(message)
     elif action.action_type == ActionType.USE:
         if "Key" in action.target['name']:
