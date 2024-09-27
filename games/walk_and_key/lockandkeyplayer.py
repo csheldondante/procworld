@@ -1,11 +1,10 @@
 from typing import Set, List
 from games.walk_and_key.item import Item
-from games.walk_and_key.room_and_door import Room
 
 
 class LockAndKeyPlayer:
-    def __init__(self, current_room: Room):
-        self.current_room: Room = current_room
+    def __init__(self, current_room):
+        self.current_room = current_room
         self.inventory: List[Item] = []
 
     def add_to_inventory(self, item: Item) -> None:

@@ -55,7 +55,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
     graph.starting_room = start_room
     current_room = start_room
     player_path = [current_room]
-    player = LockAndKeyPlayer()
+    player = LockAndKeyPlayer(graph.starting_room)
     visited_rooms: Set[Room] = set()
 
     # Initialize the log
@@ -80,7 +80,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
                     new_key = create_key(keys, connecting_door.lock.color)
                     if new_key:
                         current_room.items.append(new_key)
-                        player.inventory.add(new_key)
+                        player.inventory.append(new_key)
                         log.append(f"Player finds a {new_key.name} in {current_room.name}")
                     else:
                         log.append(f"Player discovers a locked door to {neighbor.name} but can't find a key")
