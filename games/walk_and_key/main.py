@@ -26,8 +26,10 @@ def main():
     while True:
         options = list(player.current_room.doors.items())
         situation = "Available options:\n"
-        for i, (direction, room) in enumerate(options):
-            situation += f"{chr(97 + i)}. Go {direction} to the {room.name}\n"
+        for i, (direction, door) in enumerate(options):
+            target_room = door.room2 if door.room1 == player.current_room else door.room1
+            lock_status = " (Locked)" if door.is_locked else ""
+            situation += f"{chr(97 + i)}. Go {direction} to the {target_room.name}{lock_status}\n"
         situation += f"{chr(97 + len(options))}. Quit"
         show_narrative_text(situation, "Options")
 
@@ -37,9 +39,12 @@ def main():
             show_narrative_text("Thanks for playing!")
             break
         elif choice.isalpha() and ord(choice) - 97 < len(options):
-            direction, room = options[ord(choice) - 97]
-            player.current_room = room
-            show_narrative_text(f"You move {direction} to the {player.current_room.name}.")
+            direction, door = options[ord(choice) - 97]
+            if door.is_locked:
+                show_narrative_text(f"The door to the {direction} is locked. You need to find a key.")
+            else:
+                player.current_room = door.room2 if door.room1 == player.current_room else door.room1
+                show_narrative_text(f"You move {direction} to the {player.current_room.name}.")
         else:
             show_error("Invalid choice. Please try again.")
 
