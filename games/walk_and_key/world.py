@@ -96,17 +96,17 @@ class Room:
 
     def get_full_description(self) -> Text:
         description = Text()
-        description.append("You are in the ")
-        description.append(self.get_size_description())
+        description.append(" ".join(self.adjectives), style="italic")
         description.append(" ")
         description.append(self.get_name())
+        description.append(f" ({self.get_size_description()})")
         description.append(".\n\n")
 
         if self.items:
             description.append("Items in the room:\n")
             for item in self.items:
                 description.append("- ")
-                description.append(item.get_name())
+                description.append(item.get_full_description())
                 description.append("\n")
         else:
             description.append("There are no items in this room.\n")
@@ -186,8 +186,8 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
     for room in graph.rooms.values():
         room_type = random.choice(room_types)
         room.room_type = room_type["name"]
-        room.adjectives = room_type["adjectives"]
-        room.name = f"{random.choice(room.adjectives).capitalize()} {room.room_type.replace('_', ' ').title()}"
+        room.adjectives = random.sample(room_type["adjectives"], min(len(room_type["adjectives"]), 3))
+        room.name = f"{room.room_type.replace('_', ' ').title()}"
         room.size = room_type["size"]
 
     # Create Lock objects

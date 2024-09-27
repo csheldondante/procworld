@@ -12,6 +12,8 @@ class Item:
 
     def get_full_description(self) -> Text:
         description = Text()
+        description.append(" ".join(self.adjectives), style="italic")
+        description.append(" ")
         description.append(self.get_name())
         description.append(f": {self.description}")
         return description
