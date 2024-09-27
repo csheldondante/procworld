@@ -199,7 +199,7 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
     for room in graph.rooms.values():
         room_type = random.choice(room_types)
         room.room_type = room_type["name"]
-        room.adjectives = random.sample(room_type["adjectives"], min(len(room_type["adjectives"]), 3))
+        room.adjectives = room_type["adjectives"][:3]  # Take the first 3 adjectives
         base_name = f"{room.room_type.replace('_', ' ').title()}"
         
         if base_name in room_name_counts:
