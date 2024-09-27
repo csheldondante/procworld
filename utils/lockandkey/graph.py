@@ -28,7 +28,6 @@ class Graph:
     def __init__(self):
         self.nodes: Dict[str, Node] = {}
         self.rooms: List[Room] = []
-        self.doors: List[Door] = []
 
     def add_node(self, node):
         self.nodes[node.id] = node
@@ -46,19 +45,28 @@ class Graph:
         door = Door(room1, room2, direction, lock)
         room1.add_door(direction, door)
         room2.add_door(opposite_direction[direction], door)
-        self.doors.append(door)
 
     def get_neighboring_rooms(self, room: Room) -> List[Room]:
         neighboring_rooms = []
-        for door in self.doors:
-            if door.room1 == room:
-                neighboring_rooms.append(door.room2)
-            elif door.room2 == room:
-                neighboring_rooms.append(door.room1)
+        for door in room.doors.values():
+            neighboring_room = door.room1 if door.room2 == room else door.room2
+            neighboring_rooms.append(neighboring_room)
         return neighboring_rooms
 
     def get_doors_for_room(self, room: Room) -> List[Door]:
-        return [door for door in self.doors if door.room1 == room or door.room2 == room]
+        return list(room.doors.values())
+
+    def all_doors(self):
+        visited_doors = set()
+        for room in self.rooms:
+            for door in room.doors.values():
+                if door not in visited_doors:
+                    visited_doors.add(door)
+                    yield door
+
+    def remove_locked_doors_with_no_key(self):
+        for room in self.rooms:
+            room.doors = {direction: door for direction, door in room.doors.items() if not door.is_locked_with_no_key()}
 
 class RectangularGrid(Graph):
     def __init__(self, rows, cols):

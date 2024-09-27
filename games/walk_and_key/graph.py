@@ -46,3 +46,7 @@ class Graph:
             if door.room1 == room2 or door.room2 == room2:
                 return door
         return None
+
+    def remove_locked_doors_with_no_key(self):
+        for room in self.rooms:
+            room.doors = {direction: door for direction, door in room.doors.items() if not door.is_locked_with_no_key()}
