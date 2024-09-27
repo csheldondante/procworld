@@ -17,6 +17,16 @@ from games.walk_and_key.world import generate_world, print_map
 from games.walk_and_key.graph import Graph
 from games.walk_and_key.room_and_door import Room, Door
 from games.walk_and_key.action import Action, ActionType
+from rich.text import Text
+
+def pickup_item(player: Player, item: Item) -> Text:
+    player.add_to_inventory(item)
+    player.current_room.remove_item(item)
+    message = Text("You picked up the ")
+    message.append(item.get_name())
+    message.append(". ")
+    message.append(item.description)
+    return message
 
 
 class Player:
@@ -52,12 +62,8 @@ def initialize_game(config: Dict) -> tuple[Graph, Player]:
 def autopickup_items(player: Player, config: Dict) -> None:
     if config["game"]["autopickup"] and player.current_room.items:
         for item in player.current_room.items[:]:  # Create a copy of the list to iterate over
-            player.add_to_inventory(item)
-            player.current_room.remove_item(item)
-            message = Text("You automatically picked up the ", "Item Pickup")
-            message.append(item.get_name())
-            message.append(". ")
-            message.append(item.description)
+            message = pickup_item(player, item)
+            message.insert(0, "You automatically picked up the ", "Item Pickup")
             show_narrative_text(message)
 
 
@@ -132,12 +138,7 @@ def handle_action(action: Action, player: Player, config: Dict) -> bool:
         show_narrative_text("Thanks for playing!")
         return False
     elif action.action_type == ActionType.PICK_UP:
-        player.add_to_inventory(action.target)
-        player.current_room.remove_item(action.target)
-        message = Text("You picked up the ")
-        message.append(action.target.get_name())
-        message.append(". ")
-        message.append(action.target.description)
+        message = pickup_item(player, action.target)
         show_narrative_text(message)
     elif action.action_type == ActionType.USE:
         if "Key" in action.target.name:
