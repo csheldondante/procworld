@@ -1,37 +1,52 @@
-{
-    "bedroom": {
+[
+    {
+        "name": "bedroom",
+        "adjectives": ["cozy", "personal", "restful", "intimate", "modern"],
+        "size": 3,
         "items": {
             "min": 1,
             "max": 3,
             "possible": ["Pillow", "Blanket", "Book", "Lamp", "Clothes"]
         }
     },
-    "kitchen": {
+    {
+        "name": "kitchen",
+        "adjectives": ["culinary", "functional", "aromatic", "bustling", "homey"],
+        "size": 4,
         "items": {
             "min": 2,
             "max": 4,
             "possible": ["Knife", "Plate", "Fork", "Spoon", "Pot", "Pan"]
         }
     },
-    "living_room": {
+    {
+        "name": "living_room",
+        "adjectives": ["spacious", "comfortable", "social", "relaxing", "inviting"],
+        "size": 5,
         "items": {
             "min": 1,
             "max": 3,
             "possible": ["Remote", "Magazine", "Cushion", "Plant", "Painting"]
         }
     },
-    "bathroom": {
+    {
+        "name": "bathroom",
+        "adjectives": ["clean", "private", "hygienic", "refreshing", "compact"],
+        "size": 2,
         "items": {
             "min": 1,
             "max": 2,
             "possible": ["Soap", "Towel", "Toothbrush", "Hairbrush", "Toilet Paper"]
         }
     },
-    "study": {
+    {
+        "name": "study",
+        "adjectives": ["quiet", "scholarly", "focused", "organized", "intellectual"],
+        "size": 3,
         "items": {
             "min": 2,
             "max": 4,
             "possible": ["Pen", "Paper", "Book", "Laptop", "Calculator"]
         }
     }
-}
+]
