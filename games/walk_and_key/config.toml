@@ -1,0 +1,7 @@
+[files]
+room_types = "data/room_types.json"
+locks = "data/locks.json"
+keys = "data/keys.json"
+
+[game]
+num_rooms = 10

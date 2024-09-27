@@ -1,6 +1,7 @@
 
 import random
 import json
+import os
 from typing import List, Dict, Optional, Any
 
 class Door:
@@ -70,7 +71,8 @@ def generate_random_graph(num_rooms: int, min_connections: int = 1, max_connecti
     return world
 
 def load_json(file_path: str) -> Any:
-    with open(file_path, 'r') as f:
+    full_path = os.path.join(os.path.dirname(__file__), file_path)
+    with open(full_path, 'r') as f:
         return json.load(f)
 
 def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_file: str) -> None:

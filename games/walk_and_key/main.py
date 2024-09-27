@@ -1,4 +1,5 @@
 import random
+import toml
 from typing import List
 from utils.gui.display_interface import (
     show_narrative_text,
@@ -26,11 +27,15 @@ class Player:
 
 def main() -> None:
     start_display()
+    
+    # Load configuration
+    config = toml.load("games/walk_and_key/config.toml")
+    
     world = generate_world(
-        10,
-        "games/walk_and_key/data/room_types.json",
-        "games/walk_and_key/data/locks.json",
-        "games/walk_and_key/data/keys.json"
+        config["game"]["num_rooms"],
+        config["files"]["room_types"],
+        config["files"]["locks"],
+        config["files"]["keys"]
     )
     player = Player(random.choice(list(world.rooms.values())))
 
