@@ -99,7 +99,7 @@ class Room:
         description = Text()
         description.append(self.get_name())
         description.append(" (")
-        description.append(", ".join(self.adjectives), style="italic")
+        description.append(", ".join([Text(adj, style="italic") for adj in self.adjectives]))
         description.append(" ")
         description.append(f" {self.get_size_description()}")
         description.append(").\n\n")
