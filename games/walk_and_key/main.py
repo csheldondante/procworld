@@ -3,6 +3,7 @@ import toml
 from typing import List
 from rich import print
 from rich.text import Text
+import string
 from utils.gui.display_interface import (
     show_narrative_text,
     get_user_text,
@@ -97,15 +98,19 @@ def main() -> None:
         actions.append(Action(ActionType.QUIT, None, "Quit"))
         
         # Display actions
+        alphabet = string.ascii_lowercase
         for i, action in enumerate(actions):
-            situation.append(f"{chr(97 + i)}. {action}\n")
+            if i < len(alphabet):
+                situation.append(f"{alphabet[i]}. {action}\n")
+            else:
+                break
         
         show_narrative_text(str(situation), "Options")
 
         choice = get_user_text("Enter your choice: ").lower()
 
-        if choice.isalpha() and ord(choice) - 97 < len(actions):
-            action = actions[ord(choice) - 97]
+        if choice in alphabet[:len(actions)]:
+            action = actions[alphabet.index(choice)]
             
             if action.action_type == ActionType.QUIT:
                 show_narrative_text("Thanks for playing!")
