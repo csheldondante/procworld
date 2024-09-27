@@ -1,4 +1,12 @@
 import random
+from utils.gui.display_interface import (
+    show_narrative_text,
+    get_user_text,
+    show_situation,
+    start_display,
+    stop_display,
+    show_error
+)
 
 class Room:
     def __init__(self, name):
@@ -45,31 +53,34 @@ def create_world():
     return world
 
 def main():
+    start_display()
     world = create_world()
     player = Player(random.choice(list(world.rooms.values())))
 
-    print("Welcome to the Simple Text RPG!")
-    print(f"You find yourself in the {player.current_room.name}.")
+    show_narrative_text("Welcome to the Simple Text RPG!")
+    show_narrative_text(f"You find yourself in the {player.current_room.name}.")
 
     while True:
-        print("\nWhat would you like to do?")
-        print("Available options:")
         options = list(player.current_room.doors.items())
+        situation = "Available options:\n"
         for i, (direction, room) in enumerate(options):
-            print(f"{chr(97 + i)}. Go {direction} to the {room.name}")
-        print(f"{chr(97 + len(options))}. Quit")
+            situation += f"{chr(97 + i)}. Go {direction} to the {room.name}\n"
+        situation += f"{chr(97 + len(options))}. Quit"
+        show_situation(situation)
 
-        choice = input("Enter your choice (a, b, c, ...): ").lower()
+        choice = get_user_text("Enter your choice (a, b, c, ...): ").lower()
 
         if choice == chr(97 + len(options)):
-            print("Thanks for playing!")
+            show_narrative_text("Thanks for playing!")
             break
         elif choice.isalpha() and ord(choice) - 97 < len(options):
             direction, room = options[ord(choice) - 97]
             player.current_room = room
-            print(f"You move {direction} to the {player.current_room.name}.")
+            show_narrative_text(f"You move {direction} to the {player.current_room.name}.")
         else:
-            print("Invalid choice. Please try again.")
+            show_error("Invalid choice. Please try again.")
+
+    stop_display()
 
 if __name__ == "__main__":
     main()
