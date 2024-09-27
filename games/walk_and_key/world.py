@@ -170,4 +170,4 @@ def print_map(graph: Graph) -> None:
 
         map_text.append("\n")
 
-    show_narrative_text(map_text, "World Map (development only)")
+    # show_narrative_text(map_text, "World Map (development only)")
