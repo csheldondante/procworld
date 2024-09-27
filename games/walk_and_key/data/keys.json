@@ -1,17 +1,37 @@
-{
-    "red": {
+[
+    {
+        "name": "Antique Iron Key",
+        "color": "red",
+        "adjectives": ["old", "rusty", "ornate", "heavy"],
+        "description": "A large, ornate key made of iron, its surface marred by rust. Despite its age, it feels solid and weighty in your hand.",
         "count": 2
     },
-    "blue": {
+    {
+        "name": "Sleek Keycard",
+        "color": "blue",
+        "adjectives": ["modern", "electronic", "slim", "futuristic"],
+        "description": "A thin, blue keycard with embedded circuitry. Its smooth surface occasionally flickers with tiny blue lights.",
         "count": 2
     },
-    "green": {
+    {
+        "name": "Leaf-shaped Key",
+        "color": "green",
+        "adjectives": ["natural", "organic", "delicate", "fresh"],
+        "description": "A key shaped like a leaf, its surface a vibrant green. It feels surprisingly sturdy despite its delicate appearance.",
         "count": 2
     },
-    "yellow": {
+    {
+        "name": "Golden Skeleton Key",
+        "color": "yellow",
+        "adjectives": ["valuable", "shiny", "universal", "ancient"],
+        "description": "A skeleton key made of pure gold, its teeth intricately carved. It gleams brightly even in dim light.",
         "count": 2
     },
-    "purple": {
+    {
+        "name": "Crystal Shard Key",
+        "color": "purple",
+        "adjectives": ["magical", "glowing", "sharp", "mysterious"],
+        "description": "A key-shaped shard of purple crystal. It hums softly and feels warm to the touch, as if imbued with magical energy.",
         "count": 2
     }
-}
+]

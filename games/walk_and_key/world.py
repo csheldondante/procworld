@@ -5,27 +5,28 @@ import os
 from typing import List, Dict, Optional, Any
 
 class Door:
-    def __init__(self, room1: 'Room', room2: 'Room', direction: str, lock_color: Optional[str] = None):
+    def __init__(self, room1: 'Room', room2: 'Room', direction: str, lock: Optional[Dict] = None):
         self.room1: 'Room' = room1
         self.room2: 'Room' = room2
         self.direction: str = direction
-        self.lock_color: Optional[str] = lock_color
+        self.lock: Optional[Dict] = lock
 
 class Room:
-    def __init__(self, name: str, room_type: str, size: int):
+    def __init__(self, name: str, room_type: str, size: int, adjectives: List[str]):
         self.name: str = name
         self.room_type: str = room_type
         self.size: int = size
+        self.adjectives: List[str] = adjectives
         self.doors: Dict[str, Door] = {}
-        self.items: List[str] = []
+        self.items: List[Dict] = []
 
     def add_door(self, direction: str, door: Door) -> None:
         self.doors[direction] = door
 
-    def add_item(self, item: str) -> None:
+    def add_item(self, item: Dict) -> None:
         self.items.append(item)
 
-    def remove_item(self, item: str) -> None:
+    def remove_item(self, item: Dict) -> None:
         self.items.remove(item)
 
     def get_size_description(self) -> str:
@@ -48,7 +49,7 @@ class Graph:
     def add_room(self, room: Room) -> None:
         self.rooms[room.name] = room
 
-    def add_door(self, room1_name: str, room2_name: str, direction: str, lock_color: Optional[str] = None) -> None:
+    def add_door(self, room1_name: str, room2_name: str, direction: str, lock: Optional[Dict] = None) -> None:
         room1 = self.rooms[room1_name]
         room2 = self.rooms[room2_name]
         opposite_direction = {
@@ -57,7 +58,7 @@ class Graph:
             "east": "west",
             "west": "east"
         }
-        door = Door(room1, room2, direction, lock_color)
+        door = Door(room1, room2, direction, lock)
         room1.add_door(direction, door)
         room2.add_door(opposite_direction[direction], door)
         self.doors.append(door)
@@ -68,7 +69,7 @@ def generate_random_graph(num_rooms: int, min_connections: int = 1, max_connecti
     
     # Create rooms
     for room_name in room_names:
-        room = Room(room_name, "generic", 0)  # We'll set the room type and size in decorate_graph
+        room = Room(room_name, "generic", 0, [])  # We'll set the room type, size, and adjectives in decorate_graph
         world.add_room(room)
     
     # Create connections
@@ -97,29 +98,26 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
     for room in graph.rooms.values():
         room_type = random.choice(room_types)
         room.room_type = room_type["name"]
-        room.name = f"{random.choice(room_type['adjectives'])} {room.room_type}"
+        room.adjectives = room_type["adjectives"]
+        room.name = f"{random.choice(room.adjectives)} {room.room_type}"
         room.size = room_type["size"]
-
-    # Add items to rooms based on room type
-    for room in graph.rooms.values():
-        room_type = next(rt for rt in room_types if rt["name"] == room.room_type)
-        items = room_type["items"]
-        num_items = random.randint(items["min"], items["max"])
-        for _ in range(num_items):
-            item = random.choice(items["possible"])
-            room.add_item(item)
 
     # Add locks to doors
     for door in graph.doors:
-        if random.random() < locks["probability"]:
-            lock_color = random.choice(locks["colors"])
-            door.lock_color = lock_color
+        if random.random() < 0.3:  # 30% chance of a lock, you can adjust this probability
+            lock = random.choice(locks)
+            door.lock = lock
 
-    # Add keys to rooms
-    for key_color, key_info in keys.items():
-        for _ in range(key_info["count"]):
-            room = random.choice(list(graph.rooms.values()))
-            room.add_item(f"{key_color.capitalize()} Key")
+    # Add keys and other items to rooms
+    all_items = keys + [{"name": "Mysterious Object", "adjectives": ["intriguing", "odd", "peculiar"], "description": "An object of unknown origin and purpose."}]
+    
+    for room in graph.rooms.values():
+        num_items = random.randint(0, 2)  # Each room can have 0 to 2 items
+        for _ in range(num_items):
+            matching_items = [item for item in all_items if any(adj in room.adjectives for adj in item["adjectives"])]
+            if matching_items:
+                item = random.choice(matching_items)
+                room.add_item(item)
 
 def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_file: str) -> Graph:
     graph = generate_random_graph(num_rooms)
