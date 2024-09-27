@@ -43,20 +43,20 @@ def initialize_rooms(graph: Graph, room_types: List[Dict]) -> None:
         room.items = []
 
 
-def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) -> List[str]:
-    start_room = random.choice(list(graph.rooms.values()))
+def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) -> List[Room]:
+    start_room = random.choice(graph.rooms)
     current_room = start_room
-    player_path = [current_room.name]
+    player_path = [current_room]
     player_keys: Set[Item] = set()
-    visited_rooms: Set[str] = set()
-    known_locked_doors: Set[Lock] = set[Lock]()
+    visited_rooms: Set[Room] = set()
+    known_locked_doors: Set[Lock] = set()
 
     while len(visited_rooms) < len(graph.rooms):
         current_room.visited = True
-        visited_rooms.add(current_room.name)
+        visited_rooms.add(current_room)
 
         # Update known locked doors
-        for door in graph.get_doors_for_room(current_room.name):
+        for door in graph.get_doors_for_room(current_room):
             if door.lock and door.lock not in known_locked_doors:
                 known_locked_doors.add(door.lock)
 
@@ -67,7 +67,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
                 player_keys.add(keys[-1])
 
         # Try to use a key
-        for door in graph.get_doors_for_room(current_room.name):
+        for door in graph.get_doors_for_room(current_room):
             if door.lock and door.lock.color in [key.color for key in player_keys]:
                 door.lock = None
                 player_keys.remove(next(key for key in player_keys if key.color == door.lock.color))
@@ -76,23 +76,23 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
         # Move to next room
         next_room = choose_next_room(graph, current_room, visited_rooms)
         if next_room:
-            player_path.append(next_room.name)
+            player_path.append(next_room)
             current_room = next_room
         else:
             # Backtrack if stuck
             player_path.pop()
             if player_path:
-                current_room = graph.rooms[player_path[-1]]
+                current_room = player_path[-1]
             else:
                 break  # Exit the loop if we've backtracked to the start
 
     return player_path
 
 
-def choose_next_room(graph: Graph, current_room: Room, visited_rooms: Set[str]) -> Optional[Room]:
+def choose_next_room(graph: Graph, current_room: Room, visited_rooms: Set[Room]) -> Optional[Room]:
     unvisited_neighbors = [
-        room for room in graph.get_neighboring_rooms(current_room.name)
-        if room.name not in visited_rooms
+        room for room in graph.get_neighboring_rooms(current_room)
+        if room not in visited_rooms
     ]
     return random.choice(unvisited_neighbors) if unvisited_neighbors else None
 

@@ -6,15 +6,13 @@ from games.walk_and_key.room_and_door import Room, Door
 
 class Graph:
     def __init__(self):
-        self.rooms: Dict[str, Room] = {}
+        self.rooms: List[Room] = []
         self.doors: List[Door] = []
 
     def add_room(self, room: Room) -> None:
-        self.rooms[room.name] = room
+        self.rooms.append(room)
 
-    def add_door(self, room1_name: str, room2_name: str, direction: str, lock: Optional[Lock] = None) -> None:
-        room1 = self.rooms[room1_name]
-        room2 = self.rooms[room2_name]
+    def add_door(self, room1: Room, room2: Room, direction: str, lock: Optional[Lock] = None) -> None:
         opposite_direction = {
             "north": "south",
             "south": "north",
@@ -26,14 +24,14 @@ class Graph:
         room2.add_door(opposite_direction[direction], door)
         self.doors.append(door)
 
-    def get_neighboring_rooms(self, room_name: str) -> List[Room]:
+    def get_neighboring_rooms(self, room: Room) -> List[Room]:
         neighboring_rooms = []
         for door in self.doors:
-            if door.room1.name == room_name:
+            if door.room1 == room:
                 neighboring_rooms.append(door.room2)
-            elif door.room2.name == room_name:
+            elif door.room2 == room:
                 neighboring_rooms.append(door.room1)
         return neighboring_rooms
 
-    def get_doors_for_room(self, room_name: str) -> List[Door]:
-        return [door for door in self.doors if door.room1.name == room_name or door.room2.name == room_name]
+    def get_doors_for_room(self, room: Room) -> List[Door]:
+        return [door for door in self.doors if door.room1 == room or door.room2 == room]
