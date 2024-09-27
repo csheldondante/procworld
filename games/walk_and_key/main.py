@@ -28,9 +28,9 @@ def main() -> None:
     start_display()
     world = generate_world(
         10,
-        "games/walk_and_key/room_types.json",
-        "games/walk_and_key/locks.json",
-        "games/walk_and_key/keys.json"
+        "games/walk_and_key/data/room_types.json",
+        "games/walk_and_key/data/locks.json",
+        "games/walk_and_key/data/keys.json"
     )
     player = Player(random.choice(list(world.rooms.values())))
 
