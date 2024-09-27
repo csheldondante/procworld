@@ -49,7 +49,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
     player_path = [current_room.name]
     player_keys: Set[Item] = set()
     visited_rooms: Set[str] = set()
-    known_locked_doors: Set[Lock] = set()
+    known_locked_doors: Set[Lock] = set[Lock]()
 
     while len(visited_rooms) < len(graph.rooms):
         current_room.visited = True

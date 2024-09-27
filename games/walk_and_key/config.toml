@@ -4,5 +4,6 @@ locks = "data/locks.json"
 keys = "data/keys.json"
 
 [game]
-num_rooms = 10
+num_rooms = 18
+# grid_size will be squared
 grid_size = 5
