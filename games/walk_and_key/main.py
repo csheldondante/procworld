@@ -28,18 +28,23 @@ def main():
     player = Player(random.choice(list(world.rooms.values())))
 
     show_narrative_text("Welcome to the Simple Text RPG!", "Introduction")
-    show_narrative_text(f"You are in the {player.current_room.name}.", "Location")
-
     while True:
         options = list(player.current_room.doors.items())
         situation = f"You are in the {player.current_room.name}.\n"
         
+        situation += "Your inventory:\n"
+        if player.inventory:
+            for item in player.inventory:
+                situation += f"- {item}\n"
+        else:
+            situation += "Your inventory is empty.\n"
+        
         if player.current_room.items:
-            situation += "Items in the room:\n"
+            situation += "\nItems in the room:\n"
             for item in player.current_room.items:
                 situation += f"- {item}\n"
         else:
-            situation += "There are no items in this room.\n"
+            situation += "\nThere are no items in this room.\n"
         
         situation += "\nAvailable options:\n"
         for i, (direction, door) in enumerate(options):
@@ -47,13 +52,13 @@ def main():
             lock_status = " (Locked)" if door.is_locked else ""
             situation += f"{chr(97 + i)}. Go {direction} to the {target_room.name}{lock_status}\n"
         
-        if player.current_room.items:
-            situation += f"{chr(97 + len(options))}. Pick up an item\n"
-            options.append(("pick up", None))
+        for j, item in enumerate(player.current_room.items):
+            situation += f"{chr(97 + len(options) + j)}. Pick up {item}\n"
+            options.append(("pick up", item))
         
-        if player.inventory:
-            situation += f"{chr(97 + len(options))}. Use an item from inventory\n"
-            options.append(("use item", None))
+        for k, item in enumerate(player.inventory):
+            situation += f"{chr(97 + len(options) + k)}. Use {item}\n"
+            options.append(("use", item))
         
         situation += f"{chr(97 + len(options))}. Quit"
         show_narrative_text(situation, "Options")
@@ -64,36 +69,28 @@ def main():
             show_narrative_text("Thanks for playing!")
             break
         elif choice.isalpha() and ord(choice) - 97 < len(options):
-            action, door = options[ord(choice) - 97]
+            action, item_or_door = options[ord(choice) - 97]
             if action == "pick up":
-                item_to_pick = get_user_text("Which item do you want to pick up? ").capitalize()
-                if item_to_pick in player.current_room.items:
-                    player.add_to_inventory(item_to_pick)
-                    player.current_room.remove_item(item_to_pick)
-                    show_narrative_text(f"You picked up the {item_to_pick}.")
-                else:
-                    show_error("That item is not in the room.")
-            elif action == "use item":
-                item_to_use = get_user_text("Which item do you want to use? ").capitalize()
-                if item_to_use in player.inventory:
-                    if item_to_use == "Key":
-                        for direction, door in player.current_room.doors.items():
-                            if door.is_locked:
-                                door.is_locked = False
-                                player.remove_from_inventory("Key")
-                                show_narrative_text(f"You unlocked the door to the {direction}.")
-                                break
-                        else:
-                            show_narrative_text("There are no locked doors in this room.")
+                player.add_to_inventory(item_or_door)
+                player.current_room.remove_item(item_or_door)
+                show_narrative_text(f"You picked up the {item_or_door}.")
+            elif action == "use":
+                if item_or_door == "Key":
+                    for direction, door in player.current_room.doors.items():
+                        if door.is_locked:
+                            door.is_locked = False
+                            player.remove_from_inventory("Key")
+                            show_narrative_text(f"You unlocked the door to the {direction}.")
+                            break
                     else:
-                        show_narrative_text(f"You used the {item_to_use}, but nothing happened.")
+                        show_narrative_text("There are no locked doors in this room.")
                 else:
-                    show_error("You don't have that item in your inventory.")
-            elif door:
-                if door.is_locked:
+                    show_narrative_text(f"You used the {item_or_door}, but nothing happened.")
+            elif isinstance(item_or_door, Door):
+                if item_or_door.is_locked:
                     show_narrative_text(f"The door to the {action} is locked. You need to find a key.")
                 else:
-                    player.current_room = door.room2 if door.room1 == player.current_room else door.room1
+                    player.current_room = item_or_door.room2 if item_or_door.room1 == player.current_room else item_or_door.room1
                     show_narrative_text(f"You move {action} to the {player.current_room.name}.")
         else:
             show_error("Invalid choice. Please try again.")
