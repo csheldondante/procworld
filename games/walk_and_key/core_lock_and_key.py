@@ -32,7 +32,7 @@ def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, 
 
 def initialize_rooms(graph: Graph, room_types: List[Dict]) -> None:
     room_name_counts: Dict[str, int] = {}
-    for room in graph.rooms.values():
+    for room in graph.rooms:
         room_type = random.choice(room_types)
         room.room_type = room_type["name"]
         room.adjectives = room_type["adjectives"][:3]
@@ -56,7 +56,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
         visited_rooms.add(current_room)
 
         # Update known locked doors
-        for door in graph.get_doors_for_room(current_room):
+        for door in graph.get_doors_for_room_bidirectional(current_room):
             if door.lock and door.lock not in known_locked_doors:
                 known_locked_doors.add(door.lock)
 
@@ -67,7 +67,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
                 player_keys.add(keys[-1])
 
         # Try to use a key
-        for door in graph.get_doors_for_room(current_room):
+        for door in graph.get_doors_for_room_bidirectional(current_room):
             if door.lock and door.lock.color in [key.color for key in player_keys]:
                 door.lock = None
                 player_keys.remove(next(key for key in player_keys if key.color == door.lock.color))
@@ -116,7 +116,7 @@ def add_alternative_paths(graph: Graph, locks: List[Lock], keys: List[Item]) -> 
                 if keys:
                     matching_key = next((key for key in keys if key.color == lock.color), None)
                     if matching_key:
-                        random_room = random.choice(list(graph.rooms.values()))
+                        random_room = random.choice(list(graph.rooms))
                         random_room.items.append(matching_key)
                         keys.remove(matching_key)
 
@@ -128,7 +128,7 @@ def add_misc_items(graph: Graph) -> None:
         # Add more miscellaneous items here
     ]
 
-    for room in graph.rooms.values():
+    for room in graph.rooms:
         if random.random() < 0.3:  # 30% chance to add a misc item
             if misc_items:
                 item = random.choice(misc_items)

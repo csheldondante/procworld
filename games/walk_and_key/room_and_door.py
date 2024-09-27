@@ -10,7 +10,7 @@ class Room:
         self.size: int = size
         self.adjectives: List[str] = adjectives
         self.description: str = description
-        self.doors: Dict[str, 'Door'] = {}
+        self.doors: Dict[str, 'Door'] = {}  # direction -> Door
         self.items: List[Item] = []
         self.x: int = x
         self.y: int = y

@@ -33,5 +33,5 @@ class Graph:
                 neighboring_rooms.append(door.room1)
         return neighboring_rooms
 
-    def get_doors_for_room(self, room: Room) -> List[Door]:
+    def get_doors_for_room_bidirectional(self, room: Room) -> List[Door]:
         return [door for door in self.doors if door.room1 == room or door.room2 == room]

@@ -54,7 +54,7 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
 
     # Assign room types and ensure unique names
     room_name_counts = {}
-    for room in graph.rooms.values():
+    for room in graph.rooms:
         room_type = random.choice(room_types)
         room.room_type = room_type["name"]
         room.adjectives = room_type["adjectives"][:3]  # Take the first 3 adjectives
@@ -87,7 +87,7 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
     all_items = [Item(key["name"], key["color"], key["adjectives"], key["description"]) for key in keys]
     all_items.append(Item("Mysterious Object", "gray", ["intriguing", "odd", "peculiar"], "An object of unknown origin and purpose."))
     
-    for room in graph.rooms.values():
+    for room in graph.rooms:
         num_items = random.randint(0, 2)  # Each room can have 0 to 2 items
         for _ in range(num_items):
             matching_items = [item for item in all_items if any(adj in room.adjectives for adj in item.adjectives)]
@@ -101,7 +101,7 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
         if door.lock:
             matching_key = next((key for key in all_items if key.color == door.lock.color), None)
             if matching_key:
-                random_room = random.choice(list(graph.rooms.values()))
+                random_room = random.choice(list(graph.rooms))
                 random_room.add_item(matching_key)
                 all_items.remove(matching_key)
 
@@ -115,17 +115,17 @@ def print_map(graph: Graph) -> None:
     map_text = Text()
 
     # Calculate grid size based on room positions
-    min_x = min(room.x for room in graph.rooms.values())
-    max_x = max(room.x for room in graph.rooms.values())
-    min_y = min(room.y for room in graph.rooms.values())
-    max_y = max(room.y for room in graph.rooms.values())
+    min_x = min(room.x for room in graph.rooms)
+    max_x = max(room.x for room in graph.rooms)
+    min_y = min(room.y for room in graph.rooms)
+    max_y = max(room.y for room in graph.rooms)
     
     grid_width = max_x - min_x + 1
     grid_height = max_y - min_y + 1
 
     # Create a grid representation
     grid = [[None for _ in range(grid_width)] for _ in range(grid_height)]
-    for room in graph.rooms.values():
+    for room in graph.rooms:
         grid[room.y - min_y][room.x - min_x] = room
 
     # Print the grid
@@ -142,7 +142,7 @@ def print_map(graph: Graph) -> None:
 
     # Print detailed room information
     map_text.append("Room Details:\n")
-    for room_name, room in graph.rooms.items():
+    for room in graph.rooms:
         map_text.append(room.get_name())
         map_text.append("\n")
 

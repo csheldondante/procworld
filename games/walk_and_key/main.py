@@ -67,8 +67,7 @@ def get_available_actions(player: Player, world: Graph) -> List[Action]:
     actions = []
     
     # Movement actions
-    for door in world.get_doors_for_room(player.current_room):
-        direction = next(dir for dir, d in player.current_room.doors.items() if d == door)
+    for direction, door in player.current_room.doors.items():
         target_room = door.room2 if door.room1 == player.current_room else door.room1
         description = Text()
         description.append(f"Go {direction} to the ")
