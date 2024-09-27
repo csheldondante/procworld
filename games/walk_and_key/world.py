@@ -282,7 +282,7 @@ def draw_grid_graph(graph: Graph):
                 edge_label += f"\n(Locked: {door.lock.name})"
             edge_labels[(room.name, target_room.name)] = edge_label
 
-    plt.figure(figsize=(5, 5))
+    plt.figure(figsize=(8, 8))
 
     # Draw nodes
     nx.draw_networkx_nodes(G, pos, node_color='lightblue', node_size=3000)
