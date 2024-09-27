@@ -97,11 +97,12 @@ class Room:
 
     def get_full_description(self) -> Text:
         description = Text()
-        description.append(" ".join(self.adjectives), style="italic")
-        description.append(" ")
         description.append(self.get_name())
-        description.append(f" ({self.get_size_description()})")
-        description.append(".\n\n")
+        description.append(" (")
+        description.append(", ".join(self.adjectives), style="italic")
+        description.append(" ")
+        description.append(f" {self.get_size_description()}")
+        description.append(").\n\n")
         description.append(self.description)
         description.append("\n\n")
 
