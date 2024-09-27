@@ -28,6 +28,18 @@ class Room:
     def remove_item(self, item: str) -> None:
         self.items.remove(item)
 
+    def get_size_description(self) -> str:
+        if self.size <= 2:
+            return "tiny"
+        elif self.size <= 4:
+            return "small"
+        elif self.size <= 6:
+            return "medium-sized"
+        elif self.size <= 8:
+            return "large"
+        else:
+            return "enormous"
+
 class Graph:
     def __init__(self):
         self.rooms: Dict[str, Room] = {}

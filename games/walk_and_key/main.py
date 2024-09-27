@@ -42,7 +42,7 @@ def main() -> None:
     show_narrative_text("Welcome to the Simple Text RPG!", "Introduction")
     while True:
         actions = []
-        situation = f"You are in the {player.current_room.name}.\n"
+        situation = f"You are in the {player.current_room.get_size_description()} {player.current_room.name}.\n"
         
         situation += "Your inventory:\n"
         if player.inventory:
