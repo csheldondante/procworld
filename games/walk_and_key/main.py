@@ -7,28 +7,17 @@ from utils.gui.display_interface import (
     stop_display,
     show_error
 )
-from games.walk_and_key.world import Room, Graph
+from games.walk_and_key.world import Room, Graph, generate_random_graph
+
 
 class Player:
     def __init__(self, current_room):
         self.current_room = current_room
 
-def create_world():
-    world = Graph()
-    rooms = ["Living Room", "Kitchen", "Bedroom", "Bathroom", "Study"]
-    for room_name in rooms:
-        world.add_room(Room(room_name))
-
-    world.add_door("Living Room", "Kitchen", "north")
-    world.add_door("Living Room", "Bedroom", "east")
-    world.add_door("Bedroom", "Bathroom", "north")
-    world.add_door("Living Room", "Study", "south")
-
-    return world
 
 def main():
     start_display()
-    world = create_world()
+    world = generate_random_graph(10)
     player = Player(random.choice(list(world.rooms.values())))
 
     show_narrative_text("Welcome to the Simple Text RPG!", "Introduction")
