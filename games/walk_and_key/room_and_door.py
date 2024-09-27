@@ -87,6 +87,9 @@ class Door:
     def can_player_unlock(self, player: LockAndKeyPlayer) -> bool:
         return any(self.can_unlock(key) for key in player.inventory)
 
+    def get_other_room(self, current_room: 'Room') -> 'Room':
+        return self.room2 if current_room == self.room1 else self.room1
+
     def get_lock_description_short(self) -> Text:
         if self.lock:
             description = Text()
