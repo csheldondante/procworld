@@ -74,7 +74,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
     log: List[str] = [f"Player starts in {current_room.name}"]
 
     # Start with all doors locked with no key
-    for door in graph.doors:
+    for door in graph.all_doors():
         door.set_locked_with_no_key()
 
     while len(visited_rooms) < len(graph.rooms):

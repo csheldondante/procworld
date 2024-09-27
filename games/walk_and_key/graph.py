@@ -12,6 +12,14 @@ class Graph:
     def add_room(self, room: Room) -> None:
         self.rooms.append(room)
 
+    def all_doors(self):
+        visited_doors = set()
+        for room in self.rooms:
+            for door in room.doors.values():
+                if door not in visited_doors:
+                    visited_doors.add(door)
+                    yield door
+
     def add_door(self, room1: Room, room2: Room, direction: str, lock: Optional[Lock] = None) -> None:
         opposite_direction = {
             "north": "south",
