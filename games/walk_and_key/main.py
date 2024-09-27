@@ -49,6 +49,18 @@ def initialize_game(config: Dict) -> tuple[Graph, Player]:
     return world, player
 
 
+def autopickup_items(player: Player, config: Dict) -> None:
+    if config["game"]["autopickup"] and player.current_room.items:
+        for item in player.current_room.items[:]:  # Create a copy of the list to iterate over
+            player.add_to_inventory(item)
+            player.current_room.remove_item(item)
+            message = Text("You automatically picked up the ")
+            message.append(item.get_name())
+            message.append(". ")
+            message.append(item.description)
+            show_narrative_text(message)
+
+
 def describe_situation(player: Player) -> Text:
     situation = player.current_room.get_full_description()
     
@@ -115,7 +127,7 @@ def display_actions(situation: Text, actions: List[Action]) -> None:
     show_narrative_text(situation, "Options")
 
 
-def handle_action(action: Action, player: Player) -> bool:
+def handle_action(action: Action, player: Player, config: Dict) -> bool:
     if action.action_type == ActionType.QUIT:
         show_narrative_text("Thanks for playing!")
         return False
@@ -137,7 +149,7 @@ def handle_action(action: Action, player: Player) -> bool:
             message.append(", but nothing happened.")
             show_narrative_text(message)
     elif action.action_type == ActionType.MOVE:
-        move_player(player, action.target)
+        move_player(player, action.target, config)
     return True
 
 
@@ -161,7 +173,7 @@ def use_key(player: Player, key: Item) -> None:
         show_narrative_text(message, "Action")
 
 
-def move_player(player: Player, door: Door) -> None:
+def move_player(player: Player, door: Door, config: Dict) -> None:
     if door.is_locked():
         show_narrative_text(door.get_lock_description(), "Locked door")
     else:
@@ -172,6 +184,7 @@ def move_player(player: Player, door: Door) -> None:
         message.append(player.current_room.get_name())
         message.append(".")
         show_narrative_text(message)
+        autopickup_items(player, config)
 
 
 def main() -> None:
@@ -184,6 +197,8 @@ def main() -> None:
 
     show_narrative_text("Welcome to the Lock and Key RPG!", "Introduction")
     
+    autopickup_items(player, config)  # Autopickup items in the starting room
+    
     while True:
         situation = describe_situation(player)
         actions = get_available_actions(player, world)
@@ -194,7 +209,7 @@ def main() -> None:
 
         if choice in alphabet[:len(actions)]:
             action = actions[alphabet.index(choice)]
-            if not handle_action(action, player):
+            if not handle_action(action, player, config):
                 break
         else:
             show_error("Invalid choice. Please try again.")

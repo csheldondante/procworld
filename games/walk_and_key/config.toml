@@ -7,3 +7,4 @@ keys = "data/keys.json"
 num_rooms = 18
 # grid_size will be squared
 grid_size = 5
+autopickup = true
