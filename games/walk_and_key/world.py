@@ -1,3 +1,6 @@
+
+import random
+
 class Room:
     def __init__(self, name):
         self.name = name
@@ -5,8 +8,6 @@ class Room:
 
     def add_door(self, direction, room):
         self.doors[direction] = room
-
-import random
 
 class Graph:
     def __init__(self):
