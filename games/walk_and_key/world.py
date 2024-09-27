@@ -12,9 +12,10 @@ class Door:
         self.lock_color: Optional[str] = lock_color
 
 class Room:
-    def __init__(self, name: str, room_type: str):
+    def __init__(self, name: str, room_type: str, size: int):
         self.name: str = name
         self.room_type: str = room_type
+        self.size: int = size
         self.doors: Dict[str, Door] = {}
         self.items: List[str] = []
 
@@ -55,7 +56,7 @@ def generate_random_graph(num_rooms: int, min_connections: int = 1, max_connecti
     
     # Create rooms
     for room_name in room_names:
-        room = Room(room_name, "generic")  # We'll set the room type in decorate_graph
+        room = Room(room_name, "generic", 0)  # We'll set the room type and size in decorate_graph
         world.add_room(room)
     
     # Create connections
@@ -82,11 +83,15 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
 
     # Assign room types
     for room in graph.rooms.values():
-        room.room_type = random.choice(list(room_types.keys()))
+        room_type = random.choice(room_types)
+        room.room_type = room_type["name"]
+        room.name = f"{random.choice(room_type['adjectives'])} {room.room_type}"
+        room.size = room_type["size"]
 
     # Add items to rooms based on room type
     for room in graph.rooms.values():
-        items = room_types[room.room_type]["items"]
+        room_type = next(rt for rt in room_types if rt["name"] == room.room_type)
+        items = room_type["items"]
         num_items = random.randint(items["min"], items["max"])
         for _ in range(num_items):
             item = random.choice(items["possible"])
