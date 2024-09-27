@@ -250,6 +250,8 @@ def print_map(graph: Graph) -> None:
             
             door_text.append("\n")
             map_text.append(door_text)
+        if not room.doors:
+            map_text.append("  Not connected!\n")
 
         map_text.append("\n")
 
