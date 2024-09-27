@@ -1,4 +1,5 @@
 import random
+from typing import List
 from utils.gui.display_interface import (
     show_narrative_text,
     get_user_text,
@@ -7,25 +8,30 @@ from utils.gui.display_interface import (
     stop_display,
     show_error
 )
-from games.walk_and_key.world import Room, Graph, Door, generate_random_graph
+from games.walk_and_key.world import Room, Graph, Door, generate_world
 from games.walk_and_key.action import Action, ActionType
 
 
 class Player:
-    def __init__(self, current_room):
-        self.current_room = current_room
-        self.inventory = []
+    def __init__(self, current_room: Room):
+        self.current_room: Room = current_room
+        self.inventory: List[str] = []
 
-    def add_to_inventory(self, item):
+    def add_to_inventory(self, item: str) -> None:
         self.inventory.append(item)
 
-    def remove_from_inventory(self, item):
+    def remove_from_inventory(self, item: str) -> None:
         self.inventory.remove(item)
 
 
-def main():
+def main() -> None:
     start_display()
-    world = generate_random_graph(10)
+    world = generate_world(
+        10,
+        "games/walk_and_key/room_types.json",
+        "games/walk_and_key/locks.json",
+        "games/walk_and_key/keys.json"
+    )
     player = Player(random.choice(list(world.rooms.values())))
 
     show_narrative_text("Welcome to the Simple Text RPG!", "Introduction")
