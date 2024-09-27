@@ -96,7 +96,6 @@ def main():
                             door.lock_color = None
                             unlocked_doors.append(direction)
                     if unlocked_doors:
-                        player.remove_from_inventory(action.target)
                         show_narrative_text(f"You used the {action.target} to unlock the door(s) to the {', '.join(unlocked_doors)}.")
                     else:
                         show_narrative_text(f"There are no {key_color} locked doors in this room.")
