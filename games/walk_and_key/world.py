@@ -36,13 +36,13 @@ def generate_random_graph(num_rooms: int, grid_size: int) -> Graph:
                 room = grid[y][x]
                 for direction in directions:
                     if direction == "north" and y > 0 and grid[y-1][x] is not None:
-                        world.add_door(room.name, grid[y-1][x].name, direction)
+                        world.add_door(room, grid[y-1][x], direction)
                     elif direction == "south" and y < grid_size-1 and grid[y+1][x] is not None:
-                        world.add_door(room.name, grid[y+1][x].name, direction)
+                        world.add_door(room, grid[y+1][x], direction)
                     elif direction == "east" and x < grid_size-1 and grid[y][x+1] is not None:
-                        world.add_door(room.name, grid[y][x+1].name, direction)
+                        world.add_door(room, grid[y][x+1], direction)
                     elif direction == "west" and x > 0 and grid[y][x-1] is not None:
-                        world.add_door(room.name, grid[y][x-1].name, direction)
+                        world.add_door(room, grid[y][x-1], direction)
     
     return world
 
