@@ -1,9 +1,10 @@
 import random
 import toml
-from typing import List, Dict
+from typing import List
 from rich import print
 from rich.text import Text
 import string
+from games.walk_and_key.item import Item
 from utils.gui.display_interface import (
     show_narrative_text,
     get_user_text,
@@ -19,12 +20,12 @@ from games.walk_and_key.action import Action, ActionType
 class Player:
     def __init__(self, current_room: Room):
         self.current_room: Room = current_room
-        self.inventory: List[Dict] = []
+        self.inventory: List[Item] = []
 
-    def add_to_inventory(self, item: Dict) -> None:
+    def add_to_inventory(self, item: Item) -> None:
         self.inventory.append(item)
 
-    def remove_from_inventory(self, item: Dict) -> None:
+    def remove_from_inventory(self, item: Item) -> None:
         self.inventory.remove(item)
 
 
@@ -55,7 +56,7 @@ def describe_situation(player: Player) -> Text:
     if player.inventory:
         for item in player.inventory:
             situation.append("- ")
-            situation.append(item['name'], style=f"bold {item['color']}")
+            situation.append(item.get_name())
             situation.append("\n")
     else:
         situation.append("Your inventory is empty.\n")
@@ -64,7 +65,7 @@ def describe_situation(player: Player) -> Text:
         situation.append("\nItems in the room:\n")
         for item in player.current_room.items:
             situation.append("- ")
-            situation.append(item['name'], style=f"bold {item['color']}")
+            situation.append(item.get_name())
             situation.append("\n")
     else:
         situation.append("\nThere are no items in this room.\n")
@@ -90,16 +91,14 @@ def get_available_actions(player: Player) -> List[Action]:
     
     # Pick up actions
     for item in player.current_room.items:
-        description = Text()
-        description.append("Pick up ")
-        description.append(item['name'], style=f"bold {item['color']}")
+        description = Text("Pick up ")
+        description.append(item.get_name())
         actions.append(Action(ActionType.PICK_UP, item, description))
     
     # Use actions
     for item in player.inventory:
-        description = Text()
-        description.append("Use ")
-        description.append(item['name'], style=f"bold {item['color']}")
+        description = Text("Use ")
+        description.append(item.get_name())
         actions.append(Action(ActionType.USE, item, description))
     
     # Quit action
@@ -130,14 +129,13 @@ def handle_action(action: Action, player: Player) -> bool:
     elif action.action_type == ActionType.PICK_UP:
         player.add_to_inventory(action.target)
         player.current_room.remove_item(action.target)
-        message = Text()
-        message.append("You picked up the ")
-        message.append(action.target['name'], style=f"bold {action.target['color']}")
+        message = Text("You picked up the ")
+        message.append(action.target.get_name())
         message.append(". ")
-        message.append(action.target['description'])
+        message.append(action.target.description)
         show_narrative_text(message)
     elif action.action_type == ActionType.USE:
-        if "Key" in action.target['name']:
+        if "Key" in action.target.name:
             use_key(player, action.target)
         else:
             message = Text()
@@ -150,23 +148,21 @@ def handle_action(action: Action, player: Player) -> bool:
     return True
 
 
-def use_key(player: Player, key: Dict) -> None:
-    key_color = key['color']
+def use_key(player: Player, key: Item) -> None:
+    key_color = key.color
     unlocked_doors = []
     for direction, door in player.current_room.doors.items():
-        if door.is_locked() and door.lock['color'] == key_color:
+        if door.is_locked() and door.lock.color == key_color:
             door.unlock()
             unlocked_doors.append(direction)
     if unlocked_doors:
-        message = Text()
-        message.append("You used the ")
-        message.append(key['name'], style=f"bold {key['color']}")
+        message = Text("You used the ")
+        message.append(key.get_name())
         message.append(f" to unlock the door(s) to the {', '.join(unlocked_doors)}.")
         show_narrative_text(message)
     else:
-        message = Text()
-        message.append("There are no ")
-        message.append(key_color, style=f"bold {key_color}")
+        message = Text("There are no ")
+        message.append(Text(key_color, style=f"bold {key_color}"))
         message.append(" locked doors in this room.")
         show_narrative_text(message, "Action")
 

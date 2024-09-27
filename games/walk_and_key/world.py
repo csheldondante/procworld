@@ -4,6 +4,7 @@ import json
 import os
 from typing import List, Dict, Optional, Any
 from rich.text import Text
+from games.walk_and_key.item import Item
 
 class Door:
     def __init__(self, room1: 'Room', room2: 'Room', direction: str, lock: Optional[Dict] = None):
@@ -34,15 +35,15 @@ class Room:
         self.size: int = size
         self.adjectives: List[str] = adjectives
         self.doors: Dict[str, Door] = {}
-        self.items: List[Dict] = []
+        self.items: List[Item] = []
 
     def add_door(self, direction: str, door: Door) -> None:
         self.doors[direction] = door
 
-    def add_item(self, item: Dict) -> None:
+    def add_item(self, item: Item) -> None:
         self.items.append(item)
 
-    def remove_item(self, item: Dict) -> None:
+    def remove_item(self, item: Item) -> None:
         self.items.remove(item)
 
     def get_size_description(self) -> Text:
@@ -128,27 +129,26 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
             door.lock = lock
 
     # Add keys and other items to rooms
-    all_items = keys + [{"name": "Mysterious Object", "adjectives": ["intriguing", "odd", "peculiar"], "description": "An object of unknown origin and purpose."}]
+    all_items = [Item(key["name"], key["color"], key["adjectives"], key["description"]) for key in keys]
+    all_items.append(Item("Mysterious Object", "gray", ["intriguing", "odd", "peculiar"], "An object of unknown origin and purpose."))
     
     for room in graph.rooms.values():
         num_items = random.randint(0, 2)  # Each room can have 0 to 2 items
         for _ in range(num_items):
-            matching_items = [item for item in all_items if any(adj in room.adjectives for adj in item["adjectives"])]
+            matching_items = [item for item in all_items if any(adj in room.adjectives for adj in item.adjectives)]
             if matching_items:
                 item = random.choice(matching_items)
-                if "count" in item:
-                    item["count"] -= 1
-                    if item["count"] == 0:
-                        all_items.remove(item)
                 room.add_item(item)
+                all_items.remove(item)
 
     # Ensure all locks have corresponding keys in the world
     for door in graph.doors:
         if door.lock:
-            matching_key = next((key for key in keys if key["color"] == door.lock["color"]), None)
+            matching_key = next((key for key in all_items if key.color == door.lock["color"]), None)
             if matching_key:
                 random_room = random.choice(list(graph.rooms.values()))
                 random_room.add_item(matching_key)
+                all_items.remove(matching_key)
 
 def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_file: str) -> Graph:
     graph = generate_random_graph(num_rooms)
