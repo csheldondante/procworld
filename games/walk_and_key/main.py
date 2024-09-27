@@ -68,7 +68,7 @@ def get_available_actions(player: Player) -> List[Action]:
         target_room = door.room2 if door.room1 == player.current_room else door.room1
         description = Text()
         description.append(f"Go {direction} to the ")
-        description.append(target_room.name, style="bold")
+        description.append(target_room.get_name())
         if door.is_locked():
             description.append(" (")
             description.append(door.get_lock_description())
@@ -126,7 +126,7 @@ def handle_action(action: Action, player: Player) -> bool:
         else:
             message = Text()
             message.append("You used the ")
-            message.append(action.target['name'], style=f"bold {action.target['color']}")
+            message.append(action.target.get_name())
             message.append(", but nothing happened.")
             show_narrative_text(message)
     elif action.action_type == ActionType.MOVE:
@@ -148,7 +148,7 @@ def use_key(player: Player, key: Item) -> None:
         show_narrative_text(message)
     else:
         message = Text("There are no ")
-        message.append(Text(key_color, style=f"bold {key_color}"))
+        message.append(Text(key_color, style=key_color))
         message.append(" locked doors in this room.")
         show_narrative_text(message, "Action")
 
@@ -160,7 +160,7 @@ def move_player(player: Player, door: Door) -> None:
         player.current_room = door.room2 if door.room1 == player.current_room else door.room1
         message = Text()
         message.append("You move to the ")
-        message.append(player.current_room.name, style="bold")
+        message.append(player.current_room.get_name())
         message.append(".")
         show_narrative_text(message)
 
