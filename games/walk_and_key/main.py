@@ -63,7 +63,7 @@ def describe_situation(player: Player) -> Text:
     return situation
 
 
-def get_available_actions(player: Player) -> List[Action]:
+def get_available_actions(player: Player, world: Graph) -> List[Action]:
     actions = []
     
     # Movement actions
@@ -181,7 +181,7 @@ def main() -> None:
     
     while True:
         situation = describe_situation(player)
-        actions = get_available_actions(player)
+        actions = get_available_actions(player, world)
         display_actions(situation, actions)
 
         choice = get_user_text("Enter your choice: ").lower()
