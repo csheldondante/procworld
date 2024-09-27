@@ -6,11 +6,11 @@ from rich.box import DOUBLE
 
 console = Console()
 
-def show_narrative_text(text: str, speaker: str="", color: str = "green") -> None:
+def show_narrative_text(text: str | Text, speaker: str="", color: str = "green") -> None:
     """
     Display a block of narrative text in the console.
     """
-    content = Text(text.strip())
+    content = text if isinstance(text, Text) else Text(text.strip())
     if speaker:
         panel = Panel(content, border_style=color, expand=False, title=speaker, title_align="left")
     else:
