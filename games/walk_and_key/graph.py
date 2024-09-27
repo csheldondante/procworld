@@ -25,13 +25,6 @@ class Graph:
         room1.add_door(direction, door)
         room2.add_door(opposite_direction[direction], door)
         self.doors.append(door)
-from typing import List, Dict
-from games.walk_and_key.room_and_door import Room, Door
-
-class Graph:
-    def __init__(self):
-        self.rooms: Dict[str, Room] = {}
-        self.doors: List[Door] = []
 
     def get_neighboring_rooms(self, room_name: str) -> List[Room]:
         neighboring_rooms = []
