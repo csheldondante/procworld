@@ -71,7 +71,7 @@ def get_available_actions(player: Player) -> List[Action]:
         description.append(target_room.get_name())
         if door.is_locked():
             description.append(" (")
-            description.append(door.get_lock_description())
+            description.append(door.get_lock_description_short())
             description.append(")")
         actions.append(Action(ActionType.MOVE, door, description))
     
@@ -148,7 +148,7 @@ def use_key(player: Player, key: Item) -> None:
         show_narrative_text(message)
     else:
         message = Text("There are no ")
-        message.append(Text(key_color, style=key_color))
+        message.append(Text(key_color, style=f"bold {key_color}"))
         message.append(" locked doors in this room.")
         show_narrative_text(message, "Action")
 

@@ -19,6 +19,14 @@ class Door:
     def unlock(self) -> None:
         self.lock = None
 
+    def get_lock_description_short(self) -> Text:
+        if self.lock:
+            description = Text()
+            description.append("Locked with a ")
+            description.append(self.lock['name'], style=f"bold {self.lock['color']}")
+            return description
+        return Text("Unlocked")
+
     def get_lock_description(self) -> Text:
         if self.lock:
             description = Text()
