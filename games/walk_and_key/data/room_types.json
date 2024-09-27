@@ -2,101 +2,51 @@
     {
         "name": "bedroom",
         "adjectives": ["cozy", "personal", "restful", "intimate", "modern"],
-        "size": 3,
-        "items": {
-            "min": 1,
-            "max": 3,
-            "possible": ["Pillow", "Blanket", "Book", "Lamp", "Clothes"]
-        }
+        "size": 3
     },
     {
         "name": "kitchen",
         "adjectives": ["culinary", "functional", "aromatic", "bustling", "homey"],
-        "size": 4,
-        "items": {
-            "min": 2,
-            "max": 4,
-            "possible": ["Knife", "Plate", "Fork", "Spoon", "Pot", "Pan"]
-        }
+        "size": 4
     },
     {
         "name": "living_room",
         "adjectives": ["spacious", "comfortable", "social", "relaxing", "inviting"],
-        "size": 5,
-        "items": {
-            "min": 1,
-            "max": 3,
-            "possible": ["Remote", "Magazine", "Cushion", "Plant", "Painting"]
-        }
+        "size": 5
     },
     {
         "name": "bathroom",
         "adjectives": ["clean", "private", "hygienic", "refreshing", "compact"],
-        "size": 2,
-        "items": {
-            "min": 1,
-            "max": 2,
-            "possible": ["Soap", "Towel", "Toothbrush", "Hairbrush", "Toilet Paper"]
-        }
+        "size": 2
     },
     {
         "name": "study",
         "adjectives": ["quiet", "scholarly", "focused", "organized", "intellectual"],
-        "size": 3,
-        "items": {
-            "min": 2,
-            "max": 4,
-            "possible": ["Pen", "Paper", "Book", "Laptop", "Calculator"]
-        }
+        "size": 3
     },
     {
         "name": "attic",
         "adjectives": ["dusty", "mysterious", "cramped", "forgotten", "nostalgic"],
-        "size": 3,
-        "items": {
-            "min": 2,
-            "max": 4,
-            "possible": ["Old Trunk", "Antique Mirror", "Cobweb", "Dusty Photo Album", "Vintage Toy"]
-        }
+        "size": 3
     },
     {
         "name": "basement",
         "adjectives": ["damp", "dark", "eerie", "musty", "spacious"],
-        "size": 6,
-        "items": {
-            "min": 2,
-            "max": 5,
-            "possible": ["Tool Box", "Old Bicycle", "Washing Machine", "Cardboard Box", "Spare Bulb"]
-        }
+        "size": 6
     },
     {
         "name": "garden",
         "adjectives": ["lush", "serene", "colorful", "fragrant", "well-maintained"],
-        "size": 8,
-        "items": {
-            "min": 2,
-            "max": 4,
-            "possible": ["Watering Can", "Garden Gnome", "Flower Pot", "Trowel", "Bird Feeder"]
-        }
+        "size": 8
     },
     {
         "name": "library",
         "adjectives": ["vast", "silent", "knowledge-filled", "cozy", "well-organized"],
-        "size": 7,
-        "items": {
-            "min": 3,
-            "max": 5,
-            "possible": ["Ancient Tome", "Reading Glasses", "Bookmark", "Quill Pen", "Globe"]
-        }
+        "size": 7
     },
     {
         "name": "dining_room",
         "adjectives": ["elegant", "formal", "spacious", "well-lit", "inviting"],
-        "size": 5,
-        "items": {
-            "min": 2,
-            "max": 4,
-            "possible": ["Candelabra", "Fine China", "Silverware Set", "Table Runner", "Wine Glass"]
-        }
+        "size": 5
     }
 ]
