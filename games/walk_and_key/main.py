@@ -75,20 +75,23 @@ def main():
                 player.current_room.remove_item(item_or_door)
                 show_narrative_text(f"You picked up the {item_or_door}.")
             elif action == "use":
-                if item_or_door == "Key":
+                if "Key" in item_or_door:
+                    key_color = item_or_door.split()[0].lower()
+                    unlocked_doors = []
                     for direction, door in player.current_room.doors.items():
-                        if door.is_locked:
-                            door.is_locked = False
-                            player.remove_from_inventory("Key")
-                            show_narrative_text(f"You unlocked the door to the {direction}.")
-                            break
+                        if door.lock_color == key_color:
+                            door.lock_color = None
+                            unlocked_doors.append(direction)
+                    if unlocked_doors:
+                        player.remove_from_inventory(item_or_door)
+                        show_narrative_text(f"You used the {item_or_door} to unlock the door(s) to the {', '.join(unlocked_doors)}.")
                     else:
-                        show_narrative_text("There are no locked doors in this room.")
+                        show_narrative_text(f"There are no {key_color} locked doors in this room.")
                 else:
                     show_narrative_text(f"You used the {item_or_door}, but nothing happened.")
             elif isinstance(item_or_door, Door):
-                if item_or_door.is_locked:
-                    show_narrative_text(f"The door to the {action} is locked. You need to find a key.")
+                if item_or_door.lock_color:
+                    show_narrative_text(f"The door to the {action} is locked with a {item_or_door.lock_color} lock. You need to find a {item_or_door.lock_color} key.")
                 else:
                     player.current_room = item_or_door.room2 if item_or_door.room1 == player.current_room else item_or_door.room1
                     show_narrative_text(f"You move {action} to the {player.current_room.name}.")
