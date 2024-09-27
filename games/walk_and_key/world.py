@@ -31,7 +31,7 @@ class Graph:
     def add_room(self, room):
         self.rooms[room.name] = room
 
-    def add_door(self, room1_name, room2_name, direction, is_locked=False):
+    def add_door(self, room1_name, room2_name, direction, lock_color=None):
         room1 = self.rooms[room1_name]
         room2 = self.rooms[room2_name]
         opposite_direction = {
@@ -40,7 +40,7 @@ class Graph:
             "east": "west",
             "west": "east"
         }
-        door = Door(room1, room2, direction, is_locked)
+        door = Door(room1, room2, direction, lock_color)
         room1.add_door(direction, door)
         room2.add_door(opposite_direction[direction], door)
         self.doors.append(door)

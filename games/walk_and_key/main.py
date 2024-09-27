@@ -49,7 +49,7 @@ def main():
         situation += "\nAvailable options:\n"
         for i, (direction, door) in enumerate(options):
             target_room = door.room2 if door.room1 == player.current_room else door.room1
-            lock_status = " (Locked)" if door.is_locked else ""
+            lock_status = f" (Locked with {door.lock_color} lock)" if door.lock_color else ""
             situation += f"{chr(97 + i)}. Go {direction} to the {target_room.name}{lock_status}\n"
         
         for j, item in enumerate(player.current_room.items):
