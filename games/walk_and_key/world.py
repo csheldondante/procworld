@@ -183,12 +183,12 @@ def generate_world(num_rooms: int, room_types_file: str, locks_file: str, keys_f
     decorate_graph(graph, room_types_file, locks_file, keys_file)
     return graph
 
-def print_map(graph: Graph) -> None:
-    from rich.console import Console
-    from rich.panel import Panel
-    from rich.text import Text
+from utils.gui.display_interface import show_narrative_text
+from rich.text import Text
+from rich.panel import Panel
 
-    console = Console()
+def print_map(graph: Graph) -> None:
+    map_text = Text()
 
     for room_name, room in graph.rooms.items():
         room_text = Text()
@@ -209,4 +209,7 @@ def print_map(graph: Graph) -> None:
             room_text.append("\n")
 
         panel = Panel(room_text, expand=False, border_style="cyan")
-        console.print(panel)
+        map_text.append(panel)
+        map_text.append("\n")
+
+    show_narrative_text(map_text, "World Map")
