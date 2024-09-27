@@ -90,8 +90,7 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
         for door in graph.get_doors_for_room_bidirectional(current_room):
             if door.lock and door.lock.is_locked():
                 for key in player_keys:
-                    if door.lock.unlock(key):
-                        player_keys.remove(key)
+                    if door.lock.can_unlock(key):
                         log.append(f"Player uses {key.name} to unlock a door")
                         break
 
