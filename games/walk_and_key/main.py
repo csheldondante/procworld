@@ -173,7 +173,7 @@ def use_key(player: Player, key: Dict) -> None:
 
 def move_player(player: Player, door: Door) -> None:
     if door.is_locked():
-        show_narrative_text(door.get_lock_description())
+        show_narrative_text(door.get_lock_description(), "Locked door")
     else:
         player.current_room = door.room2 if door.room1 == player.current_room else door.room1
         message = Text()

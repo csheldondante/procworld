@@ -104,7 +104,7 @@ def generate_random_graph(num_rooms: int, min_connections: int = 1, max_connecti
 
 def load_json(file_path: str) -> Any:
     full_path = os.path.join(os.path.dirname(__file__), file_path)
-    print("Loading...", full_path)
+    # print("Loading...", full_path)
     with open(full_path, 'r') as f:
         return json.load(f)
 
