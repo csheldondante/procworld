@@ -93,7 +93,7 @@ def get_available_actions(player: Player) -> List[Action]:
         description = Text()
         description.append("Pick up ")
         description.append(item['name'], style=f"bold {item['color']}")
-        actions.append(Action(ActionType.PICK_UP, item, str(description)))
+        actions.append(Action(ActionType.PICK_UP, item, description))
     
     # Use actions
     for item in player.inventory:
@@ -116,7 +116,7 @@ def display_actions(situation: Text, actions: List[Action]) -> None:
             if isinstance(action.description, Text):
                 situation.append(action.description)
             else:
-                situation.append(str(action))
+                situation.append(action)
             situation.append("\n")
         else:
             break
@@ -168,7 +168,7 @@ def use_key(player: Player, key: Dict) -> None:
         message.append("There are no ")
         message.append(key_color, style=f"bold {key_color}")
         message.append(" locked doors in this room.")
-        show_narrative_text(message)
+        show_narrative_text(message, "Action")
 
 
 def move_player(player: Player, door: Door) -> None:
