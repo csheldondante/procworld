@@ -43,7 +43,9 @@ def initialize_game(config: Dict) -> tuple[Graph, Player]:
         config["files"]["locks"],
         config["files"]["keys"]
     )
-    player = Player(random.choice(list(world.rooms)))
+    starting_room = random.choice(list(world.rooms))
+    starting_room.visited = True
+    player = Player(starting_room)
     return world, player
 
 
@@ -72,6 +74,8 @@ def get_available_actions(player: Player, world: Graph) -> List[Action]:
         description = Text()
         description.append(f"Go {direction} to the ")
         description.append(target_room.get_name())
+        if target_room.visited:
+            description.append(" (visited)")
         if door.is_locked():
             description.append(" (")
             description.append(door.get_lock_description_short())
@@ -161,6 +165,7 @@ def move_player(player: Player, door: Door) -> None:
         show_narrative_text(door.get_lock_description(), "Locked door")
     else:
         player.current_room = door.room2 if door.room1 == player.current_room else door.room1
+        player.current_room.visited = True
         message = Text()
         message.append("You move to the ")
         message.append(player.current_room.get_name())
