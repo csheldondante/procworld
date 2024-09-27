@@ -54,7 +54,7 @@ def autopickup_items(player: Player, config: Dict) -> None:
         for item in player.current_room.items[:]:  # Create a copy of the list to iterate over
             player.add_to_inventory(item)
             player.current_room.remove_item(item)
-            message = Text("You automatically picked up the ")
+            message = Text("You automatically picked up the ", "Item Pickup")
             message.append(item.get_name())
             message.append(". ")
             message.append(item.description)
