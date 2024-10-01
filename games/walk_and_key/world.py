@@ -7,8 +7,9 @@ from games.walk_and_key.item import Item
 from games.walk_and_key.room_and_door import Room
 from games.walk_and_key.lock import Lock
 from games.walk_and_key.utils.json import load_json
+from games.walk_and_key.voronoi_graph_generator import get_voronoi_graph
 
-from utils.gui.display_interface import show_narrative_text
+from utils.gui.display_interface import show_narrative_text, show_error
 
 
 def generate_random_graph(num_rooms: int, grid_size: int) -> Graph:
@@ -106,7 +107,8 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
                 all_items.remove(matching_key)
 
 def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_file: str, keys_file: str) -> Graph:
-    graph = generate_random_graph(min(num_rooms, grid_size * grid_size), grid_size)
+    # graph = generate_random_graph(min(num_rooms, grid_size * grid_size), grid_size)
+    graph = get_voronoi_graph(num_rooms, grid_size * 10)
     # decorate_graph(graph, room_types_file, locks_file, keys_file)
     dynamic_decorate_graph(graph, room_types_file, locks_file, keys_file)
     return graph
@@ -114,31 +116,34 @@ def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_f
 def print_map(graph: Graph) -> None:
     map_text = Text()
 
-    # Calculate grid size based on room positions
-    min_x = min(room.x for room in graph.rooms)
-    max_x = max(room.x for room in graph.rooms)
-    min_y = min(room.y for room in graph.rooms)
-    max_y = max(room.y for room in graph.rooms)
-    
-    grid_width = max_x - min_x + 1
-    grid_height = max_y - min_y + 1
+    try:
+        # Calculate grid size based on room positions
+        min_x = min(room.x for room in graph.rooms)
+        max_x = max(room.x for room in graph.rooms)
+        min_y = min(room.y for room in graph.rooms)
+        max_y = max(room.y for room in graph.rooms)
 
-    # Create a grid representation
-    grid = [[None for _ in range(grid_width)] for _ in range(grid_height)]
-    for room in graph.rooms:
-        grid[room.y - min_y][room.x - min_x] = room
+        grid_width = max_x - min_x + 1
+        grid_height = max_y - min_y + 1
 
-    # Print the grid
-    map_text.append("Grid Map:\n")
-    cell_size = 16
-    for row in grid:
-        for room in row:
-            if room:
-                map_text.append(f"[{room.name[:cell_size-2]:^{cell_size}}]")
-            else:
-                map_text.append("[" + " " * cell_size + "]")
+        # Create a grid representation
+        grid = [[None for _ in range(grid_width)] for _ in range(grid_height)]
+        for room in graph.rooms:
+            grid[room.y - min_y][room.x - min_x] = room
+
+        # Print the grid
+        map_text.append("Grid Map:\n")
+        cell_size = 16
+        for row in grid:
+            for room in row:
+                if room:
+                    map_text.append(f"[{room.name[:cell_size-2]:^{cell_size}}]")
+                else:
+                    map_text.append("[" + " " * cell_size + "]")
+            map_text.append("\n")
         map_text.append("\n")
-    map_text.append("\n")
+    except Exception as e:
+        show_error("Error while trying to render grid map", e)
 
     # Print detailed room information
     map_text.append("Room Details:\n")
@@ -170,4 +175,4 @@ def print_map(graph: Graph) -> None:
 
         map_text.append("\n")
 
-    # show_narrative_text(map_text, "World Map (development only)")
+    show_narrative_text(map_text, "World Map (development only)")
