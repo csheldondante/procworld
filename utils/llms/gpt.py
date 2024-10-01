@@ -52,7 +52,7 @@ def prompt_completion(question, engine="davinci-instruct-beta", max_tokens=64, t
     return answer
 
 
-def prompt_completion_chat(question="", model="gpt-3.5-turbo", n=1, temperature=0.2, max_tokens=256, system_description="You write articles for a wiki. You write text in the markdown `.md` file format, with one change, that you can link [[Articles]] with [[Double Brackets]] like in [[wikitext]]. Any time it would be appropriate to link to another article, you use double brackets to mark it as a link, even if you aren't sure if that article exists. Here are some things that are good to link: Named people, places, or events, Important nouns, Technical concepts.ka", messages=None, stop=None):
+def prompt_completion_chat(question="", model="gpt-4o", n=1, temperature=0.2, max_tokens=256, system_description="You write articles for a wiki. You write text in the markdown `.md` file format, with one change, that you can link [[Articles]] with [[Double Brackets]] like in [[wikitext]]. Any time it would be appropriate to link to another article, you use double brackets to mark it as a link, even if you aren't sure if that article exists. Here are some things that are good to link: Named people, places, or events, Important nouns, Technical concepts.ka", messages=None, stop=None):
     start_time = time.perf_counter()
     prompt = f"{question} "
     response = client.chat.completions.create(
@@ -83,7 +83,7 @@ def prompt_completion_chat(question="", model="gpt-3.5-turbo", n=1, temperature=
         return answers[0]
     return
 
-def prompt_completion_json(messages, model="gpt-3.5-turbo", temperature=0.2, max_tokens=1000):
+def prompt_completion_json(messages, model="gpt-4o-mini", temperature=0.2, max_tokens=1000):
     try:
         response = client.chat.completions.create(
             model=model,

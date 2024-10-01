@@ -1,0 +1,62 @@
+[
+    {
+        "name": "bedroom",
+        "adjectives": ["cozy", "personal", "restful", "intimate", "modern"],
+        "size": 3,
+        "description": "A place of rest and privacy. The room is dominated by a comfortable bed, with personal belongings scattered about, creating an intimate atmosphere."
+    },
+    {
+        "name": "kitchen",
+        "adjectives": ["culinary", "functional", "aromatic", "bustling", "homey"],
+        "size": 4,
+        "description": "The heart of the home, filled with the aroma of recent meals. Countertops are lined with various cooking utensils and appliances, ready for culinary adventures."
+    },
+    {
+        "name": "living_room",
+        "adjectives": ["spacious", "comfortable", "social", "relaxing", "inviting"],
+        "size": 5,
+        "description": "A welcoming space designed for relaxation and social gatherings. Comfortable seating is arranged to encourage conversation, with decorative touches that add warmth to the room."
+    },
+    {
+        "name": "bathroom",
+        "adjectives": ["clean", "private", "hygienic", "refreshing", "compact"],
+        "size": 2,
+        "description": "A small but essential room, gleaming with cleanliness. The necessary fixtures are efficiently arranged, providing a space for personal hygiene and refreshment."
+    },
+    {
+        "name": "study",
+        "adjectives": ["quiet", "scholarly", "focused", "organized", "intellectual"],
+        "size": 3,
+        "description": "A sanctuary for the mind, lined with bookshelves and featuring a sturdy desk. The atmosphere is one of quiet concentration, perfect for intellectual pursuits."
+    },
+    {
+        "name": "attic",
+        "adjectives": ["dusty", "mysterious", "cramped", "forgotten", "nostalgic"],
+        "size": 3,
+        "description": "A space frozen in time, filled with forgotten treasures and old memories. Dust motes dance in the dim light that filters through small windows, giving the room an air of mystery."
+    },
+    {
+        "name": "basement",
+        "adjectives": ["damp", "dark", "eerie", "musty", "spacious"],
+        "size": 6,
+        "description": "A vast underground space, cool and slightly damp. The air is thick with the musty smell of age, and shadows lurk in every corner, creating an eerie atmosphere."
+    },
+    {
+        "name": "garden",
+        "adjectives": ["lush", "serene", "colorful", "fragrant", "well-maintained"],
+        "size": 8,
+        "description": "An oasis of natural beauty, bursting with color and life. Well-tended plants fill the air with fragrance, while the sound of rustling leaves and birdsong creates a serene atmosphere."
+    },
+    {
+        "name": "library",
+        "adjectives": ["vast", "silent", "knowledge-filled", "cozy", "well-organized"],
+        "size": 7,
+        "description": "A treasure trove of knowledge, with towering shelves filled with books on every conceivable subject. The air is heavy with the scent of old paper, and a hushed silence encourages quiet contemplation."
+    },
+    {
+        "name": "dining_room",
+        "adjectives": ["elegant", "formal", "spacious", "well-lit", "inviting"],
+        "size": 5,
+        "description": "A room designed for shared meals and conversation. A large table dominates the space, surrounded by chairs and illuminated by warm lighting, creating an inviting atmosphere for gatherings."
+    }
+]

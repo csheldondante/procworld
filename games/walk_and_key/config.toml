@@ -1,0 +1,10 @@
+[files]
+room_types = "data/room_types.json"
+locks = "data/locks.json"
+keys = "data/keys.json"
+
+[game]
+num_rooms = 18
+# grid_size will be squared
+grid_size = 5
+autopickup = true
