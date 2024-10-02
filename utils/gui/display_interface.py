@@ -1,3 +1,5 @@
+from typing import Optional
+
 from rich import print
 from rich.panel import Panel
 from rich.console import Console
@@ -32,12 +34,15 @@ def show_rule_text(text: str, rule: str = "") -> None:
     panel = Panel(content, border_style="yellow", box=DOUBLE, expand=False, title=title, title_align="center")
     console.print(panel)
 
-def show_error(error_message: str) -> None:
+def show_error(error_message: str, e: Optional[Exception] = None) -> None:
     """
     Display an error message in the console.
     """
     panel = Panel(Text(error_message), border_style="red", title="Error", title_align="center", expand=False)
     console.print(panel)
+
+    if e:
+        console.print(f"[red]Exception: {e}[/red]")
 
 _previous_situation = ""
 
