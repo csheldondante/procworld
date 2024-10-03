@@ -3,30 +3,42 @@
         "name": "Antique Iron Key",
         "color": "red",
         "adjectives": ["old", "rusty", "ornate", "heavy"],
-        "description": "A large, ornate key made of iron, its surface marred by rust. Despite its age, it feels solid and weighty in your hand."
+        "description": "A large, ornate key made of iron, its surface marred by rust. Despite its age, it feels solid and weighty in your hand.",
+        "biomes": ["castle", "forest", "mountain"]
     },
     {
         "name": "Sleek Keycard",
         "color": "blue",
         "adjectives": ["modern", "electronic", "slim", "futuristic"],
-        "description": "A thin, blue keycard with embedded circuitry. Its smooth surface occasionally flickers with tiny blue lights."
+        "description": "A thin, blue keycard with embedded circuitry. Its smooth surface occasionally flickers with tiny blue lights.",
+        "biomes": ["castle"]
     },
     {
         "name": "Leaf-shaped Key",
         "color": "green",
         "adjectives": ["natural", "organic", "delicate", "fresh"],
-        "description": "A key shaped like a leaf, its surface a vibrant green. It feels surprisingly sturdy despite its delicate appearance."
+        "description": "A key shaped like a leaf, its surface a vibrant green. It feels surprisingly sturdy despite its delicate appearance.",
+        "biomes": ["forest", "swamp"]
     },
     {
         "name": "Golden Skeleton Key",
         "color": "yellow",
         "adjectives": ["valuable", "shiny", "universal", "ancient"],
-        "description": "A skeleton key made of pure gold, its teeth intricately carved. It gleams brightly even in dim light."
+        "description": "A skeleton key made of pure gold, its teeth intricately carved. It gleams brightly even in dim light.",
+        "biomes": ["castle", "desert"]
     },
     {
         "name": "Crystal Shard Key",
         "color": "purple",
         "adjectives": ["magical", "glowing", "sharp", "mysterious"],
-        "description": "A key-shaped shard of purple crystal. It hums softly and feels warm to the touch, as if imbued with magical energy."
+        "description": "A key-shaped shard of purple crystal. It hums softly and feels warm to the touch, as if imbued with magical energy.",
+        "biomes": ["mountain", "swamp"]
+    },
+    {
+        "name": "Sand-etched Key",
+        "color": "tan",
+        "adjectives": ["grainy", "ancient", "eroded", "desert-worn"],
+        "description": "A key made of compacted sand, its surface etched with intricate patterns. It's surprisingly sturdy despite its sandy composition.",
+        "biomes": ["desert"]
     }
 ]
