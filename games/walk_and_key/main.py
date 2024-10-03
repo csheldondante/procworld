@@ -1,5 +1,11 @@
 import random
 import toml
+import sys
+import os
+# Get the project root directory
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+# Add the project root to the sys.path
+sys.path.append(project_root)
 from typing import List, Dict
 from rich import print
 from rich.text import Text

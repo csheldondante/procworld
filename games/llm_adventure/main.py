@@ -16,8 +16,7 @@ from utils.gui.display_interface import show_narrative_text, get_user_text, show
 from conversation import Conversation, Turn
 from situation import Situation
 from character import create_character
-
-
+    
 
 def update_situation(current_situation, response, last_user_input):
     situation_json = current_situation.to_json()
@@ -139,6 +138,7 @@ def main_start():
 
     conversation = Conversation()
     situation.add_monster("Goblin", 10)
+    situation.get_situation_string()
     show_situation(situation.get_situation_string())
 
     main_loop(conversation, situation)
