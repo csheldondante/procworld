@@ -8,6 +8,8 @@ from games.walk_and_key.room_and_door import Room
 from games.walk_and_key.lock import Lock
 from games.walk_and_key.utils.json import load_json
 from games.walk_and_key.voronoi_graph_generator import get_voronoi_graph
+from scipy.spatial import Voronoi
+import numpy as np
 
 from utils.gui.display_interface import show_narrative_text, show_error
 
@@ -106,11 +108,35 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
                 random_room.add_item(matching_key)
                 all_items.remove(matching_key)
 
-def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_file: str, keys_file: str) -> Graph:
-    # graph = generate_random_graph(min(num_rooms, grid_size * grid_size), grid_size)
+def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 3) -> None:
+    biomes_data = load_json(biomes_file)
+    biome_types = [biome["name"] for biome in biomes_data]
+
+    # Create a larger Voronoi diagram for biomes
+    points = np.random.rand(len(biome_types) * 2, 2) * (graph.grid_size * scale_factor)
+    vor = Voronoi(points)
+
+    # Assign random biome types to Voronoi regions
+    region_biomes = {i: np.random.choice(biome_types) for i in range(len(vor.point_region))}
+
+    # Assign biomes to rooms based on closest Voronoi region
+    for room in graph.rooms:
+        closest_region = None
+        min_distance = float('inf')
+        room_point = np.array([room.x * scale_factor, room.y * scale_factor])
+
+        for i, point in enumerate(vor.points):
+            distance = np.linalg.norm(room_point - point)
+            if distance < min_distance:
+                min_distance = distance
+                closest_region = vor.point_region[i]
+
+        room.biome = region_biomes[closest_region]
+
+def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_file: str, keys_file: str, biomes_file: str) -> Graph:
     graph = get_voronoi_graph(num_rooms, grid_size * 10)
-    # decorate_graph(graph, room_types_file, locks_file, keys_file)
     dynamic_decorate_graph(graph, room_types_file, locks_file, keys_file)
+    add_biomes(graph, biomes_file)
     return graph
 
 def print_map(graph: Graph) -> None:
