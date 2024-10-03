@@ -145,7 +145,7 @@ def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 1.5) -> None:
 def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_file: str, keys_file: str, biomes_file: str) -> Graph:
     graph = get_voronoi_graph(num_rooms, grid_size * 10)
     add_biomes(graph, biomes_file)
-    decorate_graph(graph, room_types_file, locks_file, keys_file)
+    dynamic_decorate_graph(graph, room_types_file, locks_file, keys_file)
     return graph
 
 def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_file: str) -> None:
