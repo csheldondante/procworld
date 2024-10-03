@@ -47,7 +47,10 @@ def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, 
 def initialize_rooms(graph: Graph, room_types: List[Dict]) -> None:
     room_name_counts: Dict[str, int] = {}
     for room in graph.rooms:
-        room_type = random.choice(room_types)
+        compatible_room_types = [rt for rt in room_types if room.biome.lower() in rt.get("biomes", [])]
+        if not compatible_room_types:
+            compatible_room_types = room_types  # Fallback to all room types if none match the biome
+        room_type = random.choice(compatible_room_types)
         room.room_type = room_type["name"]
         room.adjectives = room_type["adjectives"][:3]
         room.size = room_type["size"]
