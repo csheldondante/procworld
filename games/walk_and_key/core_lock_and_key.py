@@ -177,7 +177,7 @@ def choose_next_room(graph: Graph, current_room: Room, visited_rooms: Set[Room])
 
 def add_misc_items(graph: Graph) -> None:
     misc_items = load_json("data/items.json")
-    items = [Item(item["name"], item["color"], item["adjectives"], item["description"]) for item in misc_items]
+    items = [Item(item["name"], item["color"], item["adjectives"], item["description"], item["biomes"]) for item in misc_items]
 
     for room in graph.rooms:
         num_items = random.choices([0, 1, 2], weights=[0.3, 0.5, 0.2])[0]  # 30% chance for 0, 50% for 1, 20% for 2
@@ -189,7 +189,7 @@ def add_misc_items(graph: Graph) -> None:
             else:
                 # If we run out of unique items, create copies of existing ones
                 original_item = random.choice(misc_items)
-                new_item = Item(original_item["name"], original_item["color"], original_item["adjectives"], original_item["description"])
+                new_item = Item(original_item["name"], original_item["color"], original_item["adjectives"], original_item["description"], original_item["biomes"])
                 room.items.append(new_item)
 
 

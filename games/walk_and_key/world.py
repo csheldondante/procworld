@@ -109,15 +109,12 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
                 random_room.add_item(matching_key)
                 all_items.remove(matching_key)
 
-def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 1.5) -> None:
+def add_biomes(graph: Graph, biomes_file: str, grid_size: float = 1) -> None:
     biomes_data = load_json(biomes_file)
     biome_types = [biome["name"] for biome in biomes_data]
 
-    # Hard-coded grid size
-    grid_size = 10  # You can adjust this value as needed
-
     # Create a larger Voronoi diagram for biomes
-    points = np.random.rand(len(biome_types) * 2, 2) * (grid_size * scale_factor)
+    points = np.random.rand(len(biome_types) * 2, 2) * (grid_size)
     vor = Voronoi(points)
 
     # Assign random biome types to Voronoi regions
@@ -127,7 +124,7 @@ def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 1.5) -> None:
     for room in graph.rooms:
         closest_region = None
         min_distance = float('inf')
-        room_point = np.array([room.x * scale_factor, room.y * scale_factor])
+        room_point = np.array([room.x, room.y])
 
         for i, point in enumerate(vor.points):
             distance = np.linalg.norm(room_point - point)
@@ -141,11 +138,11 @@ def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 1.5) -> None:
             # Fallback: assign a random biome if the closest region is not found
             room.biome = random.choice(biome_types).capitalize()
 
-        print(f"Room: ({room.x}, {room.y}), Closest Region: {closest_region}, Assigned Biome: {room.biome}")
+        # print(f"Room: ({room.x}, {room.y}), Closest Region: {closest_region}, Assigned Biome: {room.biome}")
 
 def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_file: str, keys_file: str, biomes_file: str) -> Graph:
     graph = get_voronoi_graph(num_rooms, grid_size * 10)
-    add_biomes(graph, biomes_file)
+    add_biomes(graph, biomes_file, grid_size * 10)
     dynamic_decorate_graph(graph, room_types_file, locks_file, keys_file)
     return graph
 
