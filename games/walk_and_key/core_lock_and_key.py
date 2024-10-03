@@ -25,8 +25,8 @@ def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, 
     # Simulate player movement and decorate the graph
     player_path, log = simulate_player_movement(graph, locks, keys)
 
-    print(f"\n\nPlayer path!\n")
-    print("\n".join(log))
+    # print(f"\n\nPlayer path!\n")
+    # print("\n".join(log))
 
     # Add remaining keys and locks to create alternative paths
     # TODO This is a good idea but needs to be handled with care
