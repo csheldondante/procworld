@@ -29,7 +29,7 @@ class Room:
         self.items.remove(item)
 
     def get_name(self) -> Text:
-        return Text(self.name, style="bold").append(Text(f" in the {self.biome}", style="none"))
+        return Text(self.name, style="bold").append(Text(" in the ", style="none")).append(Text(self.biome, style="bold"))
 
     def get_size_description(self) -> Text:
         if self.size <= 2:
