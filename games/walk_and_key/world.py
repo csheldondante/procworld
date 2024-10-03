@@ -196,6 +196,8 @@ def print_map(graph: Graph) -> None:
         for direction, door in room.doors.items():
             target_room = door.room2 if door.room1 == room else door.room1
             door_text = Text(f"  {direction.capitalize()}: ")
+            if target_room.biome != room.biome:
+                door_text.append(f"into the {target_room.biome} to ")
             door_text.append(target_room.get_name())
             
             if door.is_locked():
