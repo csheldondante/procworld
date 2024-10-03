@@ -89,10 +89,10 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
             # print(f"Checking door to {neighbor.name}: {'Locked' if connecting_door.is_locked() else 'Unlocked'}")
             if connecting_door.is_locked_with_no_key():
                 if random.random() < 0.7:  # 70% chance to create a lock and key
-                    new_lock = create_lock(locks)
+                    new_lock = create_lock(locks, current_room.biome)
                     if new_lock:
                         connecting_door.set_lock(new_lock)
-                        new_key = create_key(keys, new_lock.color)
+                        new_key = create_key(keys, new_lock.color, current_room.biome)
                         if new_key:
                             current_room.items.append(new_key)
                             player.inventory.append(new_key)
@@ -131,12 +131,20 @@ def simulate_player_movement(graph: Graph, locks: List[Lock], keys: List[Item]) 
     return player_path, log
 
 
-def create_lock(locks: List[Lock]) -> Optional[Lock]:
-    lock = random.choice(locks)
-    return lock
+def create_lock(locks: List[Lock], room_biome: str) -> Optional[Lock]:
+    matching_locks = [lock for lock in locks if room_biome.lower() in lock.biomes]
+    if matching_locks:
+        return random.choice(matching_locks)
+    return random.choice(locks)  # Fallback to any lock if no matching biome
 
 
-def create_key(keys: List[Item], color: str) -> Optional[Item]:
+def create_key(keys: List[Item], color: str, room_biome: str) -> Optional[Item]:
+    matching_keys = [key for key in keys if key.color == color and room_biome.lower() in key.biomes]
+    if matching_keys:
+        key = random.choice(matching_keys)
+        keys.remove(key)
+        return key
+    # Fallback to any key of the correct color if no matching biome
     matching_keys = [key for key in keys if key.color == color]
     if matching_keys:
         key = random.choice(matching_keys)
