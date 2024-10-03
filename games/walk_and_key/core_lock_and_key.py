@@ -20,8 +20,8 @@ def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, 
     initialize_rooms(graph, room_types)
 
     # Create Lock and Key objects
-    locks = [Lock(lock["name"], lock["color"], lock["adjectives"], lock["description"]) for lock in locks_data]
-    keys = [Item(key["name"], key["color"], key["adjectives"], key["description"]) for key in keys_data]
+    locks = [Lock(lock["name"], lock["color"], lock["adjectives"], lock["description"], lock["biomes"]) for lock in locks_data]
+    keys = [Item(key["name"], key["color"], key["adjectives"], key["description"], key["biomes"]) for key in keys_data]
 
     # Simulate player movement and decorate the graph
     player_path, log = simulate_player_movement(graph, locks, keys)
