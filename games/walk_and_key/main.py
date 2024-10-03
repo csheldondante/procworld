@@ -43,7 +43,8 @@ def initialize_game(config: Dict) -> tuple[Graph, LockAndKeyPlayer]:
         config["game"]["grid_size"],
         config["files"]["room_types"],
         config["files"]["locks"],
-        config["files"]["keys"]
+        config["files"]["keys"],
+        config["files"]["biomes"],
     )
     starting_room = world.starting_room
     starting_room.visited = True
