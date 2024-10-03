@@ -3,60 +3,98 @@
         "name": "bedroom",
         "adjectives": ["cozy", "personal", "restful", "intimate", "modern"],
         "size": 3,
-        "description": "A place of rest and privacy. The room is dominated by a comfortable bed, with personal belongings scattered about, creating an intimate atmosphere."
+        "description": "A place of rest and privacy. The room is dominated by a comfortable bed, with personal belongings scattered about, creating an intimate atmosphere.",
+        "biomes": ["castle", "forest"]
     },
     {
         "name": "kitchen",
         "adjectives": ["culinary", "functional", "aromatic", "bustling", "homey"],
         "size": 4,
-        "description": "The heart of the home, filled with the aroma of recent meals. Countertops are lined with various cooking utensils and appliances, ready for culinary adventures."
+        "description": "The heart of the home, filled with the aroma of recent meals. Countertops are lined with various cooking utensils and appliances, ready for culinary adventures.",
+        "biomes": ["castle", "forest"]
     },
     {
         "name": "living_room",
         "adjectives": ["spacious", "comfortable", "social", "relaxing", "inviting"],
         "size": 5,
-        "description": "A welcoming space designed for relaxation and social gatherings. Comfortable seating is arranged to encourage conversation, with decorative touches that add warmth to the room."
+        "description": "A welcoming space designed for relaxation and social gatherings. Comfortable seating is arranged to encourage conversation, with decorative touches that add warmth to the room.",
+        "biomes": ["castle", "forest"]
     },
     {
         "name": "bathroom",
         "adjectives": ["clean", "private", "hygienic", "refreshing", "compact"],
         "size": 2,
-        "description": "A small but essential room, gleaming with cleanliness. The necessary fixtures are efficiently arranged, providing a space for personal hygiene and refreshment."
+        "description": "A small but essential room, gleaming with cleanliness. The necessary fixtures are efficiently arranged, providing a space for personal hygiene and refreshment.",
+        "biomes": ["castle", "forest"]
     },
     {
         "name": "study",
         "adjectives": ["quiet", "scholarly", "focused", "organized", "intellectual"],
         "size": 3,
-        "description": "A sanctuary for the mind, lined with bookshelves and featuring a sturdy desk. The atmosphere is one of quiet concentration, perfect for intellectual pursuits."
+        "description": "A sanctuary for the mind, lined with bookshelves and featuring a sturdy desk. The atmosphere is one of quiet concentration, perfect for intellectual pursuits.",
+        "biomes": ["castle"]
     },
     {
         "name": "attic",
         "adjectives": ["dusty", "mysterious", "cramped", "forgotten", "nostalgic"],
         "size": 3,
-        "description": "A space frozen in time, filled with forgotten treasures and old memories. Dust motes dance in the dim light that filters through small windows, giving the room an air of mystery."
+        "description": "A space frozen in time, filled with forgotten treasures and old memories. Dust motes dance in the dim light that filters through small windows, giving the room an air of mystery.",
+        "biomes": ["castle"]
     },
     {
         "name": "basement",
         "adjectives": ["damp", "dark", "eerie", "musty", "spacious"],
         "size": 6,
-        "description": "A vast underground space, cool and slightly damp. The air is thick with the musty smell of age, and shadows lurk in every corner, creating an eerie atmosphere."
+        "description": "A vast underground space, cool and slightly damp. The air is thick with the musty smell of age, and shadows lurk in every corner, creating an eerie atmosphere.",
+        "biomes": ["castle"]
     },
     {
         "name": "garden",
         "adjectives": ["lush", "serene", "colorful", "fragrant", "well-maintained"],
         "size": 8,
-        "description": "An oasis of natural beauty, bursting with color and life. Well-tended plants fill the air with fragrance, while the sound of rustling leaves and birdsong creates a serene atmosphere."
+        "description": "An oasis of natural beauty, bursting with color and life. Well-tended plants fill the air with fragrance, while the sound of rustling leaves and birdsong creates a serene atmosphere.",
+        "biomes": ["castle", "forest"]
     },
     {
         "name": "library",
         "adjectives": ["vast", "silent", "knowledge-filled", "cozy", "well-organized"],
         "size": 7,
-        "description": "A treasure trove of knowledge, with towering shelves filled with books on every conceivable subject. The air is heavy with the scent of old paper, and a hushed silence encourages quiet contemplation."
+        "description": "A treasure trove of knowledge, with towering shelves filled with books on every conceivable subject. The air is heavy with the scent of old paper, and a hushed silence encourages quiet contemplation.",
+        "biomes": ["castle"]
     },
     {
         "name": "dining_room",
         "adjectives": ["elegant", "formal", "spacious", "well-lit", "inviting"],
         "size": 5,
-        "description": "A room designed for shared meals and conversation. A large table dominates the space, surrounded by chairs and illuminated by warm lighting, creating an inviting atmosphere for gatherings."
+        "description": "A room designed for shared meals and conversation. A large table dominates the space, surrounded by chairs and illuminated by warm lighting, creating an inviting atmosphere for gatherings.",
+        "biomes": ["castle"]
+    },
+    {
+        "name": "oasis",
+        "adjectives": ["refreshing", "lush", "tranquil", "shaded", "life-giving"],
+        "size": 6,
+        "description": "A verdant haven amidst the arid landscape, centered around a crystal-clear pool of water. Palm trees and other desert plants provide shade and greenery, creating a stark contrast to the surrounding sands.",
+        "biomes": ["desert"]
+    },
+    {
+        "name": "cave",
+        "adjectives": ["cool", "dark", "echoing", "mysterious", "sheltered"],
+        "size": 4,
+        "description": "A natural hollow in the rock, providing shelter from the harsh desert sun. The air is noticeably cooler here, and strange echoes bounce off the rough stone walls.",
+        "biomes": ["desert", "mountain"]
+    },
+    {
+        "name": "summit",
+        "adjectives": ["windswept", "panoramic", "breathtaking", "exposed", "majestic"],
+        "size": 5,
+        "description": "The highest point of the mountain, offering an unparalleled view of the surrounding landscape. The thin air and howling winds remind you of the altitude, while the vista stretches as far as the eye can see.",
+        "biomes": ["mountain"]
+    },
+    {
+        "name": "bog",
+        "adjectives": ["murky", "misty", "eerie", "damp", "overgrown"],
+        "size": 7,
+        "description": "A waterlogged area where land and water intermingle. Mist clings to the surface, obscuring the boundaries between solid ground and treacherous mire. Strange plants thrive in this unique ecosystem.",
+        "biomes": ["swamp"]
     }
 ]
