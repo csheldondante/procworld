@@ -82,7 +82,10 @@ def get_available_actions(player: LockAndKeyPlayer, world: Graph) -> List[Action
     for direction, door in player.current_room.doors.items():
         target_room = door.room2 if door.room1 == player.current_room else door.room1
         description = Text()
-        description.append(f"Go {direction} to the ")
+        description.append(f"Go {direction}")
+        if target_room.biome != player.current_room.biome:
+            description.append(f" into the {target_room.biome}")
+        description.append(" to the ")
         description.append(target_room.get_name())
         if target_room.visited:
             description.append(" (visited)")
