@@ -55,6 +55,7 @@ class Room:
             description.append(", ")
         
         description.append(self.get_size_description())
+        description.append(f", {self.biome}")
         description.append(").\n\n")
         description.append(self.description)
         description.append("\n\n")
