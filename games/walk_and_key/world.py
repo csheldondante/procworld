@@ -108,7 +108,7 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
                 random_room.add_item(matching_key)
                 all_items.remove(matching_key)
 
-def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 3) -> None:
+def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 1.5) -> None:
     biomes_data = load_json(biomes_file)
     biome_types = [biome["name"] for biome in biomes_data]
 
@@ -135,10 +135,10 @@ def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 3) -> None:
                 closest_region = vor.point_region[i]
 
         if closest_region is not None and closest_region in region_biomes:
-            room.biome = region_biomes[closest_region]
+            room.biome = region_biomes[closest_region].capitalize()
         else:
             # Fallback: assign a random biome if the closest region is not found
-            room.biome = random.choice(biome_types)
+            room.biome = random.choice(biome_types).capitalize()
 
         print(f"Room: ({room.x}, {room.y}), Closest Region: {closest_region}, Assigned Biome: {room.biome}")
 
@@ -210,4 +210,4 @@ def print_map(graph: Graph) -> None:
 
         map_text.append("\n")
 
-    show_narrative_text(map_text, "World Map (development only)")
+    # show_narrative_text(map_text, "World Map (development only)")
