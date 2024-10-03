@@ -120,7 +120,7 @@ def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 3) -> None:
     vor = Voronoi(points)
 
     # Assign random biome types to Voronoi regions
-    region_biomes = {i: np.random.choice(biome_types) for i in range(len(vor.point_region))}
+    region_biomes = {i: np.random.choice(biome_types) for i in range(len(vor.regions))}
 
     # Assign biomes to rooms based on closest Voronoi region
     for room in graph.rooms:
@@ -134,9 +134,13 @@ def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 3) -> None:
                 min_distance = distance
                 closest_region = vor.point_region[i]
 
-        print(closest_region)
-        print(min_distance)
-        room.biome = region_biomes[closest_region]
+        if closest_region is not None and closest_region in region_biomes:
+            room.biome = region_biomes[closest_region]
+        else:
+            # Fallback: assign a random biome if the closest region is not found
+            room.biome = random.choice(biome_types)
+
+        print(f"Room: ({room.x}, {room.y}), Closest Region: {closest_region}, Assigned Biome: {room.biome}")
 
 def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_file: str, keys_file: str, biomes_file: str) -> Graph:
     graph = get_voronoi_graph(num_rooms, grid_size * 10)
