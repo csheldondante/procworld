@@ -16,6 +16,7 @@ class Room:
         self.x: int = x
         self.y: int = y
         self.visited: bool = False
+        self.biome: str = ""
 
     def add_door(self, direction: str, door: 'Door') -> None:
         assert isinstance(direction, str), f"Direction must be a string, got {direction}"
