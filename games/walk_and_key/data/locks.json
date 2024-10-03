@@ -3,30 +3,42 @@
         "name": "Rusty Padlock",
         "color": "red",
         "adjectives": ["old", "weathered", "sturdy", "heavy"],
-        "description": "An ancient padlock, its red paint chipping away to reveal the rusted metal beneath. Despite its age, it looks formidable."
+        "description": "An ancient padlock, its red paint chipping away to reveal the rusted metal beneath. Despite its age, it looks formidable.",
+        "biomes": ["castle", "forest", "mountain"]
     },
     {
         "name": "Digital Keypad",
         "color": "blue",
         "adjectives": ["modern", "sleek", "electronic", "secure"],
-        "description": "A state-of-the-art digital keypad with a soft blue glow. Its smooth surface hints at advanced security features."
+        "description": "A state-of-the-art digital keypad with a soft blue glow. Its smooth surface hints at advanced security features.",
+        "biomes": ["castle"]
     },
     {
         "name": "Vine-covered Lock",
         "color": "green",
         "adjectives": ["natural", "overgrown", "mysterious", "ancient"],
-        "description": "An old lock almost completely covered in vibrant green vines. Nature seems to be reclaiming this piece of metal."
+        "description": "An old lock almost completely covered in vibrant green vines. Nature seems to be reclaiming this piece of metal.",
+        "biomes": ["forest", "swamp"]
     },
     {
         "name": "Golden Combination Lock",
         "color": "yellow",
         "adjectives": ["shiny", "valuable", "intricate", "puzzling"],
-        "description": "A gleaming golden combination lock with intricate engravings. Its polished surface reflects light brilliantly."
+        "description": "A gleaming golden combination lock with intricate engravings. Its polished surface reflects light brilliantly.",
+        "biomes": ["castle", "desert"]
     },
     {
         "name": "Amethyst Crystal Lock",
         "color": "purple",
         "adjectives": ["magical", "mystical", "glowing", "enchanted"],
-        "description": "A lock made entirely of purple amethyst crystal. It seems to pulse with an otherworldly energy."
+        "description": "A lock made entirely of purple amethyst crystal. It seems to pulse with an otherworldly energy.",
+        "biomes": ["mountain", "swamp"]
+    },
+    {
+        "name": "Sand-encrusted Lock",
+        "color": "tan",
+        "adjectives": ["grainy", "ancient", "eroded", "desert-worn"],
+        "description": "A lock covered in layers of fine sand, its mechanisms likely clogged with grit. It bears the marks of countless sandstorms.",
+        "biomes": ["desert"]
     }
 ]
