@@ -112,8 +112,11 @@ def add_biomes(graph: Graph, biomes_file: str, scale_factor: int = 3) -> None:
     biomes_data = load_json(biomes_file)
     biome_types = [biome["name"] for biome in biomes_data]
 
+    # Hard-coded grid size
+    grid_size = 10  # You can adjust this value as needed
+
     # Create a larger Voronoi diagram for biomes
-    points = np.random.rand(len(biome_types) * 2, 2) * (graph.grid_size * scale_factor)
+    points = np.random.rand(len(biome_types) * 2, 2) * (grid_size * scale_factor)
     vor = Voronoi(points)
 
     # Assign random biome types to Voronoi regions
