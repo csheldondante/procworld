@@ -8,6 +8,7 @@ from games.walk_and_key.room_and_door import Room, Door
 from games.walk_and_key.utils.json import load_json
 from games.walk_and_key.graph import Graph
 from games.walk_and_key.item import Item
+from utils.gui.display_interface import show_error
 
 
 def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_file: str) -> None:
@@ -49,6 +50,7 @@ def initialize_rooms(graph: Graph, room_types: List[Dict]) -> None:
     for room in graph.rooms:
         compatible_room_types = [rt for rt in room_types if room.biome.lower() in rt.get("biomes", [])]
         if not compatible_room_types:
+            show_error(f"No room types found for biome {room.biome}")
             compatible_room_types = room_types  # Fallback to all room types if none match the biome
         room_type = random.choice(compatible_room_types)
         room.room_type = room_type["name"]

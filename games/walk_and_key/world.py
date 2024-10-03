@@ -51,6 +51,7 @@ def generate_random_graph(num_rooms: int, grid_size: int) -> Graph:
 
 
 def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_file: str) -> None:
+    assert False, "function not used"
     room_types = load_json(room_types_file)
     locks_data = load_json(locks_file)
     keys = load_json(keys_file)
@@ -147,68 +148,6 @@ def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_f
     add_biomes(graph, biomes_file)
     dynamic_decorate_graph(graph, room_types_file, locks_file, keys_file)
     return graph
-
-def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_file: str) -> None:
-    room_types = load_json(room_types_file)
-    locks_data = load_json(locks_file)
-    keys = load_json(keys_file)
-
-    # Assign room types and ensure unique names
-    room_name_counts = {}
-    for room in graph.rooms:
-        compatible_room_types = [rt for rt in room_types if room.biome.lower() in rt["biomes"]]
-        if not compatible_room_types:
-            compatible_room_types = room_types  # Fallback to all room types if none match the biome
-        
-        room_type = random.choice(compatible_room_types)
-        room.room_type = room_type["name"]
-        room.adjectives = room_type["adjectives"][:3]  # Take the first 3 adjectives
-        base_name = f"{room.room_type.replace('_', ' ').title()}"
-        
-        if base_name in room_name_counts:
-            room_name_counts[base_name] += 1
-            count = room_name_counts[base_name]
-            if count <= len(room.adjectives):
-                room.name = f"{room.adjectives[count-1].capitalize()} {base_name}"
-            else:
-                room.name = f"{base_name} {count}"
-        else:
-            room_name_counts[base_name] = 1
-            room.name = base_name
-        
-        room.size = room_type["size"]
-        room.description = room_type["description"]
-
-    # Create Lock objects
-    locks = [Lock(lock["name"], lock["color"], lock["adjectives"], lock["description"]) for lock in locks_data]
-
-    # Add locks to doors
-    for door in graph.doors:
-        if random.random() < 0.3:  # 30% chance of a lock, you can adjust this probability
-            lock = random.choice(locks)
-            door.lock = lock
-
-    # Add keys and other items to rooms
-    all_items = [Item(key["name"], key["color"], key["adjectives"], key["description"]) for key in keys]
-    all_items.append(Item("Mysterious Object", "gray", ["intriguing", "odd", "peculiar"], "An object of unknown origin and purpose."))
-    
-    for room in graph.rooms:
-        num_items = random.randint(0, 2)  # Each room can have 0 to 2 items
-        for _ in range(num_items):
-            matching_items = [item for item in all_items if any(adj in room.adjectives for adj in item.adjectives)]
-            if matching_items:
-                item = random.choice(matching_items)
-                room.add_item(item)
-                all_items.remove(item)
-
-    # Ensure all locks have corresponding keys in the world
-    for door in graph.doors:
-        if door.lock:
-            matching_key = next((key for key in all_items if key.color == door.lock.color), None)
-            if matching_key:
-                random_room = random.choice(list(graph.rooms))
-                random_room.add_item(matching_key)
-                all_items.remove(matching_key)
 
 def print_map(graph: Graph) -> None:
     map_text = Text()
