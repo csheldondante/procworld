@@ -10,17 +10,34 @@ from games.walk_and_key.graph import Graph
 from games.walk_and_key.item import Item
 
 
-def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_file: str) -> None:
+def dynamic_decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_file: str, explore_size: int=3, pref_dis: int=3) -> None:
     room_types = load_json(room_types_file)
     locks_data = load_json(locks_file)
     keys_data = load_json(keys_file)
-
     # Initialize rooms with basic information
     initialize_rooms(graph, room_types)
 
     # Create Lock and Key objects
     locks = [Lock(lock["name"], lock["color"], lock["adjectives"], lock["description"]) for lock in locks_data]
     keys = [Item(key["name"], key["color"], key["adjectives"], key["description"]) for key in keys_data]
+    loc = random.choice(graph.rooms)
+    border_doors = set()
+    accessible=set()
+    accessible.add(loc)
+    while len(accessible)<explore_size:
+        neighbors = graph.get_neighboring_rooms(loc)
+        loc = random.choice(neighbors)
+        accessible.add(loc)
+    for room in accessible:
+        for door in graph.get_doors_for_room_bidirectional(room):
+            if door.room1 in accessible or door.room2 in accessible:
+                continue
+            border_doors.add(door)
+    
+    #choose a few obstacles
+    #choose a key to place in the room for one of the obstacles
+    #behind the locked doors add another key
+    
 
     # Simulate player movement and decorate the graph
     player_path, log = simulate_player_movement(graph, locks, keys)
