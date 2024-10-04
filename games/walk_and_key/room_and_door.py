@@ -16,6 +16,7 @@ class Room:
         self.x: int = x
         self.y: int = y
         self.visited: bool = False
+        self.biome: str = ""
 
     def add_door(self, direction: str, door: 'Door') -> None:
         assert isinstance(direction, str), f"Direction must be a string, got {direction}"
@@ -28,7 +29,7 @@ class Room:
         self.items.remove(item)
 
     def get_name(self) -> Text:
-        return Text(self.name, style="bold")
+        return Text(self.biome + " " + self.name, style="bold")
 
     def get_size_description(self) -> Text:
         if self.size <= 2:
@@ -54,6 +55,7 @@ class Room:
             description.append(", ")
         
         description.append(self.get_size_description())
+        description.append(f", {self.biome}")
         description.append(").\n\n")
         description.append(self.description)
         description.append("\n\n")

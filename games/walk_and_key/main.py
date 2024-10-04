@@ -49,7 +49,8 @@ def initialize_game(config: Dict) -> tuple[Graph, LockAndKeyPlayer]:
         config["game"]["grid_size"],
         config["files"]["room_types"],
         config["files"]["locks"],
-        config["files"]["keys"]
+        config["files"]["keys"],
+        config["files"]["biomes"],
     )
     starting_room = world.starting_room
     starting_room.visited = True
@@ -87,7 +88,11 @@ def get_available_actions(player: LockAndKeyPlayer, world: Graph) -> List[Action
     for direction, door in player.current_room.doors.items():
         target_room = door.room2 if door.room1 == player.current_room else door.room1
         description = Text()
-        description.append(f"Go {direction} to the ")
+        description.append(f"Go {direction}")
+        if target_room.biome != player.current_room.biome:
+            description.append(f" into the ")
+            description.append(target_room.biome, style="bold")
+        description.append(" to the ")
         description.append(target_room.get_name())
         if target_room.visited:
             description.append(" (visited)")

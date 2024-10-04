@@ -8,6 +8,8 @@ from games.walk_and_key.room_and_door import Room
 from games.walk_and_key.lock import Lock
 from games.walk_and_key.utils.json import load_json
 from games.walk_and_key.voronoi_graph_generator import get_voronoi_graph
+from scipy.spatial import Voronoi
+import numpy as np
 
 from utils.gui.display_interface import show_narrative_text, show_error
 
@@ -49,6 +51,7 @@ def generate_random_graph(num_rooms: int, grid_size: int) -> Graph:
 
 
 def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_file: str) -> None:
+    assert False, "function not used"
     room_types = load_json(room_types_file)
     locks_data = load_json(locks_file)
     keys = load_json(keys_file)
@@ -106,10 +109,40 @@ def decorate_graph(graph: Graph, room_types_file: str, locks_file: str, keys_fil
                 random_room.add_item(matching_key)
                 all_items.remove(matching_key)
 
-def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_file: str, keys_file: str) -> Graph:
-    # graph = generate_random_graph(min(num_rooms, grid_size * grid_size), grid_size)
+def add_biomes(graph: Graph, biomes_file: str, grid_size: float = 1) -> None:
+    biomes_data = load_json(biomes_file)
+    biome_types = [biome["name"] for biome in biomes_data]
+
+    # Create a larger Voronoi diagram for biomes
+    points = np.random.rand(len(biome_types) * 2, 2) * (grid_size)
+    vor = Voronoi(points)
+
+    # Assign random biome types to Voronoi regions
+    region_biomes = {i: np.random.choice(biome_types) for i in range(len(vor.regions))}
+
+    # Assign biomes to rooms based on closest Voronoi region
+    for room in graph.rooms:
+        closest_region = None
+        min_distance = float('inf')
+        room_point = np.array([room.x, room.y])
+
+        for i, point in enumerate(vor.points):
+            distance = np.linalg.norm(room_point - point)
+            if distance < min_distance:
+                min_distance = distance
+                closest_region = vor.point_region[i]
+
+        if closest_region is not None and closest_region in region_biomes:
+            room.biome = region_biomes[closest_region].capitalize()
+        else:
+            # Fallback: assign a random biome if the closest region is not found
+            room.biome = random.choice(biome_types).capitalize()
+
+        # print(f"Room: ({room.x}, {room.y}), Closest Region: {closest_region}, Assigned Biome: {room.biome}")
+
+def generate_world(num_rooms: int, grid_size: int, room_types_file: str, locks_file: str, keys_file: str, biomes_file: str) -> Graph:
     graph = get_voronoi_graph(num_rooms, grid_size * 10)
-    # decorate_graph(graph, room_types_file, locks_file, keys_file)
+    add_biomes(graph, biomes_file, grid_size * 10)
     dynamic_decorate_graph(graph, room_types_file, locks_file, keys_file)
     return graph
 
@@ -161,6 +194,8 @@ def print_map(graph: Graph) -> None:
         for direction, door in room.doors.items():
             target_room = door.room2 if door.room1 == room else door.room1
             door_text = Text(f"  {direction.capitalize()}: ")
+            if target_room.biome != room.biome:
+                door_text.append(f"into the {target_room.biome} to ")
             door_text.append(target_room.get_name())
             
             if door.is_locked():
@@ -175,4 +210,4 @@ def print_map(graph: Graph) -> None:
 
         map_text.append("\n")
 
-    show_narrative_text(map_text, "World Map (development only)")
+    # show_narrative_text(map_text, "World Map (development only)")

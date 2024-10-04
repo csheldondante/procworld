@@ -1,0 +1,22 @@
+[
+    {
+        "name": "forest",
+        "description": "A dense woodland area with tall trees and lush undergrowth."
+    },
+    {
+        "name": "castle",
+        "description": "A fortified structure with high walls and towers."
+    },
+    {
+        "name": "desert",
+        "description": "A hot, arid region with sand dunes and sparse vegetation."
+    },
+    {
+        "name": "mountain",
+        "description": "A high elevation area with rocky terrain and steep slopes."
+    },
+    {
+        "name": "swamp",
+        "description": "A wetland area with murky water and dense vegetation."
+    }
+]

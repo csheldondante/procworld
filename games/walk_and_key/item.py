@@ -1,11 +1,13 @@
 from rich.text import Text
+from typing import List
 
 class Item:
-    def __init__(self, name: str, color: str, adjectives: list[str], description: str):
+    def __init__(self, name: str, color: str, adjectives: List[str], description: str, biomes: List[str]):
         self.name = name
         self.color = color
         self.adjectives = adjectives
         self.description = description
+        self.biomes = biomes
 
     def get_name(self) -> Text:
         return Text(self.name, style=f"bold {self.color}")
